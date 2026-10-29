@@ -1,0 +1,7 @@
+node_modules
+.wrangler
+.firebase
+.env
+*.log
+.clave-groq.txt
+.dev.vars

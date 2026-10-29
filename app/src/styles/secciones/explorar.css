@@ -1,0 +1,10 @@
+.miradas { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--e-3); margin-bottom: var(--e-4); }
+.mirada { border-radius: var(--r-l); padding: var(--e-4); display: flex; flex-direction: column; }
+.mirada b { font-size: 1.4rem; }
+.mirada--padre { background: var(--rojo-suave); }
+.mirada--hijo { background: var(--salvia); }
+.globo { position: relative; margin: var(--e-2) 0 0; padding: var(--e-3); background: var(--papel); border-radius: var(--r-m); font-family: var(--f-mano); font-size: clamp(1.15rem, 4.4vw, 1.4rem); line-height: 1.15; box-shadow: var(--sombra-1); flex: 1; }
+.globo::before { content: ''; position: absolute; top: -8px; left: 22px; border: 8px solid transparent; border-top: 0; border-bottom-color: var(--papel); }
+.detras { text-align: left; animation: aparecer 0.4s var(--suave); }
+.prueba-hoy { background: var(--ambar-suave); border-radius: var(--r-m); padding: var(--e-3) var(--e-4); }
+.prueba-hoy .icono { display: inline-block; vertical-align: -4px; color: var(--rojo); }

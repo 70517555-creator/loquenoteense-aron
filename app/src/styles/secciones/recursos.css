@@ -1,0 +1,6 @@
+.recursos { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--e-3); }
+.recurso { display: flex; align-items: center; gap: var(--e-4); padding: var(--e-4); }
+.recurso__num { flex: none; font-size: 2rem; color: var(--rojo); width: 2.6rem; }
+.recurso__cuerpo { flex: 1; }
+.recurso__texto { margin: 0; font-weight: 700; }
+.recurso__cuerpo .suave { margin: var(--e-1) 0 0; font-size: var(--t-s); }

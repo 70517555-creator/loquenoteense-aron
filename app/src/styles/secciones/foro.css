@@ -1,0 +1,58 @@
+.foro { display: grid; gap: var(--e-4); padding-bottom: calc(var(--alto-pestanas) + var(--seguro-abajo) + var(--e-6)); }
+.conversacion { display: grid; gap: var(--e-4); }
+.tema-del-dia { display: grid; gap: var(--e-2); background: linear-gradient(160deg, var(--ambar-suave), var(--papel)); border: 1.5px solid #f3dca6; }
+.tema-del-dia .insignia { justify-self: start; min-height: 30px; font-size: var(--t-xs); }
+
+.comentarios, .propuestas, .temas-anteriores, .lista-panel { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--e-3); }
+.comentario { display: grid; gap: var(--e-1); padding: var(--e-4); border-radius: var(--r-m); background: var(--papel); box-shadow: var(--sombra-1); border-left: 4px solid var(--linea); }
+.comentario--psicologia { border-left-color: var(--salvia-oscuro); background: #f3faf5; }
+.comentario--propio { border-left-style: dashed; opacity: 0.92; }
+.comentario__autor { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-2); }
+.comentario__autor .insignia { min-height: 26px; padding: 0 var(--e-3); font-size: var(--t-xs); }
+.comentario__texto { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.comentario__rechazo { margin: 0; font-size: var(--t-s); color: var(--rojo-oscuro); }
+.comentario__acciones { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-3); margin-top: var(--e-1); }
+
+.me-ayudo { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 var(--e-3); border: 1.5px solid var(--linea); border-radius: var(--r-total); background: #fff; font-weight: 700; font-size: var(--t-s); cursor: pointer; }
+.me-ayudo--activo { border-color: var(--rojo); color: var(--rojo); background: var(--rojo-suave); }
+.me-ayudo:disabled { cursor: default; }
+.enlace-discreto { border: 0; background: none; padding: 4px; color: var(--tinta-suave); text-decoration: underline; font-size: var(--t-s); cursor: pointer; }
+.reporte, .moderacion { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-2); }
+.reporte .ficha, .moderacion .ficha { min-height: 34px; font-size: var(--t-xs); }
+
+.formulario-foro { display: grid; gap: var(--e-3); }
+.formulario-foro .titulo-tarjeta { margin: 0; }
+.formulario-foro label { display: grid; gap: var(--e-1); font-weight: 700; font-size: var(--t-s); }
+.formulario-foro .boton { justify-self: start; }
+.formulario-foro .casilla { display: flex; align-items: center; gap: var(--e-2); font-weight: 600; }
+.formulario-foro .casilla input { width: auto; }
+.apodo { display: grid; grid-template-columns: 1fr 1.4fr; gap: var(--e-2); margin: 0; padding: 0; border: 0; }
+.apodo legend { grid-column: 1 / -1; margin-bottom: var(--e-2); font-size: var(--t-s); }
+.aviso-riesgo { display: grid; gap: var(--e-2); background: var(--rojo-suave); }
+.aviso-riesgo p { margin: 0; }
+
+.propuesta { display: grid; gap: var(--e-2); }
+.propuesta__texto { margin: 0; font-weight: 700; font-size: var(--t-m); }
+.propuesta .insignia, .propuesta .me-ayudo { justify-self: start; }
+
+.tema-anterior { width: 100%; display: grid; grid-template-columns: 1fr auto; gap: 2px var(--e-3); align-items: center; text-align: left; border: 0; cursor: pointer; }
+.tema-anterior small { grid-column: 1; }
+.tema-anterior b { grid-column: 1; }
+.tema-anterior > :last-child:not(small, b) { grid-column: 2; grid-row: 1 / span 2; }
+
+.foro__equipo { margin: var(--e-5) 0 0; text-align: center; font-size: var(--t-s); line-height: 2; color: var(--tinta-suave); }
+.panel__saludo { display: flex; justify-content: space-between; align-items: center; }
+.panel__saludo p { margin: 0; }
+.por-revisar { display: grid; gap: var(--e-2); }
+.por-revisar--urgente { border: 2px solid var(--rojo); }
+.insignia--urgente { justify-self: start; background: var(--rojo-suave); color: var(--rojo-oscuro); }
+
+@media (max-width: 420px) {
+  .apodo { grid-template-columns: 1fr; }
+}
+.formulario-foro .aceptar-normas { display: flex; align-items: flex-start; gap: var(--e-2); font-size: var(--t-s); line-height: 1.4; cursor: pointer; }
+.formulario-foro .aceptar-normas input { flex: none; width: 20px; padding: 0; height: 20px; margin-top: 1px; accent-color: var(--rojo); }
+.indicadores { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--e-3); }
+.indicador { display: grid; justify-items: start; gap: 2px; }
+.indicador__emoji { font-size: 1.4rem; }
+.indicador__numero { font-size: var(--t-xl); line-height: 1; }

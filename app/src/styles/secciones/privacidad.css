@@ -1,0 +1,8 @@
+.politica { display: grid; gap: var(--e-4); padding-bottom: calc(var(--alto-pestanas) + var(--seguro-abajo) + var(--e-6)); }
+.politica__seccion .titulo-tarjeta, .politica .tarjeta .titulo-tarjeta { margin: 0 0 var(--e-2); }
+.politica__seccion p, .politica .tarjeta p { margin: 0 0 var(--e-2); }
+.politica ul, .politica ol { margin: 0; padding-left: 1.25rem; display: grid; gap: var(--e-2); }
+.politica__normas { background: var(--salvia); }
+.politica__borrar, .politica__contacto { display: grid; gap: var(--e-1); }
+.politica__borrar .boton { justify-self: start; }
+.casa__privacidad { display: inline-block; margin-top: var(--e-3); font-size: var(--t-xs); color: var(--texto-cielo); opacity: 0.75; }

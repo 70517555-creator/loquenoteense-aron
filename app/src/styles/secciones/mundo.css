@@ -1,0 +1,3 @@
+.lista-check { list-style: none; padding: 0; }
+.lista-check li { display: flex; gap: var(--e-2); align-items: flex-start; margin-bottom: var(--e-2); }
+.lista-check .icono { flex: none; margin-top: 4px; color: var(--exito); }

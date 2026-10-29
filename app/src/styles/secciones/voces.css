@@ -1,0 +1,4 @@
+.voces { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--e-3); }
+.voz { display: flex; gap: var(--e-4); align-items: flex-start; animation: aparecer 0.5s var(--suave) both; }
+.voz__avatar { flex: none; width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; color: #fff; font-weight: 800; }
+.voz__texto { margin: 0 0 var(--e-1); font-size: var(--t-l); line-height: 1.4; }

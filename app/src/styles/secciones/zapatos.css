@@ -1,0 +1,14 @@
+.opcion {
+  display: flex; align-items: center; gap: var(--e-3);
+  width: 100%; min-height: 56px; margin-bottom: var(--e-3); padding: var(--e-3) var(--e-4);
+  text-align: left; background: var(--papel);
+  border: 1.5px solid var(--linea); border-radius: var(--r-m);
+  transition: all 0.2s;
+}
+.opcion:hover:not(:disabled) { border-color: var(--rojo); }
+.opcion__letra { flex: none; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: var(--rojo-suave); color: var(--rojo); font-weight: 800; }
+.opcion--mejor { border-color: var(--exito); background: #eaf6ef; }
+.opcion--mejor .opcion__letra { background: var(--exito); color: #fff; }
+.opcion--elegida { border-color: var(--rojo); }
+.opcion--apagada { opacity: 0.45; }
+.opcion:disabled { cursor: default; }

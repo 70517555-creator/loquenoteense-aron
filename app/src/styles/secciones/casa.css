@@ -1,0 +1,439 @@
+.casa {
+  --cielo-1: #6fb6ea; --cielo-2: #bfe3f6; --cielo-3: #fdf1dc;
+  --texto-cielo: var(--tinta);
+  --colina-lejos: #b5dba2; --colina-medio: #8cc67c; --colina-cerca: #6aae5f;
+  --copa: #4e9a56; --copa-luz: #7ec46f; --tronco: #8a5a3b;
+  --nube: #ffffff; --nube-op: 0.95;
+  --pared: #f8e7cd; --pared-2: #f0d5b1; --veta: rgba(150, 100, 50, 0.1); --piedra: #d9bf9c; --piedra-2: #c4a37c;
+  --teja-1: #d9533f; --teja-2: #a8302a;
+  --madera: #7a4a2e; --madera-2: #a66d44; --reja: #2a2930; --silueta: rgba(110, 70, 45, 0.5);
+  --interior: linear-gradient(180deg, #fbf3e4 0%, #efe2c8 62%, #b9d49a 100%);
+  --placa: rgba(255, 250, 242, 0.92); --texto-placa: var(--tinta);
+  --vidrio: linear-gradient(160deg, #d7ecf8 0%, #f3f8fc 50%, #cfe4f2 100%);
+  --foto: none; --foto-visitada: none;
+
+  position: relative; min-height: 100dvh; overflow: hidden; isolation: isolate;
+  padding: 0 0 calc(var(--alto-pestanas) + var(--seguro-abajo) + var(--e-6));
+  background: linear-gradient(180deg, var(--cielo-1) 0%, var(--cielo-2) 42%, var(--cielo-3) 78%);
+}
+.casa--manana { --cielo-1: #86cdf3; --cielo-2: #cdeefa; --cielo-3: #fff4de; --colina-lejos: #bfe2a8; }
+.casa--atardecer {
+  --cielo-1: #3d3a7a; --cielo-2: #c06f86; --cielo-3: #f9b26c; --texto-cielo: #fff;
+  --colina-lejos: #9b6f8f; --colina-medio: #765d84; --colina-cerca: #574d72;
+  --copa: #4b4d6e; --copa-luz: #64608a; --tronco: #3e3048;
+  --nube: #ffd0b8; --nube-op: 0.75;
+  --pared: #edcdb0; --pared-2: #ddb391;
+  --interior: linear-gradient(180deg, #ffe6c4 0%, #f6c995 70%, #a9b98a 100%);
+  --foto: brightness(0.88) saturate(0.95);
+}
+.casa--noche {
+  --cielo-1: #070b24; --cielo-2: #1a2154; --cielo-3: #39356f; --texto-cielo: #f4ece3;
+  --colina-lejos: #252b5e; --colina-medio: #1c214b; --colina-cerca: #141838;
+  --copa: #151b3d; --copa-luz: #1e2652; --tronco: #0f1330;
+  --nube: #c9cff5; --nube-op: 0.1;
+  --pared: #4c4166; --pared-2: #3f3558; --veta: rgba(0, 0, 0, 0.14); --piedra: #3a3352; --piedra-2: #2e2944;
+  --teja-1: #8e3b3d; --teja-2: #5c2329;
+  --madera: #3d2a24; --madera-2: #57392c; --reja: #121118; --silueta: rgba(45, 22, 30, 0.78);
+  --interior: radial-gradient(ellipse at 50% 85%, #ffe2a0 0%, #f2a94e 55%, #9c5a2a 100%);
+  --placa: rgba(18, 14, 40, 0.62); --texto-placa: #f4ece3;
+  --vidrio: linear-gradient(160deg, #2c2850, #3c3566);
+  --foto: brightness(0.5) saturate(0.7); --foto-visitada: brightness(1.04) saturate(1.05) sepia(0.12);
+}
+
+.cielo { position: fixed; inset: 0 0 auto; height: 78vh; pointer-events: none; z-index: -1; }
+
+.sol {
+  position: absolute; right: 7%; top: calc(76px + var(--seguro-arriba));
+  width: 62px; height: 62px; border-radius: 50%;
+  background: radial-gradient(circle at 40% 38%, #fff6c4, #ffd75e 55%, #ffbf3a);
+  box-shadow: 0 0 50px 16px rgba(255, 210, 90, 0.45);
+  animation: flotar 8s ease-in-out infinite;
+}
+.sol__rayos { position: absolute; inset: -46%; fill: #ffd35c; opacity: 0.55; animation: girar 50s linear infinite; }
+.casa--atardecer .sol { top: 44vh; width: 80px; height: 80px; background: radial-gradient(circle at 45% 40%, #ffe2a6, #ff9e55 60%, #f2724a); box-shadow: 0 0 70px 26px rgba(255, 140, 80, 0.45); }
+.casa--atardecer .sol__rayos { display: none; }
+
+.luna {
+  position: absolute; right: 7%; top: calc(76px + var(--seguro-arriba));
+  width: 58px; height: 58px; border-radius: 50%;
+  background: radial-gradient(circle at 38% 35%, #fffdf3, #ece6cf 70%, #d9d1b5);
+  animation: flotar 9s ease-in-out infinite, halo 6s ease-in-out infinite;
+}
+.luna i { position: absolute; border-radius: 50%; background: rgba(150, 140, 110, 0.22); }
+.luna i:nth-child(1) { width: 12px; height: 12px; left: 16px; top: 14px; }
+.luna i:nth-child(2) { width: 8px; height: 8px; left: 34px; top: 30px; }
+.luna i:nth-child(3) { width: 6px; height: 6px; left: 20px; top: 38px; }
+
+.estrella { position: absolute; border-radius: 50%; background: #fff; box-shadow: 0 0 4px rgba(255, 255, 255, 0.9); animation: titilar 3s ease-in-out infinite; }
+.estrella--destello {
+  width: 11px !important; height: 11px !important; border-radius: 0; box-shadow: none; background: #fffbe8;
+  clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%);
+}
+.fugaz {
+  position: absolute; top: 9%; left: 62%; width: 130px; height: 2px; border-radius: 2px; opacity: 0;
+  background: linear-gradient(90deg, #fff, rgba(255, 255, 255, 0));
+  animation: fugaz 11s ease-in infinite 2s;
+}
+.fugaz--2 { top: 22%; left: 30%; width: 90px; animation-duration: 17s; animation-delay: 9s; }
+
+.nube { position: absolute; left: 0; fill: var(--nube); opacity: var(--nube-op); animation: viajar linear infinite; filter: drop-shadow(0 6px 10px rgba(80, 110, 150, 0.12)); }
+.nube--1 { width: 170px; top: 18%; animation-duration: 75s; animation-delay: -20s; }
+.nube--2 { width: 110px; top: 31%; animation-duration: 95s; animation-delay: -62s; }
+.nube--3 { width: 230px; top: 6%; animation-duration: 120s; animation-delay: -95s; }
+.casa--noche .nube { filter: none; }
+
+.pajaro { position: absolute; left: 0; width: 22px; fill: none; stroke: #2e3d5c; stroke-width: 2; stroke-linecap: round; opacity: 0.6; animation: volar 32s linear infinite, aletear 0.45s ease-in-out infinite alternate; }
+.pajaro--1 { top: 16%; animation-delay: -4s, 0s; }
+.pajaro--2 { top: 19%; width: 16px; animation-delay: -5.5s, -0.2s; }
+.pajaro--3 { top: 13%; width: 14px; animation-delay: -6.2s, -0.1s; }
+
+.suelo { position: fixed; inset: auto 0 0; height: clamp(240px, 38vh, 360px); pointer-events: none; z-index: -1; }
+.suelo__colinas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.colina--lejos { fill: var(--colina-lejos); }
+.colina--medio { fill: var(--colina-medio); }
+.colina--cerca { fill: var(--colina-cerca); }
+.arbol__tronco { fill: var(--tronco); }
+.arbol__copa { fill: var(--copa); }
+.arbol__copa--luz { fill: var(--copa-luz); opacity: 0.8; }
+.matorral { fill: var(--copa); }
+.florcita--0 { fill: #ef5a4c; } .florcita--1 { fill: #ffd25a; } .florcita--2 { fill: #ffffff; } .florcita--3 { fill: #f39ac0; }
+.casa--atardecer .florcita { opacity: 0.6; }
+.casa--noche .florcita { opacity: 0.18; }
+.luciernaga {
+  position: absolute; width: 5px; height: 5px; border-radius: 50%;
+  background: #fff7a8; box-shadow: 0 0 8px 3px rgba(255, 236, 120, 0.7);
+  animation: deriva 7s ease-in-out infinite alternate, parpadeo 2.2s ease-in-out infinite;
+}
+
+.casa__cabecera { position: relative; max-width: 560px; margin: 0 auto; padding: calc(var(--e-5) + var(--seguro-arriba)) var(--e-4) var(--e-4); color: var(--texto-cielo); }
+.casa__barra { display: flex; align-items: center; justify-content: space-between; gap: var(--e-3); margin-bottom: var(--e-5); }
+.casa__video {
+  display: inline-flex; align-items: center; gap: var(--e-1); min-height: 40px; padding: 0 var(--e-4);
+  border-radius: var(--r-total); font-weight: 700; font-size: var(--t-s); text-decoration: none; color: inherit;
+  background: color-mix(in srgb, currentColor 12%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, currentColor 35%, transparent);
+  backdrop-filter: blur(6px);
+}
+.casa__video:hover { background: color-mix(in srgb, currentColor 20%, transparent); }
+.casa__saludo { font-size: var(--t-xxl); margin: 0; }
+.casa__frase { margin: var(--e-1) 0 var(--e-3); font-weight: 600; max-width: 30ch; }
+.casa__progreso { font-size: var(--t-s); margin: 0 0 var(--e-2); }
+.casa .barra-progreso { max-width: 240px; background: rgba(255, 255, 255, 0.45); }
+
+.edificio { position: relative; max-width: 560px; margin: var(--e-6) auto 0; padding: 0 var(--e-4); filter: drop-shadow(0 18px 26px rgba(30, 15, 5, 0.22)); }
+
+.techo { position: relative; height: 88px; margin: 0 -14px; }
+.techo::before {
+  content: ''; position: absolute; inset: 0;
+  clip-path: polygon(13% 0, 87% 0, 100% 100%, 0 100%);
+  background:
+    radial-gradient(ellipse 13px 10px at 50% 0, transparent 88%, rgba(60, 8, 8, 0.28) 92%, transparent 100%) 0 0 / 26px 15px,
+    radial-gradient(ellipse 13px 10px at 50% 0, transparent 88%, rgba(60, 8, 8, 0.28) 92%, transparent 100%) 13px 7.5px / 26px 15px,
+    linear-gradient(180deg, var(--teja-1), var(--teja-2));
+}
+.techo::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: -7px; height: 11px;
+  background: var(--madera); border-radius: 4px; box-shadow: 0 5px 8px rgba(0, 0, 0, 0.22);
+}
+.techo__tejas { position: absolute; top: -5px; left: 12%; right: 12%; height: 10px; border-radius: 5px; background: var(--teja-2); box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.15); }
+.chimenea {
+  position: absolute; right: 19%; top: -34px; width: 32px; height: 50px; z-index: -1;
+  background: repeating-linear-gradient(0deg, #9a5440 0 8px, #7a4030 8px 9.5px);
+  border-radius: 2px;
+}
+.chimenea::before { content: ''; position: absolute; top: -6px; left: -4px; right: -4px; height: 8px; border-radius: 2px; background: #5b3326; }
+.chimenea i { position: absolute; left: 6px; top: -10px; width: 18px; height: 18px; border-radius: 50%; background: rgba(255, 255, 255, 0.75); filter: blur(2px); animation: humo 4.5s ease-out infinite; }
+.chimenea i:nth-child(2) { animation-delay: 1.5s; }
+.chimenea i:nth-child(3) { animation-delay: 3s; }
+.casa--noche .chimenea i { background: rgba(220, 225, 255, 0.22); }
+
+.fachada {
+  position: relative;
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--e-5) var(--e-4);
+  padding: var(--e-6) var(--e-5) var(--e-5);
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.07), transparent 5%, transparent 95%, rgba(0, 0, 0, 0.07)),
+    repeating-linear-gradient(0deg, transparent 0 27px, var(--veta) 27px 28px),
+    linear-gradient(180deg, var(--pared), var(--pared-2));
+}
+.fachada::before, .fachada::after {
+  content: ''; position: absolute; top: 0; bottom: 0; width: 12px;
+  background: repeating-linear-gradient(180deg, var(--piedra) 0 24px, transparent 24px 30px, var(--piedra-2) 30px 46px, transparent 46px 52px);
+}
+.fachada::before { left: 0; }
+.fachada::after { right: 0; }
+
+.ventana {
+  position: relative; display: flex; flex-direction: column; align-items: center;
+  text-decoration: none; color: var(--texto-placa);
+  animation: aparecer 0.5s var(--suave) both;
+}
+.ventana__marco {
+  display: block; width: 100%; padding: 6px;
+  background: var(--madera); border-radius: 14px 14px 4px 4px;
+  box-shadow: inset 0 0 0 2px var(--madera-2), 0 5px 10px rgba(40, 20, 10, 0.22);
+  transition: transform 0.25s var(--suave), box-shadow 0.6s;
+}
+.ventana__vidrio {
+  position: relative; display: grid; place-items: center; width: 100%; aspect-ratio: 4 / 3; overflow: hidden;
+  border-radius: 9px 9px 2px 2px; background: var(--vidrio); color: var(--rojo);
+}
+.ventana__vidrio::before {
+  content: ''; position: absolute; inset: 0; z-index: 2; pointer-events: none;
+  background: linear-gradient(115deg, rgba(255, 255, 255, 0.14) 0 14%, transparent 14% 26%, rgba(255, 255, 255, 0.07) 26% 30%, transparent 30%);
+}
+.ventana__vidrio::after {
+  content: ''; position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: 0.55;
+  background:
+    linear-gradient(90deg, transparent calc(50% - 1.5px), var(--madera) calc(50% - 1.5px), var(--madera) calc(50% + 1.5px), transparent calc(50% + 1.5px)),
+    linear-gradient(0deg, transparent calc(50% - 1.5px), var(--madera) calc(50% - 1.5px), var(--madera) calc(50% + 1.5px), transparent calc(50% + 1.5px));
+}
+.ventana__img { width: 100%; height: 100%; object-fit: cover; filter: var(--foto); transition: filter 0.8s, transform 0.5s var(--suave); }
+.ventana__icono { position: relative; z-index: 1; filter: drop-shadow(0 2px 0 #fff); }
+.ventana__luz { position: absolute; inset: 0; z-index: 1; pointer-events: none; opacity: 0; transition: opacity 0.8s; mix-blend-mode: screen; background: radial-gradient(circle at 50% 70%, rgba(255, 190, 90, 0.5), rgba(255, 160, 60, 0.12) 70%); }
+.ventana__titulo {
+  display: grid; place-items: center; width: calc(100% + 14px); min-height: calc(2 * 1.15em + 12px);
+  margin-top: -1px; padding: 5px 8px 7px;
+  font-size: 0.8125rem; line-height: 1.15; text-align: center; font-weight: 800; letter-spacing: 0.01em;
+  color: #fff4e0; text-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.18) 0 2px, transparent 2px),
+    repeating-linear-gradient(90deg, transparent 0 18px, rgba(0, 0, 0, 0.05) 18px 19px),
+    linear-gradient(180deg, #8d5a37, #6f4329);
+  border-radius: 3px 3px 7px 7px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25);
+}
+.casa--noche .ventana__titulo { background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0 2px, transparent 2px), linear-gradient(180deg, #5a3b2d, #432a20); color: #f4ece3; }
+.ventana__marca { position: absolute; top: -8px; right: -8px; z-index: 3; width: 24px; height: 24px; display: grid; place-items: center; border-radius: 50%; background: var(--exito); color: #fff; box-shadow: 0 0 0 3px var(--pared); }
+.ventana:hover .ventana__marco, .ventana:focus-visible .ventana__marco { transform: translateY(-4px); }
+.ventana:hover .ventana__img { transform: scale(1.05); }
+.ventana:active .ventana__marco { transform: scale(0.97); }
+
+.casa--noche .ventana--visitada .ventana__img, .casa--atardecer .ventana--visitada .ventana__img { filter: var(--foto-visitada); }
+.casa--noche .ventana--visitada .ventana__luz { opacity: 1; animation: vela 3s ease-in-out infinite; }
+.casa--noche .ventana--visitada .ventana__marco { box-shadow: inset 0 0 0 2px var(--madera-2), 0 0 26px 6px rgba(255, 190, 90, 0.38); }
+.casa--noche .ventana:hover .ventana__img { filter: brightness(0.85); }
+
+.balcon { grid-column: 1 / -1; animation-delay: 480ms; }
+.balcon__sala {
+  position: relative; display: block; height: 96px; overflow: hidden;
+  border-radius: 9px 9px 2px 2px; background: var(--interior);
+}
+.balcon__sala::before {
+  content: ''; position: absolute; inset: 0; z-index: 3; pointer-events: none;
+  background:
+    linear-gradient(115deg, rgba(255, 255, 255, 0.16) 0 8%, transparent 8% 16%, rgba(255, 255, 255, 0.08) 16% 19%, transparent 19%),
+    linear-gradient(90deg, transparent calc(33.3% - 1.5px), var(--madera) calc(33.3% - 1.5px) calc(33.3% + 1.5px), transparent calc(33.3% + 1.5px) calc(66.6% - 1.5px), var(--madera) calc(66.6% - 1.5px) calc(66.6% + 1.5px), transparent calc(66.6% + 1.5px));
+  opacity: 0.6;
+}
+.balcon__familias { position: absolute; inset: auto 6% 0; display: flex; justify-content: space-around; align-items: flex-end; }
+.balcon__familias i {
+  position: relative; width: 26px; height: 44px; border-radius: 13px 13px 3px 3px; background: var(--silueta);
+  transform-origin: bottom center; animation: conversar 5s ease-in-out infinite;
+}
+.balcon__familias i::before { content: ''; position: absolute; left: 50%; top: -19px; translate: -50% 0; width: 18px; height: 18px; border-radius: 50%; background: inherit; }
+.balcon__familias i:nth-child(2) { height: 30px; width: 20px; animation-delay: -1.2s; }
+.balcon__familias i:nth-child(2)::before { width: 14px; height: 14px; top: -15px; }
+.balcon__familias i:nth-child(3) { height: 48px; animation-delay: -2.4s; }
+.balcon__familias i:nth-child(4) { height: 40px; animation-delay: -3.1s; }
+.balcon__familias i:nth-child(5) { height: 34px; width: 22px; animation-delay: -0.6s; }
+.balcon__burbujas { position: absolute; inset: 0; z-index: 2; }
+.balcon__burbujas i {
+  position: absolute; top: 10px; width: 22px; height: 14px; border-radius: 7px; background: #fff; opacity: 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15); animation: burbuja 6s ease-in-out infinite;
+}
+.balcon__burbujas i::after { content: ''; position: absolute; left: 5px; bottom: -4px; border: 4px solid transparent; border-top-color: #fff; border-bottom: 0; }
+.balcon__burbujas i:nth-child(1) { left: 16%; }
+.balcon__burbujas i:nth-child(2) { left: 48%; animation-delay: 2s; }
+.balcon__burbujas i:nth-child(3) { left: 76%; animation-delay: 4s; }
+.balcon__baranda {
+  position: absolute; inset: auto 0 0; z-index: 4; height: 40%;
+  background:
+    linear-gradient(180deg, var(--reja) 0 3px, transparent 3px calc(100% - 3px), var(--reja) calc(100% - 3px)),
+    linear-gradient(90deg, transparent 0 4.5px, var(--reja) 4.5px 6px, transparent 6px) 50% 0 / 11px 100%;
+}
+.balcon__letrero {
+  position: absolute; top: -12px; left: 18px; z-index: 5; display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 800; color: var(--tinta);
+  background: var(--ambar); box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2); rotate: -3deg;
+}
+.balcon__titulo { min-height: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 0 8px; }
+.balcon__titulo small { font-weight: 600; opacity: 0.85; }
+.casa--noche .balcon .ventana__marco { box-shadow: inset 0 0 0 2px var(--madera-2), 0 0 28px 6px rgba(255, 180, 90, 0.35); }
+
+.ventana--atico {
+  position: relative; z-index: 1;
+  width: max-content; max-width: 92%; margin: -96px auto -14px;
+  text-align: center; transition: transform 0.2s var(--suave);
+}
+.medalla { position: relative; display: grid; place-items: center; padding-top: 30px; transform-origin: 50% 0; animation: balanceo 5s ease-in-out infinite; }
+.medalla::before {
+  content: ''; position: absolute; top: 0; left: 50%; translate: -50% 0; width: 58px; height: 44px;
+  clip-path: polygon(0 0, 100% 0, 72% 100%, 28% 100%);
+  background: linear-gradient(90deg, var(--rojo-oscuro) 0 38%, var(--ambar) 38% 62%, var(--rojo-oscuro) 62%);
+}
+.medalla::after {
+  content: ''; position: absolute; top: 24px; left: 50%; translate: -50% 0; width: 22px; height: 10px; border-radius: 3px;
+  background: linear-gradient(180deg, #ffe07a, #c98b16);
+}
+.atico__titulo { width: auto; min-width: 230px; min-height: 0; padding: 6px var(--e-4) 8px; gap: 1px; }
+.atico__titulo b { font-size: 0.9375rem; }
+.atico__titulo small { font-weight: 600; opacity: 0.85; }
+.claraboya {
+  position: relative; z-index: 1; flex: none; width: 72px; height: 72px; border-radius: 50%; overflow: hidden;
+  background: radial-gradient(circle at 42% 68%, #fff1c4 0%, #ffcf7a 34%, #e89a4a 70%, #a8602e 100%);
+  box-shadow:
+    inset 0 0 0 4px #e8ad2c, inset 0 0 0 6px #fff1b0, inset 0 0 0 8px #c98b16,
+    0 0 0 3px #f6cc4f, 0 0 0 5px #b97a12, 0 4px 10px rgba(80, 40, 0, 0.35), 0 0 26px rgba(255, 200, 80, 0.55);
+  animation: resplandor 3.2s ease-in-out infinite;
+}
+.claraboya::after {
+  content: ''; position: absolute; inset: 0; z-index: 3; pointer-events: none; border-radius: 50%;
+  background:
+    linear-gradient(0deg, var(--madera-2) 0 13px, var(--madera) 13px 16px, transparent 16px),
+    linear-gradient(125deg, rgba(255, 255, 255, 0.35) 0 18%, transparent 18%);
+  opacity: 0.85;
+}
+.claraboya__vela { position: absolute; left: 21px; bottom: 16px; z-index: 4; width: 9px; height: 15px; border-radius: 2px; background: #fff7ea; box-shadow: inset -2px 0 0 #ecd9bf; }
+.claraboya__vela::before {
+  content: ''; position: absolute; left: 50%; bottom: 100%; translate: -50% 0; width: 8px; height: 13px;
+  border-radius: 50% 50% 45% 45% / 65% 65% 35% 35%; background: radial-gradient(circle at 50% 75%, #fffbe0 0 25%, #ffd35a 50%, #ff9a3c 100%);
+  transform-origin: 50% 100%; animation: llama 1.6s ease-in-out infinite;
+}
+.claraboya__taza { position: absolute; right: 17px; bottom: 16px; z-index: 4; width: 14px; height: 10px; border-radius: 2px 2px 6px 6px; background: var(--rojo); }
+.claraboya__taza::after { content: ''; position: absolute; right: -5px; top: 2px; width: 5px; height: 5px; border: 2px solid var(--rojo); border-left: 0; border-radius: 0 6px 6px 0; }
+.claraboya__taza i { position: absolute; bottom: 100%; left: 3px; width: 3px; height: 10px; border-radius: 3px; background: rgba(255, 255, 255, 0.85); filter: blur(0.6px); opacity: 0; animation: vapor 2.6s ease-out infinite; }
+.claraboya__taza i:nth-child(2) { left: 9px; animation-delay: 1.3s; }
+.ventana--atico:hover { transform: translateY(-3px); }
+
+.zocalo {
+  position: relative; height: 96px; border-radius: 0 0 6px 6px;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.14), transparent 12px),
+    repeating-linear-gradient(0deg, transparent 0 23px, rgba(0, 0, 0, 0.12) 23px 24px),
+    linear-gradient(180deg, var(--piedra), var(--piedra-2));
+}
+.acceso { position: absolute; left: 50%; bottom: 10px; translate: -50% 0; display: flex; align-items: flex-end; gap: 12px; }
+.porton {
+  position: relative; height: 74px; border-radius: 2px;
+  background:
+    linear-gradient(180deg, transparent 22%, var(--reja) 22% calc(22% + 2px), transparent calc(22% + 2px) 86%, var(--reja) 86% calc(86% + 2px), transparent calc(86% + 2px)),
+    linear-gradient(90deg, transparent 0 4.75px, var(--reja) 4.75px 6.25px, transparent 6.25px) 50% 0 / 11px 100%,
+    var(--interior);
+  box-shadow: inset 0 0 0 3px var(--reja), 0 0 0 3px var(--piedra-2);
+}
+.porton::before {
+  content: ''; position: absolute; left: 3px; right: 3px; top: 3px; height: calc(22% - 3px);
+  background: radial-gradient(circle, transparent 0 2px, var(--reja) 2.3px 3.2px, transparent 3.5px) 0 50% / 11px 8px space no-repeat;
+}
+.porton i {
+  position: absolute; top: 54%; width: 8px; height: 11px; border-radius: 2px;
+  background: radial-gradient(circle at 50% 40%, var(--ambar) 0 1.5px, var(--reja) 2px);
+}
+.porton--cochera { width: 128px; }
+.porton--cochera::after { content: ''; position: absolute; inset: 0 auto; left: 50%; width: 3px; translate: -50% 0; background: var(--reja); }
+.porton--cochera i { left: 50%; translate: -50% 0; }
+.porton--peatonal { width: 44px; }
+.porton--peatonal i { right: 5px; }
+.casa--noche .porton { box-shadow: inset 0 0 0 3px var(--reja), 0 0 0 3px var(--piedra-2), 0 0 22px rgba(255, 180, 90, 0.4); }
+.escalon { position: absolute; left: -14px; right: -14px; bottom: -10px; height: 11px; border-radius: 3px 3px 0 0; background: var(--piedra-2); box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.12); }
+.farol { position: absolute; left: -32px; bottom: 36px; width: 16px; height: 24px; border-radius: 4px 4px 6px 6px; background: #2b2a33; }
+.farol--der { left: auto; right: -32px; }
+.farol::before { content: ''; position: absolute; inset: 4px 3px 5px; border-radius: 2px; background: #efe8d6; }
+.farol::after { content: ''; position: absolute; left: 4px; right: 4px; top: -5px; height: 6px; border-radius: 3px 3px 0 0; background: #2b2a33; }
+.casa--noche .farol::before, .casa--atardecer .farol::before { background: #ffe39a; box-shadow: 0 0 18px 9px rgba(255, 200, 100, 0.55); animation: vela 3s ease-in-out infinite; }
+
+.jardin { position: relative; height: 0; }
+.arbusto {
+  position: absolute; bottom: -8px; left: 2%; width: 96px; height: 50px; transform-origin: bottom center;
+  background:
+    radial-gradient(circle at 24% 62%, var(--copa-luz) 0 21px, transparent 22px),
+    radial-gradient(circle at 54% 42%, var(--copa) 0 26px, transparent 27px),
+    radial-gradient(circle at 80% 64%, var(--copa) 0 20px, transparent 21px),
+    radial-gradient(ellipse 48px 14px at 50% 100%, var(--copa) 0 98%, transparent 100%);
+  animation: mecer-planta 6s ease-in-out infinite;
+}
+.arbusto--der { left: auto; right: 2%; animation-delay: -3s; }
+.flor { position: absolute; bottom: -6px; left: 24%; width: 3px; height: 28px; background: #4f8e4a; border-radius: 2px; transform-origin: bottom; animation: mecer-planta 4s ease-in-out infinite; }
+.flor::before { content: ''; position: absolute; left: 50%; top: -6px; translate: -50% 0; width: 14px; height: 14px; border-radius: 50%; background: radial-gradient(circle, #ffd25a 0 3px, #ef5a4c 3.5px); }
+.flor--2 { left: 29%; height: 22px; animation-delay: -1s; }
+.flor--2::before { background: radial-gradient(circle, #ffd25a 0 3px, #f39ac0 3.5px); }
+.flor--3 { left: auto; right: 26%; height: 25px; animation-delay: -2s; }
+.flor--4 { left: auto; right: 31%; height: 20px; animation-delay: -3s; }
+.flor--4::before { background: radial-gradient(circle, #ffd25a 0 3px, #ffffff 3.5px); }
+.casa--noche .jardin { filter: brightness(0.85) saturate(0.75); }
+
+@media (min-width: 640px) {
+  .fachada { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .edificio, .casa__cabecera { max-width: 860px; }
+}
+@media (min-width: 1024px) and (orientation: landscape) {
+  .casa {
+    --alto-libre: calc(100dvh - var(--alto-pestanas) - var(--seguro-abajo) - 74px);
+    --ancho-casa: min(820px, 56vw, calc((var(--alto-libre) - 320px) / 0.3));
+    display: grid; grid-template-columns: minmax(240px, 380px) var(--ancho-casa);
+    grid-template-rows: minmax(0, 1fr); justify-content: center; column-gap: clamp(32px, 5vw, 96px);
+    padding: var(--e-7) var(--e-6) calc(var(--alto-pestanas) + var(--seguro-abajo) + var(--e-5));
+  }
+  .casa__cabecera { max-width: none; margin: 0; padding: 0; align-self: stretch; display: flex; flex-direction: column; }
+  .casa__barra { margin-bottom: auto; margin-top: calc(-1 * var(--e-5)); }
+  .casa .barra-progreso { margin-bottom: auto; }
+  .sol, .luna { right: auto; left: 30vw; top: calc(96px + var(--seguro-arriba)); }
+  .casa--atardecer .sol { top: 40vh; }
+  .casa__saludo { font-size: clamp(2.6rem, 3.6vw, 3.6rem); white-space: nowrap; }
+  .casa__frase { font-size: var(--t-l); }
+  .edificio { max-width: none; width: var(--ancho-casa); margin: 0; padding: 0; align-self: end; }
+  .fachada { gap: var(--e-4) var(--e-4); padding: var(--e-5) var(--e-5) var(--e-4); }
+  .techo { height: 72px; }
+  .ventana--atico { margin-top: -88px; margin-bottom: -10px; }
+  .fachada { grid-template-columns: repeat(4, minmax(0, 1fr)) minmax(0, 1.2fr); }
+  .balcon { grid-column: 5; grid-row: 1 / span 2; }
+  .balcon .ventana__marco { flex: 1; display: flex; }
+  .balcon__sala { flex: 1; height: auto; }
+  .balcon__sala::before { background: linear-gradient(115deg, rgba(255, 255, 255, 0.16) 0 14%, transparent 14% 26%, rgba(255, 255, 255, 0.08) 26% 30%, transparent 30%), linear-gradient(90deg, transparent calc(50% - 1.5px), var(--madera) calc(50% - 1.5px) calc(50% + 1.5px), transparent calc(50% + 1.5px)); }
+  .balcon__baranda { height: 30%; }
+  .balcon__familias { inset: auto 6% 0; }
+  .balcon__familias i { width: 36px; height: 66px; border-radius: 18px 18px 4px 4px; }
+  .balcon__familias i::before { width: 26px; height: 26px; top: -28px; }
+  .balcon__familias i:nth-child(2) { width: 28px; height: 46px; }
+  .balcon__familias i:nth-child(2)::before { width: 20px; height: 20px; top: -22px; }
+  .balcon__familias i:nth-child(3) { height: 72px; }
+  .balcon__familias i:nth-child(n + 4), .balcon__burbujas i:nth-child(3) { display: none; }
+  .balcon__burbujas i { top: 34%; }
+  .balcon__burbujas i:nth-child(1) { left: 12%; }
+  .balcon__burbujas i:nth-child(2) { left: 62%; }
+  .balcon__titulo { flex-direction: column; gap: 2px; }
+  .balcon__titulo small { font-size: 0.6875rem; }
+  .zocalo { height: 74px; }
+  .porton { height: 60px; }
+  .porton--cochera { width: 104px; }
+  .porton--peatonal { width: 36px; }
+  .farol { bottom: 28px; }
+}
+@media (min-width: 1024px) and (orientation: landscape) and (max-height: 660px) {
+  .casa { padding-top: var(--e-5); }
+}
+@media (max-width: 759px) { .sol, .luna { top: calc(88px + var(--seguro-arriba)); width: 50px; height: 50px; } }
+
+@keyframes flotar { 0%, 100% { translate: 0 0; } 50% { translate: 0 -8px; } }
+@keyframes girar { to { rotate: 360deg; } }
+@keyframes halo { 0%, 100% { box-shadow: 0 0 36px 8px rgba(243, 239, 224, 0.22); } 50% { box-shadow: 0 0 60px 18px rgba(243, 239, 224, 0.34); } }
+@keyframes titilar { 0%, 100% { opacity: 0.25; } 50% { opacity: 1; } }
+@keyframes fugaz {
+  0%, 86% { opacity: 0; transform: rotate(-28deg) translateX(0); }
+  88% { opacity: 1; }
+  95%, 100% { opacity: 0; transform: rotate(-28deg) translateX(-340px); }
+}
+@keyframes viajar { from { transform: translateX(-30vw); } to { transform: translateX(130vw); } }
+@keyframes volar { from { translate: -10vw 0; } 50% { translate: 55vw -20px; } to { translate: 120vw 10px; } }
+@keyframes aletear { from { scale: 1 1; } to { scale: 1 0.45; } }
+@keyframes deriva { from { translate: 0 0; } to { translate: 26px -34px; } }
+@keyframes parpadeo { 0%, 100% { opacity: 0.15; } 50% { opacity: 1; } }
+@keyframes humo { 0% { opacity: 0.8; transform: translate(0, 0) scale(0.6); } 100% { opacity: 0; transform: translate(16px, -54px) scale(2); } }
+@keyframes vela { 0%, 100% { opacity: 0.85; } 50% { opacity: 1; } }
+@keyframes conversar { 0%, 100% { rotate: 0deg; } 30% { rotate: -2deg; } 60% { rotate: 2deg; } }
+@keyframes burbuja { 0%, 100% { opacity: 0; translate: 0 6px; } 10%, 30% { opacity: 1; translate: 0 0; } 40% { opacity: 0; translate: 0 -6px; } }
+@keyframes llama { 0%, 100% { scale: 1 1; rotate: -2deg; } 30% { scale: 0.92 1.08; rotate: 3deg; } 60% { scale: 1.05 0.94; rotate: -3deg; } }
+@keyframes vapor { 0% { opacity: 0; translate: 0 2px; scale: 1 0.6; } 30% { opacity: 0.9; } 100% { opacity: 0; translate: 3px -12px; scale: 1 1.3; } }
+@keyframes resplandor { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.1); } }
+@keyframes balanceo { 0%, 100% { rotate: -2.5deg; } 50% { rotate: 2.5deg; } }
+@keyframes mecer-planta { 0%, 100% { rotate: -3deg; } 50% { rotate: 3deg; } }

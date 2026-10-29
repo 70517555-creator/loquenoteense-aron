@@ -1,0 +1,17 @@
+.reloj {
+  margin: var(--e-4) auto 0; max-width: 340px;
+  padding: var(--e-3); text-align: center;
+  font-family: 'Courier New', ui-monospace, monospace; font-weight: 700; letter-spacing: 4px;
+  font-size: clamp(3rem, 15vw, 4.6rem);
+  background: #1d1a1a; color: #7fd3ff; border-radius: var(--r-l);
+  box-shadow: inset 0 0 0 6px #3a2b22, var(--sombra-2);
+  text-shadow: 0 0 18px rgba(127, 211, 255, 0.6);
+}
+.reloj--andando { animation: pulso 2s ease-in-out infinite; }
+@keyframes pulso { 0%, 100% { text-shadow: 0 0 10px rgba(127, 211, 255, 0.4); } 50% { text-shadow: 0 0 26px rgba(127, 211, 255, 0.9); } }
+.lista-pasos { list-style: none; padding: 0; margin: var(--e-5) 0 0; }
+.paso { display: flex; gap: var(--e-3); align-items: flex-start; padding: var(--e-3) 0; border-bottom: 1px dashed var(--linea); cursor: pointer; }
+.paso input { flex: none; width: 22px; height: 22px; margin-top: 2px; accent-color: var(--rojo); }
+.paso input:checked + span { color: var(--tinta-suave); text-decoration: line-through; }
+.reflexion { display: grid; gap: var(--e-2); margin-top: var(--e-5); }
+.reflexion .mano { font-size: 1.4rem; }

@@ -1,0 +1,15 @@
+@import './tokens.css';
+@import './base.css';
+@import './secciones/portada.css';
+@import './secciones/casa.css';
+@import './secciones/mochila.css';
+@import './secciones/explorar.css';
+@import './secciones/zapatos.css';
+@import './secciones/voces.css';
+@import './secciones/retos.css';
+@import './secciones/mundo.css';
+@import './secciones/recursos.css';
+@import './secciones/podcast.css';
+@import './secciones/asistente.css';
+@import './secciones/foro.css';
+@import './secciones/privacidad.css';
