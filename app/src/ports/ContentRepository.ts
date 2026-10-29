@@ -1,9 +1,9 @@
 import type {
-  Episodio, Escenario, Etiqueta, GrupoRecursos, Reto, Situacion, Tendencia, Voz,
+  CargaDelHijo, Episodio, Escenario, GrupoRecursos, Reto, Situacion, Tendencia, Voz,
 } from '../domain/tipos'
 
 export interface ContentRepository {
-  etiquetas(): Promise<Etiqueta[]>
+  cargas(): Promise<CargaDelHijo[]>
   situaciones(): Promise<Situacion[]>
   escenarios(): Promise<Escenario[]>
   voces(): Promise<Voz[]>

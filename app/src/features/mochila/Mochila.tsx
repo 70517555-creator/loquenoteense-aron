@@ -1,132 +1,94 @@
-import { useState, type CSSProperties } from 'react'
+import { useRef, useState, type CSSProperties } from 'react'
 import { CLAVES_DE_PROGRESO } from '../../app/clavesDeProgreso'
-import type { Etiqueta } from '../../domain/tipos'
+import type { CargaDelHijo } from '../../domain/tipos'
 import { useContenido } from '../../hooks/useContenido'
 import { usePersistente } from '../../hooks/usePersistente'
 import { Cargando } from '../../ui/Cargando'
 import { Encabezado } from '../../ui/Encabezado'
 import { clases } from '../../utils/clases'
 import { agregarSinRepetir } from '../../utils/listas'
+import { BolsilloSecreto } from './BolsilloSecreto'
+import { DetalleDeCarga } from './DetalleDeCarga'
+import { DibujoDeMochila } from './DibujoDeMochila'
+import { useCartas } from './useCartas'
 
-const ETIQUETA_SIN_NOMBRE = '?'
+const BOLSILLO = 'bolsillo'
 
-function Cremallera({ d }: { d: string }) {
-  return (
-    <>
-      <path d={d} fill="none" stroke="#0f1b30" strokeWidth="7" strokeLinecap="round" />
-      <path d={d} fill="none" stroke="#b9c4d6" strokeWidth="2" strokeDasharray="2 3" />
-    </>
-  )
-}
-
-function Jalador({ x, y }: { x: number; y: number }) {
-  return (
-    <g transform={`translate(${x} ${y})`}>
-      <rect x="-4" y="-3" width="8" height="7" rx="2" fill="#8c96a8" />
-      <rect x="-4.5" y="3" width="9" height="20" rx="4.5" fill="#c8302c" />
-      <rect x="-2" y="6" width="4" height="9" rx="2" fill="#7d1b18" />
-    </g>
-  )
-}
-
-function DibujoDeMochila() {
-  return (
-    <svg className="mochila__dibujo" viewBox="0 0 300 360" aria-hidden="true">
-      <defs>
-        <linearGradient id="mochila-tela" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#35527a" />
-          <stop offset="1" stopColor="#1c2d4a" />
-        </linearGradient>
-        <linearGradient id="mochila-bolsillo" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#2b4467" />
-          <stop offset="1" stopColor="#18263f" />
-        </linearGradient>
-        <pattern id="mochila-malla" width="5" height="5" patternUnits="userSpaceOnUse">
-          <rect width="5" height="5" fill="#16233a" />
-          <circle cx="2.5" cy="2.5" r="1" fill="#2c4262" />
-        </pattern>
-      </defs>
-      <path d="M96 64C58 76 40 150 44 252" fill="none" stroke="#14213a" strokeWidth="20" strokeLinecap="round" />
-      <path d="M204 64c38 12 56 86 52 188" fill="none" stroke="#14213a" strokeWidth="20" strokeLinecap="round" />
-      <path d="M122 50c0-26 56-26 56 0" fill="none" stroke="#14213a" strokeWidth="12" strokeLinecap="round" />
-      <rect x="30" y="206" width="26" height="104" rx="10" fill="url(#mochila-malla)" />
-      <rect x="244" y="206" width="26" height="104" rx="10" fill="url(#mochila-malla)" />
-      <path d="M48 112c0-50 42-76 102-76s102 26 102 76v192c0 26-18 40-44 40H92c-26 0-44-14-44-40z" fill="url(#mochila-tela)" />
-      <path d="M58 116c0-40 36-66 92-66s92 26 92 66" fill="none" stroke="rgba(255,255,255,0.14)" strokeWidth="2" strokeDasharray="5 4" />
-      <path d="M64 96c14-30 44-46 86-46" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="10" strokeLinecap="round" />
-      <Cremallera d="M66 122c12-50 156-50 168 0" />
-      <Jalador x={228} y={110} />
-      <rect x="72" y="208" width="156" height="112" rx="26" fill="url(#mochila-bolsillo)" />
-      <rect x="80" y="216" width="140" height="96" rx="20" fill="none" stroke="rgba(255,255,255,0.16)" strokeWidth="2" strokeDasharray="5 4" />
-      <Cremallera d="M88 234h124" />
-      <Jalador x={190} y={234} />
-      <path d="M60 330c30 12 150 12 180 0" fill="none" stroke="rgba(0,0,0,0.25)" strokeWidth="6" strokeLinecap="round" />
-    </svg>
-  )
-}
-
-function Reflexion({ etiqueta }: { etiqueta?: Etiqueta }) {
-  if (!etiqueta) return <p className="mano invitacion">Elige una etiqueta de la mochila…</p>
-  const titulo = etiqueta.texto === ETIQUETA_SIN_NOMBRE ? 'Lo que aún no sé nombrar' : etiqueta.texto
-  return (
-    <>
-      <h2 className="mano titulo-tarjeta">{titulo}</h2>
-      <p>{etiqueta.reflexion}</p>
-      <p className="pregunta-guia">🤔 {etiqueta.pregunta}</p>
-    </>
-  )
-}
-
-function MochilaInteractiva({ etiquetas }: { etiquetas: Etiqueta[] }) {
-  const [vistas, setVistas] = usePersistente<string[]>(CLAVES_DE_PROGRESO.etiquetasMochila, [])
+function MochilaInteractiva({ cargas }: { cargas: CargaDelHijo[] }) {
+  const [abiertas, setAbiertas] = usePersistente<string[]>(CLAVES_DE_PROGRESO.cargasAbiertas, [])
   const [activa, setActiva] = useState<string>()
-  const abrioTodas = etiquetas.every((e) => vistas.includes(e.id))
+  const cartas = useCartas()
+  const { sinLeer } = cartas
+  const detalle = useRef<HTMLDivElement>(null)
+  const indiceActivo = cargas.findIndex((c) => c.id === activa)
+  const vistas = cargas.filter((c) => abiertas.includes(c.id)).length
 
   const elegir = (id: string) => {
     setActiva(id)
-    setVistas((anteriores) => agregarSinRepetir(anteriores, id))
+    if (id !== BOLSILLO) setAbiertas((anteriores) => agregarSinRepetir(anteriores, id))
+    requestAnimationFrame(() => detalle.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }))
   }
 
   return (
     <>
-      <div className={clases('mochila', abrioTodas && 'mochila--liviana')}>
+      <div className={clases('mochila', vistas === cargas.length && 'mochila--liviana')}>
         <DibujoDeMochila />
-        {etiquetas.map((etiqueta) => (
+        {cargas.map((carga) => (
           <button
-            key={etiqueta.id}
+            key={carga.id}
             className={clases(
               'etiqueta',
-              `etiqueta--${etiqueta.color}`,
-              vistas.includes(etiqueta.id) && 'etiqueta--vista',
-              activa === etiqueta.id && 'etiqueta--activa',
+              `etiqueta--${carga.color}`,
+              abiertas.includes(carga.id) && 'etiqueta--vista',
+              activa === carga.id && 'etiqueta--activa',
             )}
-            style={{ left: `${etiqueta.x}%`, top: `${etiqueta.y}%`, '--giro': `${etiqueta.giro}deg` } as CSSProperties}
-            onClick={() => elegir(etiqueta.id)}
-            aria-pressed={activa === etiqueta.id}
+            style={{ left: `${carga.x}%`, top: `${carga.y}%`, '--giro': `${carga.giro}deg` } as CSSProperties}
+            onClick={() => elegir(carga.id)}
+            aria-pressed={activa === carga.id}
           >
-            {etiqueta.texto}
+            {carga.etiqueta}
           </button>
         ))}
+        <button
+          className={clases('carta-del-bolsillo', activa === BOLSILLO && 'carta-del-bolsillo--activa')}
+          onClick={() => elegir(BOLSILLO)}
+          aria-pressed={activa === BOLSILLO}
+          aria-label={`Bolsillo secreto${sinLeer ? `: ${sinLeer} carta(s) sin leer` : ''}`}
+        >
+          <span aria-hidden="true">✉️</span> Bolsillo secreto
+          {sinLeer > 0 && <span className="carta-del-bolsillo__aviso">{sinLeer}</span>}
+        </button>
       </div>
 
-      <div className="tarjeta revelado" aria-live="polite">
-        <Reflexion etiqueta={etiquetas.find((e) => e.id === activa)} />
+      <p className="suave centrado">Abriste {vistas} de {cargas.length} cosas que carga tu hijo</p>
+
+      <div className="tarjeta revelado" ref={detalle}>
+        {activa === BOLSILLO ? (
+          <BolsilloSecreto cartas={cartas} />
+        ) : indiceActivo >= 0 ? (
+          <DetalleDeCarga key={activa} carga={cargas[indiceActivo]} orden={indiceActivo} />
+        ) : (
+          <p className="mano invitacion">Toca una etiqueta de la mochila…</p>
+        )}
       </div>
-      {abrioTodas && <p className="aviso-suave">✨ Abriste toda tu mochila. Reconocer lo que cargamos ya la hace más liviana.</p>}
+      {vistas === cargas.length && (
+        <p className="aviso-suave">✨ Abriste toda su mochila. Entender lo que carga ya lo hace sentir menos solo.</p>
+      )}
     </>
   )
 }
 
 export default function Mochila() {
-  const etiquetas = useContenido('etiquetas')
+  const cargas = useContenido('cargas')
   return (
     <main>
-      <Encabezado titulo="Mi mochila" icono="bag" />
+      <Encabezado titulo="La mochila de tu hijo" icono="bag" />
       <div className="contenedor">
         <p className="entrada">
-          Todos llevamos una mochila. Esta es la tuya ahora. Toca cada tema para ver cómo influye en tu forma de acompañar.
+          Tu hijo carga cosas que no siempre te cuenta. Toca cada etiqueta para entender qué le pasa, practicar qué decirle y llevarte un reto de 10 minutos.
+          {' '}<b>7 de 16 familias del colegio nos dijeron que su hijo necesita más tiempo con ellas</b>: diez minutos de verdad ya son un buen comienzo.
         </p>
-        {etiquetas ? <MochilaInteractiva etiquetas={etiquetas} /> : <Cargando />}
+        {cargas ? <MochilaInteractiva cargas={cargas} /> : <Cargando />}
       </div>
     </main>
   )

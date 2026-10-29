@@ -23,7 +23,7 @@ export const politicaDePrivacidad: SeccionDePolitica[] = [
     parrafos: ['Para que la app recuerde tu avance, guardamos algunos datos únicamente en tu teléfono. Nadie más los ve, ni siquiera el colegio:'],
     puntos: [
       'Las habitaciones que visitaste hoy.',
-      'Tus etiquetas de "Mi mochila", tu resultado en "Ponte en mis zapatos" y los retos que cumpliste, con tus notas.',
+      'Lo que abriste en "La mochila de tu hijo", las cartas del bolsillo secreto, tu resultado en "Ponte en mis zapatos" y los retos que cumpliste, con tus notas.',
       'El apodo que elegiste para el foro (por ejemplo, "Mamá · 3.° de secundaria") y los votos que diste.',
       'Si ya viste el video de bienvenida.',
     ],

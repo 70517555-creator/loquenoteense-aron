@@ -8,7 +8,7 @@ export interface Habitacion {
 
 export const habitaciones: Habitacion[] = [
   { id: 'explorar', titulo: 'Explorar situaciones', ruta: '/explorar', icono: 'people', frase: 'Dos miradas, una misma casa' },
-  { id: 'mochila', titulo: 'Mi mochila', ruta: '/mochila', icono: 'bag', frase: 'Lo que cargamos sin darnos cuenta' },
+  { id: 'mochila', titulo: 'La mochila de tu hijo', ruta: '/mochila', icono: 'bag', frase: 'Lo que carga y no te cuenta' },
   { id: 'zapatos', titulo: 'Ponte en mis zapatos', ruta: '/zapatos', icono: 'shoe', frase: '¿Tú qué harías?' },
   { id: 'voces', titulo: 'Voces reales', ruta: '/voces', icono: 'chat', frase: 'Lo que dicen nuestros estudiantes' },
   { id: 'retos', titulo: 'Retos en familia', ruta: '/retos', icono: 'trophy', frase: 'Pequeños pasos, grandes cambios' },

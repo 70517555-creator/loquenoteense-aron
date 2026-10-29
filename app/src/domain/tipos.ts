@@ -1,12 +1,32 @@
-export interface Etiqueta {
-  id: string
+export interface RespuestaPosible {
   texto: string
+  reaccion: string
+  abre: boolean
+}
+
+export interface CargaDelHijo {
+  id: string
+  etiqueta: string
+  titulo: string
   color: 'crema' | 'rosa' | 'verde'
   x: number
   y: number
   giro: number
-  reflexion: string
-  pregunta: string
+  voz: string
+  loQuePasa: string
+  dato: string
+  situacion: { frase: string; respuestas: RespuestaPosible[] }
+  evita: string[]
+  prueba: string[]
+  reto: string
+}
+
+export interface Carta {
+  id: string
+  de: 'hijo' | 'familia'
+  texto: string
+  fecha: string
+  leida: boolean
 }
 
 export interface DatoReal {
