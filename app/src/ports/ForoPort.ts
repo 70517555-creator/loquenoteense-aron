@@ -39,6 +39,7 @@ export interface PanelDePsicologiaPort {
   ocultarReportado(reporte: Reporte): Promise<void>
   resumen(hoy: string): Promise<ResumenDelForo>
   resultadosDeCasa(): Promise<Record<string, ConteoDeCasa>>
+  reiniciarResultadosDeCasa(): Promise<void>
   publicados(): Promise<Comentario[]>
   equipo(): Promise<Psicologo[]>
   agregarAlEquipo(psicologo: Psicologo): Promise<void>

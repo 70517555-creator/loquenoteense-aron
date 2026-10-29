@@ -147,6 +147,15 @@ export const firestorePanel: PanelDePsicologiaPort = {
     return Object.fromEntries(encuesta.docs.map((d) => [d.id, aConteoDeCasa(d)]))
   },
 
+  async reiniciarResultadosDeCasa() {
+    const encuesta = await getDocs(collection(db, RUTAS.encuesta))
+    const votos = await Promise.all(encuesta.docs.map((d) => getDocs(collection(d.ref, RUTAS.votos))))
+    const lote = writeBatch(db)
+    votos.flatMap((v) => v.docs).forEach((v) => lote.delete(v.ref))
+    encuesta.docs.forEach((d) => lote.delete(d.ref))
+    await lote.commit()
+  },
+
   async publicados() {
     const publicados = await getDocs(query(collectionGroup(db, 'comentarios'), where('estado', '==', 'aprobado')))
     return publicados.docs.map((d) => aComentario(d)).sort(masRecientePrimero)

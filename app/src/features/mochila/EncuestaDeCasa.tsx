@@ -12,7 +12,8 @@ function Resultado({ conteo, miRespuesta }: { conteo: ConteoDeCasa; miRespuesta:
   if (total < MINIMO_PARA_PORCENTAJE) {
     return (
       <p className="encuesta__nota">
-        💛 Gracias. Eres de las primeras <b>{total}</b> familias en responder. Cuando seamos más, aquí verás lo que se vive en las casas del colegio.
+        💛 Gracias. {total === 1 ? <>Eres la <b>primera familia</b> en responder.</> : <>Eres de las primeras <b>{total}</b> familias en responder.</>}
+        {' '}Cuando seamos más, aquí verás lo que se vive en las casas del colegio.
       </p>
     )
   }

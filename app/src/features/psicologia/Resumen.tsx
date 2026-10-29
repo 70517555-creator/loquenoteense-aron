@@ -3,6 +3,7 @@ import { useServicios } from '../../app/servicios'
 import { cargas } from '../../content/cargas'
 import type { ResumenDelForo } from '../../domain/foro'
 import { lesPasa, totalDe } from '../../domain/mochila'
+import { useAccion } from '../../hooks/useAccion'
 import { useConsulta } from '../../hooks/useConsulta'
 import { Cargando } from '../../ui/Cargando'
 import { porcentaje } from '../../utils/listas'
@@ -20,8 +21,14 @@ const INDICADORES: { clave: keyof ResumenDelForo; texto: string; emoji: string }
 
 function LoQueSeViveEnCasa() {
   const { panel } = useServicios()
-  const { datos } = useConsulta(useCallback(() => panel.resultadosDeCasa(), [panel]))
+  const { datos, recargar } = useConsulta(useCallback(() => panel.resultadosDeCasa(), [panel]))
+  const { ocupado, error, ejecutar } = useAccion()
   if (!datos) return null
+
+  const reiniciar = async () => {
+    if (!confirm('¿Borrar todas las respuestas de "¿Esto te pasa en casa?"? Úsalo solo para limpiar las pruebas antes del lanzamiento.')) return
+    if (await ejecutar(() => panel.reiniciarResultadosDeCasa())) recargar()
+  }
   const filas = cargas
     .map((c) => ({ titulo: c.titulo, conteo: datos[c.id] }))
     .filter((f) => f.conteo && totalDe(f.conteo) > 0)
@@ -46,6 +53,10 @@ function LoQueSeViveEnCasa() {
         </ul>
       ) : (
         <p className="suave">Aún no hay respuestas de las familias.</p>
+      )}
+      {error && <p className="aviso-suave">{error}</p>}
+      {filas.length > 0 && (
+        <button className="enlace-discreto" disabled={ocupado} onClick={reiniciar}>Reiniciar resultados (borrar pruebas)</button>
       )}
     </div>
   )

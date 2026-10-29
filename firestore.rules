@@ -207,9 +207,11 @@ service cloud.firestore {
     match /encuesta/{carga} {
       allow read: if true;
       allow create, update: if carga.matches('^[a-z-]{1,30}$') && sumaUnaRespuesta(carga);
+      allow delete: if esCoordinador();
 
       match /votos/{uid} {
         allow get: if conSesion() && uid == request.auth.uid;
+        allow list, delete: if esCoordinador();
         allow create: if conSesion() && uid == request.auth.uid
           && nuevo().keys().hasOnly(['respuesta', 'creadoEn'])
           && nuevo().respuesta in ['si', 'aveces', 'no']
