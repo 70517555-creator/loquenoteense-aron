@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useServicios } from '../../app/servicios'
 import { config } from '../../config'
-import { normasDelForo, politicaDePrivacidad, type SeccionDePolitica } from '../../content/politicas'
+import { normasDeLasCartas, normasDelForo, politicaDePrivacidad, type SeccionDePolitica } from '../../content/politicas'
 import { Encabezado } from '../../ui/Encabezado'
 
 function Seccion({ seccion }: { seccion: SeccionDePolitica }) {
@@ -81,6 +81,12 @@ export default function Privacidad() {
           <h2 className="titulo-tarjeta">Normas del foro "Entre padres"</h2>
           <ol>
             {normasDelForo.map((norma) => <li key={norma}>{norma}</li>)}
+          </ol>
+        </section>
+        <section className="tarjeta politica__normas" id="normas-de-las-cartas">
+          <h2 className="titulo-tarjeta">Normas para las cartas de estudiantes</h2>
+          <ol>
+            {normasDeLasCartas.map((norma) => <li key={norma}>{norma}</li>)}
           </ol>
         </section>
         <BorrarMisDatos />

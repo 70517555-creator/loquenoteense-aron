@@ -4,6 +4,7 @@ export const CLAVES_DE_PROGRESO = {
   frasePortada: 'frase-portada',
   cargasAbiertas: 'mochila-hijo',
   cartasDelBolsillo: 'mochila-cartas',
+  retosDeLaMochila: 'mochila-retos',
   mejorResultadoZapatos: 'zapatos-mejor',
   retosCumplidos: 'retos-cumplidos',
   pasosDeRetos: 'retos-pasos',

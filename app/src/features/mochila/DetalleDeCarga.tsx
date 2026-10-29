@@ -1,8 +1,12 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { FUENTE_DE_LOS_DATOS } from '../../content/cargas'
 import type { CargaDelHijo, RespuestaPosible } from '../../domain/tipos'
 import { clases } from '../../utils/clases'
 import { rotar } from '../../utils/listas'
+import { CartasDeEstudiantes } from './CartasDeEstudiantes'
+import { EncuestaDeCasa } from './EncuestaDeCasa'
+import { RetoDeHoy } from './RetoDeHoy'
 
 function estadoDeRespuesta(respuesta: RespuestaPosible, elegida?: RespuestaPosible) {
   if (!elegida) return undefined
@@ -77,10 +81,12 @@ export function DetalleDeCarga({ carga, orden }: { carga: CargaDelHijo; orden: n
         </div>
       </section>
 
-      <div className="pregunta-guia carga__reto">
-        <span>⏱️ Reto de 10 minutos para hoy</span>
-        <p>{carga.reto}</p>
-      </div>
+      <RetoDeHoy carga={carga.id} reto={carga.reto} />
+
+      <EncuestaDeCasa carga={carga.id} />
+      <CartasDeEstudiantes carga={carga.id} />
+
+      <Link className="boton boton--borde carga__foro" to="/foro">💬 Conversa con otras familias en el foro</Link>
     </article>
   )
 }

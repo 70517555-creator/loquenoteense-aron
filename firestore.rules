@@ -74,6 +74,32 @@ service cloud.firestore {
       return resource.data.estado == 'aprobado' || esAutor(resource.data) || esPsicologo();
     }
 
+    function anterior(campo) {
+      return resource == null ? 0 : resource.data.get(campo, 0);
+    }
+
+    function sube(campo) {
+      return nuevo().get(campo, 0) == anterior(campo) + 1;
+    }
+
+    function igual(campo) {
+      return nuevo().get(campo, 0) == anterior(campo);
+    }
+
+    function sumaUnaRespuesta(carga) {
+      let voto = /databases/$(database)/documents/encuesta/$(carga)/votos/$(request.auth.uid);
+      let respuesta = getAfter(voto).data.respuesta;
+      return conSesion()
+        && nuevo().keys().hasOnly(['si', 'aveces', 'no'])
+        && !exists(voto)
+        && existsAfter(voto)
+        && (
+          (respuesta == 'si' && sube('si') && igual('aveces') && igual('no'))
+          || (respuesta == 'aveces' && sube('aveces') && igual('si') && igual('no'))
+          || (respuesta == 'no' && sube('no') && igual('si') && igual('aveces'))
+        );
+    }
+
     match /psicologos/{correo} {
       allow get: if conSesion() && request.auth.token.email.lower() == correo;
       allow list: if esPsicologo();
@@ -149,6 +175,45 @@ service cloud.firestore {
       match /votos/{uid} {
         allow get: if conSesion() && uid == request.auth.uid;
         allow create: if votoValido(uid);
+      }
+    }
+
+    match /cartas/{id} {
+      allow read: if puedeLeerPublicacion();
+
+      allow create: if conSesion()
+        && nuevo().keys().hasOnly(['carga', 'texto', 'nivel', 'urgente', 'autorUid', 'estado', 'meHizoPensar', 'creadoEn', 'politica'])
+        && textoValido(nuevo().texto, 800)
+        && textoValido(nuevo().carga, 30)
+        && textoValido(nuevo().nivel, 40)
+        && nuevo().urgente is bool
+        && nuevo().autorUid == request.auth.uid
+        && nuevo().estado == 'pendiente'
+        && nuevo().meHizoPensar == 0
+        && aceptoLaPolitica()
+        && nuevo().creadoEn == request.time;
+
+      allow update: if (esPsicologo() && soloCambia(['estado', 'motivoRechazo']) && nuevo().estado in ['aprobado', 'rechazado'])
+        || sumaUnVoto('meHizoPensar', /databases/$(database)/documents/cartas/$(id)/votos/$(request.auth.uid));
+
+      allow delete: if esPsicologo();
+
+      match /votos/{uid} {
+        allow get: if conSesion() && uid == request.auth.uid;
+        allow create: if votoValido(uid);
+      }
+    }
+
+    match /encuesta/{carga} {
+      allow read: if true;
+      allow create, update: if carga.matches('^[a-z-]{1,30}$') && sumaUnaRespuesta(carga);
+
+      match /votos/{uid} {
+        allow get: if conSesion() && uid == request.auth.uid;
+        allow create: if conSesion() && uid == request.auth.uid
+          && nuevo().keys().hasOnly(['respuesta', 'creadoEn'])
+          && nuevo().respuesta in ['si', 'aveces', 'no']
+          && nuevo().creadoEn == request.time;
       }
     }
 

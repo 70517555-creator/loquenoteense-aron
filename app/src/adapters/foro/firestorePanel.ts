@@ -6,12 +6,12 @@ import {
 import { config } from '../../config'
 import { MOTIVO_AL_RETIRAR, masAntiguoPrimero, masRecientePrimero, type Comentario, type Decision } from '../../domain/foro'
 import type { PanelDePsicologiaPort } from '../../ports/ForoPort'
-import { aComentario, aPropuesta, aPsicologo, aReporte, aTema } from './conversores'
+import { aCartaDeEstudiante, aComentario, aConteoDeCasa, aPropuesta, aPsicologo, aReporte, aTema } from './conversores'
 import { auth, db, RUTAS, usuarioActual } from './firebase'
 
 const proveedorGoogle = new GoogleAuthProvider()
 
-const urgentesPrimero = (a: Comentario, b: Comentario) => Number(b.urgente) - Number(a.urgente) || masAntiguoPrimero(a, b)
+const urgentesPrimero = <T extends { urgente: boolean; creadoEn: Date }>(a: T, b: T) => Number(b.urgente) - Number(a.urgente) || masAntiguoPrimero(a, b)
 
 const cambiosDeModeracion = (decision: Decision, motivo?: string) =>
   decision === 'rechazado' ? { estado: decision, motivoRechazo: motivo } : { estado: decision }
@@ -55,13 +55,15 @@ export const firestorePanel: PanelDePsicologiaPort = {
   salir: () => signOut(auth),
 
   async pendientes() {
-    const [comentarios, propuestas] = await Promise.all([
+    const [comentarios, propuestas, cartas] = await Promise.all([
       getDocs(query(collectionGroup(db, 'comentarios'), where('estado', '==', 'pendiente'))),
       getDocs(query(collection(db, RUTAS.propuestas), where('estado', '==', 'pendiente'))),
+      getDocs(query(collection(db, RUTAS.cartas), where('estado', '==', 'pendiente'))),
     ])
     return {
       comentarios: comentarios.docs.map((d) => aComentario(d)).sort(urgentesPrimero),
       propuestas: propuestas.docs.map((d) => aPropuesta(d)).sort(masAntiguoPrimero),
+      cartas: cartas.docs.map((d) => aCartaDeEstudiante(d)).sort(urgentesPrimero),
     }
   },
 
@@ -69,6 +71,8 @@ export const firestorePanel: PanelDePsicologiaPort = {
 
   moderarPropuesta: (propuesta, decision, motivo) =>
     updateDoc(doc(db, RUTAS.propuestas, propuesta.id), cambiosDeModeracion(decision, motivo)),
+
+  moderarCarta: (carta, decision, motivo) => updateDoc(doc(db, RUTAS.cartas, carta.id), cambiosDeModeracion(decision, motivo)),
 
   async responder(comentario, texto, nombre) {
     const usuario = await usuarioActual()
@@ -126,15 +130,21 @@ export const firestorePanel: PanelDePsicologiaPort = {
 
   async resumen(hoy) {
     const comentarios = collectionGroup(db, 'comentarios')
-    const [publicados, pendientes, propuestas, reportes, temasProgramados, equipo] = await Promise.all([
+    const [publicados, pendientes, propuestas, reportes, temasProgramados, equipo, cartas] = await Promise.all([
       contar(query(comentarios, where('estado', '==', 'aprobado'))),
       contar(query(comentarios, where('estado', '==', 'pendiente'))),
       contar(collection(db, RUTAS.propuestas)),
       contar(collection(db, RUTAS.reportes)),
       contar(query(collection(db, RUTAS.temas), where('fecha', '>=', hoy))),
       contar(collection(db, RUTAS.psicologos)),
+      contar(collection(db, RUTAS.cartas)),
     ])
-    return { publicados, pendientes, propuestas, reportes, temasProgramados, equipo }
+    return { publicados, pendientes, propuestas, reportes, temasProgramados, equipo, cartas }
+  },
+
+  async resultadosDeCasa() {
+    const encuesta = await getDocs(collection(db, RUTAS.encuesta))
+    return Object.fromEntries(encuesta.docs.map((d) => [d.id, aConteoDeCasa(d)]))
   },
 
   async publicados() {

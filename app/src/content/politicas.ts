@@ -49,6 +49,27 @@ export const politicaDePrivacidad: SeccionDePolitica[] = [
     ],
   },
   {
+    id: 'mochila',
+    titulo: 'La mochila de tu hijo',
+    puntos: [
+      'Cuando respondes "¿Esto te pasa en casa?", guardamos solo tu respuesta (sí, a veces o no) junto al código anónimo de tu celular, para que respondas una sola vez. Los resultados se muestran sumados, nunca uno por uno.',
+      'Las cartas del "bolsillo secreto" se quedan solo en tu celular: no se envían a nadie.',
+    ],
+  },
+  {
+    id: 'cartas-de-estudiantes',
+    titulo: 'Las cartas de los estudiantes',
+    parrafos: [
+      'Los estudiantes de secundaria (y de 6.° de primaria) pueden escribir cartas anónimas para las familias, como parte de una actividad de tutoría autorizada por el colegio.',
+    ],
+    puntos: [
+      'No pedimos nombre, grado, sección ni ningún dato personal: solo el nivel (secundaria o 6.° de primaria), el tema y el texto de la carta.',
+      'El equipo de psicología lee cada carta antes de publicarla. Si tiene nombres o datos que permitan reconocer a alguien, no se publica.',
+      'Si una carta muestra señales de riesgo, el celular del estudiante le muestra de inmediato las líneas de ayuda y lo invita a acercarse a psicología del colegio.',
+      'Las familias solo pueden leer las cartas y marcar "Me hizo pensar". No pueden responderlas ni saber quién las escribió.',
+    ],
+  },
+  {
     id: 'equipo',
     titulo: 'El equipo de psicología',
     parrafos: [
@@ -82,6 +103,7 @@ export const politicaDePrivacidad: SeccionDePolitica[] = [
     puntos: [
       'Lo que está en tu celular se queda ahí hasta que lo borres (con el botón de abajo o borrando los datos del navegador).',
       'Los comentarios del foro se guardan mientras el foro esté activo. Psicología puede retirar los que ya no sean necesarios.',
+      'Las cartas de los estudiantes se guardan mientras la actividad esté activa. Psicología puede retirarlas en cualquier momento.',
       'Los reportes se eliminan cuando psicología los revisa.',
     ],
   },
@@ -106,6 +128,13 @@ export const politicaDePrivacidad: SeccionDePolitica[] = [
     titulo: 'Cambios en esta política',
     parrafos: ['Si cambiamos algo importante, lo avisaremos en la app. Última actualización: ' + FECHA_DE_ACTUALIZACION + '.'],
   },
+]
+
+export const normasDeLasCartas: string[] = [
+  'No escribas tu nombre ni el de otras personas (compañeros, profesores o familiares).',
+  'No pongas tu grado, sección, teléfono ni redes sociales.',
+  'Escribe con respeto: puedes contar lo que te duele sin insultar a nadie.',
+  'Si estás en peligro, no esperes: habla hoy con un adulto de confianza o con psicología del colegio, o llama a la Línea 113 (opción 5) o a la Línea 100.',
 ]
 
 export const normasDelForo: string[] = [

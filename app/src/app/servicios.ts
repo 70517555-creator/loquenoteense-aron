@@ -9,6 +9,7 @@ import { perezoso } from '../utils/perezoso'
 import type { AssistantPort } from '../ports/AssistantPort'
 import type { ContentRepository } from '../ports/ContentRepository'
 import type { ForoPort, PanelDePsicologiaPort } from '../ports/ForoPort'
+import type { MochilaPort } from '../ports/MochilaPort'
 import type { ProgressStore } from '../ports/ProgressStore'
 
 export interface Servicios {
@@ -17,6 +18,7 @@ export interface Servicios {
   progreso: ProgressStore
   foro: ForoPort
   panel: PanelDePsicologiaPort
+  mochila: MochilaPort
   conIA: boolean
 }
 
@@ -31,6 +33,7 @@ export const servicios: Servicios = {
   progreso: localProgressStore,
   foro: perezoso(() => import('../adapters/foro/firestoreForo').then((m) => m.firestoreForo)),
   panel: perezoso(() => import('../adapters/foro/firestorePanel').then((m) => m.firestorePanel)),
+  mochila: perezoso(() => import('../adapters/foro/firestoreMochila').then((m) => m.firestoreMochila)),
   conIA: Boolean(config.urlAsistente),
 }
 

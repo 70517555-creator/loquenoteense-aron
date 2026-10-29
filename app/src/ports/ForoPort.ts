@@ -1,6 +1,7 @@
 import type {
   Comentario, Decision, NuevoComentario, Propuesta, Psicologo, Reporte, ResumenDelForo, TemaDelDia,
 } from '../domain/foro'
+import type { CartaDeEstudiante, ConteoDeCasa } from '../domain/mochila'
 
 export interface ForoPort {
   temaDeLaFecha(fecha: string): Promise<TemaDelDia | null>
@@ -17,6 +18,7 @@ export interface ForoPort {
 export interface Pendientes {
   comentarios: Comentario[]
   propuestas: Propuesta[]
+  cartas: CartaDeEstudiante[]
 }
 
 export interface PanelDePsicologiaPort {
@@ -26,6 +28,7 @@ export interface PanelDePsicologiaPort {
   pendientes(): Promise<Pendientes>
   moderarComentario(comentario: Comentario, decision: Decision, motivo?: string): Promise<void>
   moderarPropuesta(propuesta: Propuesta, decision: Decision, motivo?: string): Promise<void>
+  moderarCarta(carta: CartaDeEstudiante, decision: Decision, motivo?: string): Promise<void>
   responder(comentario: Comentario, texto: string, nombre: string): Promise<void>
   propuestasAprobadas(): Promise<Propuesta[]>
   temasProgramados(desde: string): Promise<TemaDelDia[]>
@@ -35,6 +38,7 @@ export interface PanelDePsicologiaPort {
   resolverReporte(reporte: Reporte): Promise<void>
   ocultarReportado(reporte: Reporte): Promise<void>
   resumen(hoy: string): Promise<ResumenDelForo>
+  resultadosDeCasa(): Promise<Record<string, ConteoDeCasa>>
   publicados(): Promise<Comentario[]>
   equipo(): Promise<Psicologo[]>
   agregarAlEquipo(psicologo: Psicologo): Promise<void>

@@ -1,4 +1,5 @@
 import { Timestamp, type DocumentSnapshot } from 'firebase/firestore'
+import type { CartaDeEstudiante, ConteoDeCasa } from '../../domain/mochila'
 import type { Comentario, Propuesta, Psicologo, Reporte, TemaDelDia } from '../../domain/foro'
 
 const fecha = (valor: unknown) => (valor instanceof Timestamp ? valor.toDate() : new Date())
@@ -50,6 +51,25 @@ export const aPsicologo = (d: DocumentSnapshot): Psicologo => ({
   correo: d.id,
   nombre: d.get('nombre'),
   coordinador: Boolean(d.get('coordinador')),
+})
+
+export const aCartaDeEstudiante = (d: DocumentSnapshot, uid?: string): CartaDeEstudiante => ({
+  id: d.id,
+  carga: d.get('carga'),
+  texto: d.get('texto'),
+  nivel: d.get('nivel') ?? '',
+  estado: d.get('estado'),
+  urgente: Boolean(d.get('urgente')),
+  meHizoPensar: d.get('meHizoPensar') ?? 0,
+  creadoEn: fecha(d.get('creadoEn')),
+  esMia: d.get('autorUid') === uid,
+  motivoRechazo: d.get('motivoRechazo'),
+})
+
+export const aConteoDeCasa = (d: DocumentSnapshot): ConteoDeCasa => ({
+  si: d.get('si') ?? 0,
+  aveces: d.get('aveces') ?? 0,
+  no: d.get('no') ?? 0,
 })
 
 export const sinRepetir = <T extends { id: string }>(lista: T[]) => [...new Map(lista.map((x) => [x.id, x])).values()]

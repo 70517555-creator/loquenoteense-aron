@@ -58,6 +58,7 @@ export interface ResumenDelForo {
   reportes: number
   temasProgramados: number
   equipo: number
+  cartas: number
 }
 
 export interface NuevoComentario {

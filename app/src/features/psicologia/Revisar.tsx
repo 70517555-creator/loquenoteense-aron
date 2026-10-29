@@ -1,6 +1,8 @@
 import { useCallback, useState, type ReactNode } from 'react'
 import { useServicios } from '../../app/servicios'
+import { tituloDeCarga } from '../../content/cargas'
 import { MOTIVOS_DE_RECHAZO, type Comentario, type Decision, type Propuesta, type Psicologo } from '../../domain/foro'
+import { MOTIVOS_DE_RECHAZO_DE_CARTA, type CartaDeEstudiante } from '../../domain/mochila'
 import { useAccion } from '../../hooks/useAccion'
 import { useConsulta } from '../../hooks/useConsulta'
 import { Cargando } from '../../ui/Cargando'
@@ -8,18 +10,19 @@ import { clases } from '../../utils/clases'
 
 interface PropsDeModeracion {
   ocupado: boolean
+  motivos?: string[]
   onDecidir: (decision: Decision, motivo?: string) => void
   children?: ReactNode
 }
 
-function BotonesDeModeracion({ ocupado, onDecidir, children }: PropsDeModeracion) {
+function BotonesDeModeracion({ ocupado, motivos = MOTIVOS_DE_RECHAZO, onDecidir, children }: PropsDeModeracion) {
   const [rechazando, setRechazando] = useState(false)
 
   if (rechazando) {
     return (
       <div className="moderacion">
         <small className="suave">Motivo (lo verá quien escribió):</small>
-        {MOTIVOS_DE_RECHAZO.map((motivo) => (
+        {motivos.map((motivo) => (
           <button key={motivo} className="ficha" disabled={ocupado} onClick={() => onDecidir('rechazado', motivo)}>
             {motivo}
           </button>
@@ -99,13 +102,33 @@ function PropuestaPorRevisar({ propuesta, onListo }: { propuesta: Propuesta; onL
   )
 }
 
+function CartaPorRevisar({ carta, onListo }: { carta: CartaDeEstudiante; onListo: () => void }) {
+  const { panel } = useServicios()
+  const { ocupado, error, ejecutar } = useAccion()
+
+  const decidir = async (decision: Decision, motivo?: string) => {
+    if (await ejecutar(() => panel.moderarCarta(carta, decision, motivo))) onListo()
+  }
+
+  return (
+    <li className={clases('tarjeta', 'por-revisar', carta.urgente && 'por-revisar--urgente')}>
+      {carta.urgente && <span className="insignia insignia--urgente">⚠️ Posible riesgo: el estudiante vio las líneas de ayuda</span>}
+      <small className="suave">✉️ Carta de estudiante · {carta.nivel} · tema: {tituloDeCarga(carta.carga)}</small>
+      <p className="comentario__texto">{carta.texto}</p>
+      <small className="suave">Revisa que no tenga nombres, grados, secciones ni datos que permitan reconocer a alguien.</small>
+      {error && <p className="aviso-suave">{error}</p>}
+      <BotonesDeModeracion ocupado={ocupado} motivos={MOTIVOS_DE_RECHAZO_DE_CARTA} onDecidir={decidir} />
+    </li>
+  )
+}
+
 export function Revisar({ psicologo }: { psicologo: Psicologo }) {
   const { panel } = useServicios()
   const { datos, cargando, fallo, recargar } = useConsulta(useCallback(() => panel.pendientes(), [panel]))
 
   if (fallo) return <p className="aviso-suave">No pudimos cargar los pendientes.</p>
   if (cargando && !datos) return <Cargando />
-  const sinPendientes = !datos?.comentarios.length && !datos?.propuestas.length
+  const sinPendientes = !datos?.comentarios.length && !datos?.propuestas.length && !datos?.cartas.length
 
   return (
     <section className="conversacion">
@@ -113,6 +136,7 @@ export function Revisar({ psicologo }: { psicologo: Psicologo }) {
       {sinPendientes && <p className="suave centrado">🎉 No hay nada por revisar.</p>}
       <ul className="lista-panel">
         {datos?.comentarios.map((c) => <ComentarioPorRevisar key={c.id} comentario={c} psicologo={psicologo} onListo={recargar} />)}
+        {datos?.cartas.map((c) => <CartaPorRevisar key={c.id} carta={c} onListo={recargar} />)}
         {datos?.propuestas.map((p) => <PropuestaPorRevisar key={p.id} propuesta={p} onListo={recargar} />)}
       </ul>
     </section>

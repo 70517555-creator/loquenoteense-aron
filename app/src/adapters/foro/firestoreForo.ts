@@ -1,12 +1,11 @@
 import {
-  addDoc, collection, doc, getDoc, getDocs, increment, limit, orderBy, query, serverTimestamp, where, writeBatch,
-  type DocumentReference,
+  addDoc, collection, doc, getDoc, getDocs, limit, orderBy, query, serverTimestamp, where,
 } from 'firebase/firestore'
 import { VERSION_DE_POLITICA } from '../../content/politicas'
 import { masAntiguoPrimero } from '../../domain/foro'
 import type { ForoPort } from '../../ports/ForoPort'
 import { aComentario, aPropuesta, aTema, sinRepetir } from './conversores'
-import { db, RUTAS, uidConSesion } from './firebase'
+import { db, RUTAS, sumarUnaVez, uidConSesion } from './firebase'
 
 const MAX_TEMAS_ANTERIORES = 14
 
@@ -17,14 +16,6 @@ async function aprobadosYPropios(ruta: string, uid: string) {
     getDocs(query(coleccion, where('autorUid', '==', uid))),
   ])
   return [...aprobados.docs, ...propios.docs]
-}
-
-async function sumarUnaVez(ref: DocumentReference, campo: string) {
-  const uid = await uidConSesion()
-  const lote = writeBatch(db)
-  lote.update(ref, { [campo]: increment(1) })
-  lote.set(doc(ref, RUTAS.votos, uid), { creadoEn: serverTimestamp() })
-  await lote.commit()
 }
 
 export const firestoreForo: ForoPort = {

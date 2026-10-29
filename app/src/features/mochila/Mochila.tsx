@@ -86,7 +86,7 @@ export default function Mochila() {
       <div className="contenedor">
         <p className="entrada">
           Tu hijo carga cosas que no siempre te cuenta. Toca cada etiqueta para entender qué le pasa, practicar qué decirle y llevarte un reto de 10 minutos.
-          {' '}<b>7 de 16 familias del colegio nos dijeron que su hijo necesita más tiempo con ellas</b>: diez minutos de verdad ya son un buen comienzo.
+          {' '}<b>Casi la mitad de las familias del colegio nos dijo que lo que más necesita su hijo es más tiempo con ellas.</b> Diez minutos de verdad ya son un buen comienzo.
         </p>
         {cargas ? <MochilaInteractiva cargas={cargas} /> : <Cargando />}
       </div>

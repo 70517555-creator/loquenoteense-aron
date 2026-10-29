@@ -1,8 +1,11 @@
 import { useCallback } from 'react'
 import { useServicios } from '../../app/servicios'
+import { cargas } from '../../content/cargas'
 import type { ResumenDelForo } from '../../domain/foro'
+import { lesPasa, totalDe } from '../../domain/mochila'
 import { useConsulta } from '../../hooks/useConsulta'
 import { Cargando } from '../../ui/Cargando'
+import { porcentaje } from '../../utils/listas'
 import { fechaDeHoy } from '../../utils/tiempo'
 
 const INDICADORES: { clave: keyof ResumenDelForo; texto: string; emoji: string }[] = [
@@ -11,8 +14,42 @@ const INDICADORES: { clave: keyof ResumenDelForo; texto: string; emoji: string }
   { clave: 'propuestas', texto: 'Temas propuestos', emoji: '💡' },
   { clave: 'reportes', texto: 'Reportes sin atender', emoji: '🚩' },
   { clave: 'temasProgramados', texto: 'Temas programados', emoji: '📅' },
+  { clave: 'cartas', texto: 'Cartas de estudiantes', emoji: '✉️' },
   { clave: 'equipo', texto: 'Personas en el equipo', emoji: '👥' },
 ]
+
+function LoQueSeViveEnCasa() {
+  const { panel } = useServicios()
+  const { datos } = useConsulta(useCallback(() => panel.resultadosDeCasa(), [panel]))
+  if (!datos) return null
+  const filas = cargas
+    .map((c) => ({ titulo: c.titulo, conteo: datos[c.id] }))
+    .filter((f) => f.conteo && totalDe(f.conteo) > 0)
+    .sort((a, b) => porcentaje(lesPasa(b.conteo), totalDe(b.conteo)) - porcentaje(lesPasa(a.conteo), totalDe(a.conteo)))
+
+  return (
+    <div className="tarjeta">
+      <h3 className="carga__subtitulo">🏠 Lo que más se vive en casa (La mochila de tu hijo)</h3>
+      {filas.length ? (
+        <ul className="encuesta__barras">
+          {filas.map(({ titulo, conteo }) => {
+            const parte = Math.round(porcentaje(lesPasa(conteo), totalDe(conteo)))
+            return (
+              <li key={titulo}>
+                <span>{titulo}</span>
+                <span className="encuesta__barra"><span style={{ width: `${parte}%` }} /></span>
+                <b>{parte} %</b>
+                <small className="suave">{totalDe(conteo)} familias · sí {conteo.si} · a veces {conteo.aveces} · no {conteo.no}</small>
+              </li>
+            )
+          })}
+        </ul>
+      ) : (
+        <p className="suave">Aún no hay respuestas de las familias.</p>
+      )}
+    </div>
+  )
+}
 
 export function Resumen() {
   const { panel } = useServicios()
@@ -31,6 +68,7 @@ export function Resumen() {
           </li>
         ))}
       </ul>
+      <LoQueSeViveEnCasa />
       <button className="boton boton--fantasma" onClick={recargar}>Actualizar</button>
     </section>
   )

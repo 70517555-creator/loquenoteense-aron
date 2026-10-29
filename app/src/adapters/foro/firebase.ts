@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app'
 import { getAuth, signInAnonymously, type User } from 'firebase/auth'
-import { initializeFirestore } from 'firebase/firestore'
+import { doc, increment, initializeFirestore, serverTimestamp, writeBatch, type DocumentReference } from 'firebase/firestore'
 import { config } from '../../config'
 
 const app = initializeApp(config.firebase)
@@ -15,6 +15,8 @@ export const RUTAS = {
   reportes: 'reportes',
   psicologos: 'psicologos',
   votos: 'votos',
+  cartas: 'cartas',
+  encuesta: 'encuesta',
 } as const
 
 export async function usuarioActual(): Promise<User | null> {
@@ -29,4 +31,12 @@ export async function uidConSesion(): Promise<string> {
   if (usuario) return usuario.uid
   sesionAnonima ??= signInAnonymously(auth).then(({ user }) => user)
   return (await sesionAnonima).uid
+}
+
+export async function sumarUnaVez(ref: DocumentReference, campo: string) {
+  const uid = await uidConSesion()
+  const lote = writeBatch(db)
+  lote.update(ref, { [campo]: increment(1) })
+  lote.set(doc(ref, RUTAS.votos, uid), { creadoEn: serverTimestamp() })
+  await lote.commit()
 }

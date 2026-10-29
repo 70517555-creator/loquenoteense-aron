@@ -14,6 +14,7 @@ export const paginas = {
   asistente: lazy(() => import('../features/asistente/Asistente')),
   foro: lazy(() => import('../features/foro/Foro')),
   psicologia: lazy(() => import('../features/psicologia/Psicologia')),
+  escribe: lazy(() => import('../features/escribe/Escribe')),
   privacidad: lazy(() => import('../features/privacidad/Privacidad')),
   noEncontrado: lazy(() => import('../features/NoEncontrado')),
 }
