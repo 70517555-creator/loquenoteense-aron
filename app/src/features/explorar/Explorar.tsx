@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import type { Situacion } from '../../domain/tipos'
+import type { DatoReal, Situacion } from '../../domain/tipos'
 import { useContenido } from '../../hooks/useContenido'
 import { useSeleccionEnUrl } from '../../hooks/useSeleccionEnUrl'
 import { AnteriorSiguiente, Puntos } from '../../ui/AnteriorSiguiente'
@@ -27,6 +27,15 @@ function DosMiradas({ situacion }: { situacion: Situacion }) {
   )
 }
 
+function DatoDeContexto({ dato }: { dato: DatoReal }) {
+  return (
+    <p className="dato-real">
+      <b>📊 Dato real:</b> {dato.texto}{' '}
+      <a href={dato.enlace} target="_blank" rel="noopener noreferrer">Fuente: {dato.fuente}</a>
+    </p>
+  )
+}
+
 function LoQueHayDetras({ situacion }: { situacion: Situacion }) {
   const [revelada, setRevelada] = useState<string>()
 
@@ -37,6 +46,7 @@ function LoQueHayDetras({ situacion }: { situacion: Situacion }) {
       {revelada === situacion.id ? (
         <div className="detras" aria-live="polite">
           <p>{situacion.detras}</p>
+          {situacion.dato && <DatoDeContexto dato={situacion.dato} />}
           <p className="prueba-hoy">
             <Icono nombre="bulb" tam={20} /> <b>Prueba hoy:</b> {situacion.pruebaHoy}
           </p>

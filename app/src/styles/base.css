@@ -92,6 +92,7 @@ ul, ol { padding-left: 1.2em; }
   scroll-snap-type: x proximity;
 }
 .fichas::-webkit-scrollbar { display: none; }
+@media (min-width: 760px) { .fichas { flex-wrap: wrap; justify-content: center; overflow: visible; } }
 .ficha {
   flex: none; scroll-snap-align: start;
   min-height: 40px; padding: 0 var(--e-4);

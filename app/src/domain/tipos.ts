@@ -9,6 +9,12 @@ export interface Etiqueta {
   pregunta: string
 }
 
+export interface DatoReal {
+  texto: string
+  fuente: string
+  enlace: string
+}
+
 export interface Situacion {
   id: string
   contexto: string
@@ -16,6 +22,7 @@ export interface Situacion {
   hijo: string
   detras: string
   pruebaHoy: string
+  dato?: DatoReal
 }
 
 export interface Opcion {

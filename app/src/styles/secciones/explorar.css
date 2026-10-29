@@ -8,3 +8,5 @@
 .detras { text-align: left; animation: aparecer 0.4s var(--suave); }
 .prueba-hoy { background: var(--ambar-suave); border-radius: var(--r-m); padding: var(--e-3) var(--e-4); }
 .prueba-hoy .icono { display: inline-block; vertical-align: -4px; color: var(--rojo); }
+.dato-real { background: var(--lila); border-radius: var(--r-m); padding: var(--e-3) var(--e-4); font-size: var(--t-s); }
+.dato-real a { display: block; margin-top: var(--e-1); font-size: var(--t-xs); color: var(--tinta-suave); }
