@@ -2,17 +2,30 @@
 .mochila--liviana { transform: translateY(-6px) scale(0.98); }
 .mochila__dibujo { width: 100%; height: 100%; filter: drop-shadow(0 14px 18px rgba(40, 30, 20, 0.3)); }
 .etiqueta {
-  position: absolute; max-width: 40%;
-  padding: var(--e-2) var(--e-3); border: 0;
-  font-family: var(--f-mano); font-weight: 700; font-size: clamp(1rem, 4.2vw, 1.25rem); line-height: 1.05; text-align: left;
-  color: #3a2e28; background: #fbeecd;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
-  transition: transform 0.2s var(--suave), box-shadow 0.2s;
+  position: absolute; max-width: 38%; transform-origin: 50% -16px;
+  padding: 18px var(--e-3) var(--e-2); border: 0; border-radius: 6px 6px 10px 10px;
+  font-family: var(--f-mano); font-weight: 700; font-size: clamp(0.95rem, 4vw, 1.2rem); line-height: 1.05; text-align: left;
+  color: #3a2e28;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.35), transparent 40%), #f6e7c8;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.32), inset 0 0 0 1px rgba(120, 90, 50, 0.15);
+  transition: transform 0.25s var(--suave), box-shadow 0.2s, opacity 0.3s;
+  animation: colgar 4.5s ease-in-out infinite;
 }
+.etiqueta::before {
+  content: ''; position: absolute; top: 6px; left: 50%; translate: -50% 0; width: 8px; height: 8px; border-radius: 50%;
+  background: #1c2d4a; box-shadow: 0 0 0 2px #c9b48c;
+}
+.etiqueta::after {
+  content: ''; position: absolute; bottom: calc(100% - 10px); left: 50%; width: 2px; height: 22px; translate: -50% 0;
+  background: #e9dcc0; box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.2);
+}
+.etiqueta:nth-of-type(2n) { animation-delay: -1.6s; }
+.etiqueta:nth-of-type(3n) { animation-delay: -3s; }
 .etiqueta:hover { transform: scale(1.06); }
-.etiqueta--rosa { background: #f9d6d6; }
-.etiqueta--verde { background: #dff0d4; }
-.etiqueta--vista { opacity: 0.75; }
-.etiqueta--activa { opacity: 1; transform: scale(1.08); box-shadow: 0 0 0 3px var(--rojo), 0 8px 18px rgba(0, 0, 0, 0.3); }
+.etiqueta--rosa { background-color: #f6d3cf; }
+.etiqueta--verde { background-color: #d9ecd0; }
+.etiqueta--vista { opacity: 0.8; }
+.etiqueta--activa { opacity: 1; transform: scale(1.08); box-shadow: 0 0 0 3px var(--rojo), 0 10px 20px rgba(0, 0, 0, 0.35); animation: none; }
+@keyframes colgar { 0%, 100% { rotate: var(--giro, 0deg); } 50% { rotate: calc(var(--giro, 0deg) + 3deg); } }
 .revelado { min-height: 150px; }
 .pregunta-guia { background: var(--lila); border-radius: var(--r-m); padding: var(--e-3) var(--e-4); margin: var(--e-3) 0 0; font-weight: 700; }
