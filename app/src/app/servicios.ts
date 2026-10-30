@@ -3,11 +3,13 @@ import { localAssistant } from '../adapters/assistant/localAssistant'
 import { crearRemoteAssistant } from '../adapters/assistant/remoteAssistant'
 import { crearResilientAssistant } from '../adapters/assistant/resilientAssistant'
 import { localContentRepository } from '../adapters/content/localContentRepository'
+import { firestoreRest } from '../adapters/estadisticas/firestoreRest'
 import { localProgressStore } from '../adapters/progress/localProgressStore'
 import { config } from '../config'
 import { perezoso } from '../utils/perezoso'
 import type { AssistantPort } from '../ports/AssistantPort'
 import type { ContentRepository } from '../ports/ContentRepository'
+import type { EstadisticasPort } from '../ports/EstadisticasPort'
 import type { ForoPort, PanelDePsicologiaPort } from '../ports/ForoPort'
 import type { MochilaPort } from '../ports/MochilaPort'
 import type { ProgressStore } from '../ports/ProgressStore'
@@ -19,6 +21,7 @@ export interface Servicios {
   foro: ForoPort
   panel: PanelDePsicologiaPort
   mochila: MochilaPort
+  estadisticas: EstadisticasPort
   conIA: boolean
 }
 
@@ -34,6 +37,7 @@ export const servicios: Servicios = {
   foro: perezoso(() => import('../adapters/foro/firestoreForo').then((m) => m.firestoreForo)),
   panel: perezoso(() => import('../adapters/foro/firestorePanel').then((m) => m.firestorePanel)),
   mochila: perezoso(() => import('../adapters/foro/firestoreMochila').then((m) => m.firestoreMochila)),
+  estadisticas: firestoreRest,
   conIA: Boolean(config.urlAsistente),
 }
 

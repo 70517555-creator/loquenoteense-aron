@@ -6,6 +6,7 @@ import { lesPasa, totalDe } from '../../domain/mochila'
 import { useAccion } from '../../hooks/useAccion'
 import { useConsulta } from '../../hooks/useConsulta'
 import { Cargando } from '../../ui/Cargando'
+import { Visitas } from './Visitas'
 import { porcentaje } from '../../utils/listas'
 import { fechaDeHoy } from '../../utils/tiempo'
 
@@ -79,6 +80,7 @@ export function Resumen() {
           </li>
         ))}
       </ul>
+      <Visitas />
       <LoQueSeViveEnCasa />
       <button className="boton boton--fantasma" onClick={recargar}>Actualizar</button>
     </section>

@@ -6,3 +6,4 @@
 .politica__borrar, .politica__contacto { display: grid; gap: var(--e-1); }
 .politica__borrar .boton { justify-self: start; }
 .casa__privacidad { display: inline-block; margin-top: var(--e-3); font-size: var(--t-xs); color: var(--texto-cielo); opacity: 0.75; }
+.casa__visitas { display: inline-block; margin: var(--e-3) 0 0 var(--e-3); font-size: var(--t-xs); color: var(--texto-cielo); opacity: 0.75; }

@@ -7,6 +7,7 @@ import { Icono } from '../../ui/Icono'
 import { Logo } from '../../ui/Logo'
 import { PARAMETRO_ABRIR_VIDEO } from '../inicio/useVideoDeBienvenida'
 import { videoDeBienvenida } from '../inicio/youtube'
+import { ContadorDeVisitas } from './ContadorDeVisitas'
 import { Cielo } from './paisaje/Cielo'
 import { Suelo } from './paisaje/Suelo'
 import { Balcon, Ventana, VentanaDelAtico } from './Ventana'
@@ -36,6 +37,7 @@ function Bienvenida({ momento, saludo, recorridas }: { momento: Momento; saludo:
       </p>
       <BarraDeProgreso avance={recorridas} total={habitaciones.length} />
       <Link to="/privacidad" className="casa__privacidad">Privacidad y normas</Link>
+      <ContadorDeVisitas />
     </header>
   )
 }

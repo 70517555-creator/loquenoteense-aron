@@ -1,5 +1,7 @@
 export const CLAVES_DE_PROGRESO = {
   visitasDelDia: 'visitas-del-dia',
+  visitaContada: 'visita-contada',
+  yaVisito: 'ya-visito',
   videoVisto: 'video-visto',
   frasePortada: 'frase-portada',
   cargasAbiertas: 'mochila-hijo',

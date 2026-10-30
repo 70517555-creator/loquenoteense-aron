@@ -219,6 +219,15 @@ service cloud.firestore {
       }
     }
 
+    match /visitas/{id} {
+      allow get: if true;
+      allow create: if id.matches('^(total|dispositivos|dia-[0-9]{4}-[0-9]{2}-[0-9]{2})$')
+        && nuevo().keys().hasOnly(['cuenta'])
+        && nuevo().cuenta == 1;
+      allow update: if nuevo().keys().hasOnly(['cuenta'])
+        && nuevo().cuenta == resource.data.cuenta + 1;
+    }
+
     match /reportes/{id} {
       allow create: if conSesion()
         && nuevo().keys().hasOnly(['ruta', 'texto', 'motivo', 'autorUid', 'creadoEn'])

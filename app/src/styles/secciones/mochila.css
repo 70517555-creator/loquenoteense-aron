@@ -112,3 +112,4 @@
 .mis-cartas__eco { display: block; color: var(--rojo-oscuro); }
 .inicios .ficha { white-space: normal; text-align: left; max-width: 100%; height: auto; min-height: 36px; padding-block: 6px; }
 .carga__foro { text-align: center; }
+.visitas__dias { margin-top: var(--e-4); }

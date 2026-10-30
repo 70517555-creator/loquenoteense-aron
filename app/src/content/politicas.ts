@@ -29,6 +29,13 @@ export const politicaDePrivacidad: SeccionDePolitica[] = [
     ],
   },
   {
+    id: 'visitas',
+    titulo: 'Cómo contamos las visitas',
+    parrafos: [
+      'Para saber cuántas familias usan la app, sumamos 1 a un contador cada vez que un celular entra por primera vez en el día. Solo guardamos el número total por día: no guardamos quién entró, desde dónde ni qué miró.',
+    ],
+  },
+  {
     id: 'asistente',
     titulo: 'El asistente "¿Qué pasó hoy en casa?"',
     puntos: [
