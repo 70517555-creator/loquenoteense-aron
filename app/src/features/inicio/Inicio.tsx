@@ -57,6 +57,7 @@ export default function Inicio() {
       {abierto && <VideoBienvenida key={abierto.video.id} {...abierto} onCerrar={cerrar} />}
       <FotoPortada />
       <div className="portada__velo" />
+      <div className="portada__foco" aria-hidden="true" />
       <MenuSuperior />
 
       <section className="portada__heroe">
@@ -64,7 +65,7 @@ export default function Inicio() {
         <h1 className="portada__titulo">Lo que no te enseñaron</h1>
         <p className="portada__bajada">Un espacio para entender, escuchar y construir juntos.</p>
         <div className="portada__acciones">
-          <Link to="/casa" className="boton boton--claro boton--grande">
+          <Link to="/casa" className="boton boton--comenzar">
             Comenzar <Icono nombre="arrow" tam={20} />
           </Link>
         </div>

@@ -10,7 +10,19 @@
   position: absolute; inset: 0;
   background: linear-gradient(180deg, rgba(20, 14, 30, 0.55) 0%, rgba(20, 14, 30, 0.1) 35%, rgba(20, 14, 30, 0.15) 60%, rgba(20, 14, 30, 0.78) 100%);
 }
-.portada > *:not(.portada__foto):not(.portada__velo) { position: relative; z-index: 1; }
+.portada__foco {
+  position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(0deg, rgba(14, 10, 24, 0.82) 0%, rgba(14, 10, 24, 0.55) 38%, rgba(14, 10, 24, 0) 62%);
+  -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px);
+  -webkit-mask-image: linear-gradient(0deg, #000 30%, transparent 62%); mask-image: linear-gradient(0deg, #000 30%, transparent 62%);
+}
+@media (min-width: 701px) and (orientation: landscape) {
+  .portada__foco {
+    background: linear-gradient(90deg, rgba(14, 10, 24, 0.8) 0%, rgba(14, 10, 24, 0.55) 26%, rgba(14, 10, 24, 0) 46%);
+    -webkit-mask-image: linear-gradient(90deg, #000 22%, transparent 44%); mask-image: linear-gradient(90deg, #000 22%, transparent 44%);
+  }
+}
+.portada > *:not(.portada__foto):not(.portada__velo):not(.portada__foco) { position: relative; z-index: 1; }
 .portada__barra {
   display: flex; align-items: center; justify-content: space-between;
   padding: calc(var(--e-4) + var(--seguro-arriba)) clamp(var(--e-4), 4vw, var(--e-7)) var(--e-4);
@@ -115,3 +127,20 @@
 .miniaturas li:nth-child(2) .miniatura__imagen { animation-delay: 1.6s; }
 @keyframes respira { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.03); } }
 @media (prefers-reduced-motion: reduce) { .miniatura__imagen { animation: none; } }
+
+.boton--comenzar {
+  min-height: 68px; padding: 0 clamp(var(--e-6), 4vw, 56px); gap: var(--e-3);
+  font-size: clamp(1.25rem, 1rem + 0.8vw, 1.55rem); font-weight: 800; letter-spacing: 0.01em;
+  color: #fff; background: linear-gradient(180deg, #e2453f, var(--rojo));
+  box-shadow: 0 10px 28px rgba(200, 48, 44, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  animation: llamar 2.6s ease-in-out infinite;
+}
+.boton--comenzar:hover { background: linear-gradient(180deg, #ea5650, #d63a35); }
+.boton--comenzar svg { transition: translate 0.2s; }
+.boton--comenzar:hover svg { translate: 4px 0; }
+@keyframes llamar {
+  0%, 100% { box-shadow: 0 10px 28px rgba(200, 48, 44, 0.55), 0 0 0 0 rgba(255, 120, 110, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.35); }
+  60% { box-shadow: 0 10px 28px rgba(200, 48, 44, 0.55), 0 0 0 14px rgba(255, 120, 110, 0), inset 0 1px 0 rgba(255, 255, 255, 0.35); }
+}
+@media (max-width: 700px) { .portada__acciones .boton--comenzar { flex: 1 1 100%; } }
+@media (prefers-reduced-motion: reduce) { .boton--comenzar { animation: none; } }
