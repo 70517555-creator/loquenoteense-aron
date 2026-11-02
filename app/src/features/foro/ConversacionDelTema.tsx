@@ -38,12 +38,15 @@ function ListaDeComentarios({ comentarios, cargando, fallo, onQuitar }: PropsDeL
   const publicados = comentarios?.filter((c) => c.estado === 'aprobado').length ?? 0
   return (
     <>
-      {!!comentarios?.length && (
-        <ul className="comentarios">
-          {comentarios.map((c) => <TarjetaDeComentario key={c.id} comentario={c} onQuitar={onQuitar} />)}
-        </ul>
-      )}
       {publicados < POCOS_COMENTARIOS && <InvitacionACompartir primera={publicados === 0} />}
+      {!!comentarios?.length && (
+        <>
+          <h3 className="titulo-tarjeta conversacion__subtitulo">Lo que comparten las familias</h3>
+          <ul className="comentarios">
+            {comentarios.map((c) => <TarjetaDeComentario key={c.id} comentario={c} onQuitar={onQuitar} />)}
+          </ul>
+        </>
+      )}
     </>
   )
 }
@@ -70,8 +73,8 @@ export function ConversacionDelTema({ tema, etiqueta, autor, enfocar }: Props) {
         <h2 className="mano titulo-grande sin-margen">{tema.titulo}</h2>
         {tema.descripcion && <p>{tema.descripcion}</p>}
       </article>
-      <ListaDeComentarios comentarios={datos} cargando={cargando} fallo={fallo} onQuitar={delEquipo ? quitar : undefined} />
       <FormularioDeComentario tema={tema} onEnviado={recargar} enfocar={enfocar && !cargando} />
+      <ListaDeComentarios comentarios={datos} cargando={cargando} fallo={fallo} onQuitar={delEquipo ? quitar : undefined} />
     </section>
   )
 }

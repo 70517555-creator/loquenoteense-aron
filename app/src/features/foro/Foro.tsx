@@ -40,11 +40,11 @@ export default function Foro() {
     <main>
       <Encabezado titulo="Entre padres" icono="chat" />
       <div className="contenedor foro">
-        <p className="suave">
-          Un espacio anónimo para compartir y aprender entre familias, acompañados por psicología del colegio.
-        </p>
         <Fichas etiqueta="Secciones del foro" opciones={SECCIONES.map((s) => s.titulo)} activa={indice} onCambiar={ir} />
         {enLinea ? <Contenido /> : <p className="aviso-suave">Para conversar en el foro necesitas internet.</p>}
+        <p className="suave centrado">
+          🔒 Un espacio anónimo para compartir y aprender entre familias, acompañados por psicología del colegio.
+        </p>
         <p className="foro__equipo">
           <Link to="/privacidad#normas-del-foro">Normas del foro y privacidad</Link>
           <br />

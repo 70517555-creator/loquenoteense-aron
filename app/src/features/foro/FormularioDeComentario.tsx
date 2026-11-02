@@ -61,8 +61,7 @@ export function FormularioDeComentario({ tema, onEnviado, enfocar }: Props) {
 
   return (
     <form className="tarjeta formulario-foro" onSubmit={enviar}>
-      <h3 className="titulo-tarjeta">Comparte tu experiencia</h3>
-      <small className="suave">Respondes a: <b>{tema.titulo}</b></small>
+      <h3 className="titulo-tarjeta">✍️ Escribe tu respuesta</h3>
       <textarea
         ref={caja}
         className="formulario-foro__caja"

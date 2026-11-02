@@ -62,3 +62,5 @@
 .indicador__numero { font-size: var(--t-xl); line-height: 1; }
 .formulario-foro__caja { min-height: 120px; font-size: var(--t-m, 1rem); }
 .formulario-foro__caja:focus { outline: 3px solid color-mix(in srgb, var(--rojo) 45%, transparent); outline-offset: 2px; }
+.conversacion__subtitulo { margin: var(--e-4) 0 0; }
+.tema-del-dia + .formulario-foro { margin-top: calc(-1 * var(--e-2)); border-top: 3px solid var(--ambar); }
