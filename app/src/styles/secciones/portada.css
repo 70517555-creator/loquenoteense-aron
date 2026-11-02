@@ -22,7 +22,7 @@
     -webkit-mask-image: linear-gradient(90deg, #000 22%, transparent 44%); mask-image: linear-gradient(90deg, #000 22%, transparent 44%);
   }
 }
-.portada > *:not(.portada__foto):not(.portada__velo):not(.portada__foco) { position: relative; z-index: 1; }
+.portada > *:not(.portada__foto):not(.portada__velo):not(.portada__foco):not(.mural) { position: relative; z-index: 1; }
 .portada__barra {
   display: flex; align-items: center; justify-content: space-between;
   padding: calc(var(--e-4) + var(--seguro-arriba)) clamp(var(--e-4), 4vw, var(--e-7)) var(--e-4);
@@ -226,3 +226,41 @@
 .portada__acciones, .miniaturas { justify-content: center; }
 .miniatura { text-align: center; justify-items: center; }
 .portada .nota-pegada { margin: clamp(var(--e-2), 1.5dvh, var(--e-4)) auto clamp(var(--e-2), 2dvh, var(--e-4)); }
+
+/* Botón Comenzar: el protagonista, solo y grande al centro. */
+.boton--comenzar {
+  min-height: clamp(64px, 12dvh, 100px); padding-inline: clamp(56px, 9vw, 132px);
+  font-size: clamp(1.6rem, 1rem + 1.9vw, 2.6rem);
+}
+
+/* Mural de videos: en el celular, una fila debajo del botón. */
+.portada > .mural { position: relative; z-index: 1; display: flex; justify-content: center; padding: 0 var(--e-4) clamp(var(--e-2), 1.5dvh, var(--e-4)); }
+
+/* En pantallas anchas, fotos tipo polaroid clavadas en el espacio de la izquierda. */
+@media (min-width: 900px) and (orientation: landscape) {
+  .portada > .mural {
+    position: absolute; z-index: 2; left: clamp(var(--e-4), 4.5vw, 88px); top: 50%; translate: 0 -46%; padding: 0;
+  }
+  .mural .miniaturas { flex-direction: column; flex-wrap: nowrap; gap: clamp(var(--e-4), 4dvh, var(--e-7)); margin: 0; }
+  .mural .miniatura {
+    position: relative; padding: 8px 8px 4px; border-radius: 3px; background: #fdfcf8;
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.25), 0 14px 26px -8px rgba(0, 0, 0, 0.6);
+    transition: rotate 0.25s var(--suave), scale 0.25s var(--suave);
+  }
+  .mural li:nth-child(1) .miniatura { rotate: -5deg; }
+  .mural li:nth-child(2) .miniatura { rotate: 4deg; margin-left: clamp(var(--e-5), 3vw, 56px); }
+  .mural li:nth-child(3) .miniatura { rotate: -2deg; }
+  .mural .miniatura:hover, .mural .miniatura:focus-visible { rotate: 0deg; scale: 1.06; }
+  .mural .miniatura::before {
+    content: ''; position: absolute; z-index: 1; top: -9px; left: 50%; translate: -50% 0; width: 18px; height: 18px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 32%, #ff9e94 0 18%, #e53935 45%, #8e1414 100%);
+    box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.4);
+  }
+  .mural .miniatura__imagen {
+    width: clamp(150px, min(14vw, 25dvh), 250px); border-radius: 2px; box-shadow: none; animation: none;
+  }
+  .mural .miniatura__play { width: 46px; height: 46px; }
+  .mural .miniatura__etiqueta {
+    padding: 4px 0 2px; color: #3a3226; text-shadow: none; font-family: var(--f-mano); font-size: clamp(1rem, 2.4dvh, 1.35rem); font-weight: 700;
+  }
+}

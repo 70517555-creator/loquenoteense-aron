@@ -68,11 +68,14 @@ export default function Inicio() {
           <Link to="/casa" className="boton boton--comenzar">
             Comenzar <Icono nombre="arrow" tam={20} />
           </Link>
-          <MiniaturasDeVideos bienvenida={bienvenida} onAbrir={abrir} />
         </div>
         <p className="portada__nota-chica">Situaciones reales. Voces de estudiantes. Retos para tu familia.</p>
         <InvitacionAInstalar />
       </section>
+
+      <div className="mural">
+        <MiniaturasDeVideos bienvenida={bienvenida} onAbrir={abrir} />
+      </div>
 
       <p className="portada__lema">Diferentes miradas, un mismo amor ♡</p>
     </main>
