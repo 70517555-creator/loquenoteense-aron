@@ -160,3 +160,51 @@
 @media (min-width: 701px) and (orientation: landscape) {
   .portada .nota-pegada { font-size: clamp(1rem, 3dvh, 2.1rem); }
 }
+
+/* Post-it de verdad: cuadrado amarillo, chinche roja y se mece colgado del chinche. */
+.portada .nota-pegada {
+  width: 6.3em; padding: 1.15em 0.5em 0.7em; overflow: visible; line-height: 1.12;
+  font-size: clamp(1.15rem, 3dvh, 2rem);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.35) 0, transparent 22%),
+    linear-gradient(135deg, #fff7a8 0%, #ffef7a 55%, #ffe45a 100%);
+  border-radius: 2px 2px 3.2em 2px / 2px 2px 0.5em 2px;
+  box-shadow:
+    0 1px 1px rgba(0, 0, 0, 0.12),
+    0 14px 18px -10px rgba(0, 0, 0, 0.55),
+    inset 0 -10px 14px -12px rgba(150, 110, 0, 0.35);
+  rotate: -3deg; transform-origin: 50% 6px;
+  animation: colgar 4.2s ease-in-out infinite;
+}
+.portada .nota-pegada::before {
+  content: ''; position: absolute; top: -9px; left: 50%; translate: -50% 0; width: 22px; height: 22px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 32%, #ff9e94 0 18%, #e53935 45%, #8e1414 100%);
+  box-shadow: 3px 5px 5px rgba(0, 0, 0, 0.4), inset -2px -2px 3px rgba(0, 0, 0, 0.25);
+}
+.portada .nota-pegada::after {
+  content: ''; position: absolute; top: 10px; left: calc(50% + 3px); width: 8px; height: 5px; border-radius: 50%;
+  background: rgba(0, 0, 0, 0.18); filter: blur(1.5px);
+}
+@keyframes colgar { 0%, 100% { rotate: -4deg; } 50% { rotate: 3deg; } }
+@media (min-width: 701px) and (orientation: landscape) {
+  .portada .nota-pegada { font-size: clamp(1.2rem, 3.3dvh, 2.3rem); }
+}
+@media (prefers-reduced-motion: reduce) { .portada .nota-pegada { animation: none; } }
+
+/* Botón Comenzar más grande, con brillo que lo recorre, y los videos al costado. */
+.portada__acciones { align-items: center; gap: clamp(var(--e-3), 2vw, var(--e-5)); }
+.portada__acciones .miniaturas { margin: 0; }
+.boton--comenzar {
+  position: relative; overflow: hidden;
+  min-height: clamp(60px, 10.5dvh, 88px); padding-inline: clamp(var(--e-7), 5vw, 76px);
+  font-size: clamp(1.45rem, 1rem + 1.3vw, 2.1rem); border-radius: var(--r-total);
+}
+.boton--comenzar::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.45) 50%, transparent 70%);
+  translate: -120% 0; animation: destello 3.2s ease-in-out infinite;
+}
+.boton--comenzar svg { animation: empujar 1.6s ease-in-out infinite; }
+@keyframes destello { 0%, 55% { translate: -120% 0; } 85%, 100% { translate: 120% 0; } }
+@keyframes empujar { 0%, 100% { translate: 0 0; } 50% { translate: 5px 0; } }
+@media (prefers-reduced-motion: reduce) { .boton--comenzar::after, .boton--comenzar svg { animation: none; } }
