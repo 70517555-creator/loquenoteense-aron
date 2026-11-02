@@ -4,6 +4,7 @@ import { Icono } from '../../ui/Icono'
 import { clases } from '../../utils/clases'
 import { BotonDeVoto } from './BotonDeVoto'
 import { BotonReportar } from './BotonReportar'
+import { sinGuiones } from './useApodo'
 
 const rutaDelComentario = (c: Comentario) => `temas/${c.temaId}/comentarios/${c.id}`
 
@@ -42,7 +43,7 @@ export function TarjetaDeComentario({ comentario, onQuitar }: Props) {
   return (
     <li className={clases('comentario', dePsicologia && 'comentario--psicologia', !publicado && 'comentario--propio')}>
       <div className="comentario__autor">
-        <b>{comentario.apodo}</b>
+        <b>{sinGuiones(comentario.apodo)}</b>
         {dePsicologia && <span className="insignia">Psicología del colegio</span>}
         {comentario.esMio && publicado && <small className="suave">(tú)</small>}
         {onQuitar && publicado && (

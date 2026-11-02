@@ -1,3 +1,4 @@
+import { sinGuiones } from '../foro/useApodo'
 import { useCallback, useState, type ReactNode } from 'react'
 import { useServicios } from '../../app/servicios'
 import { tituloDeCarga } from '../../content/cargas'
@@ -64,7 +65,7 @@ function ComentarioPorRevisar({ comentario, psicologo, onListo }: PropsDeComenta
     <li className={clases('tarjeta', 'por-revisar', comentario.urgente && 'por-revisar--urgente')}>
       {comentario.urgente && <span className="insignia insignia--urgente">⚠️ Posible riesgo: atender primero</span>}
       <small className="suave">Tema: {comentario.temaTitulo}</small>
-      <b>{comentario.apodo}</b>
+      <b>{sinGuiones(comentario.apodo)}</b>
       <p className="comentario__texto">{comentario.texto}</p>
       {respuesta !== undefined && (
         <textarea rows={3} value={respuesta} onChange={(e) => setRespuesta(e.target.value)} placeholder={`Responder como ${firma}…`} />

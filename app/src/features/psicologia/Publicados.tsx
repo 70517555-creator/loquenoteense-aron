@@ -1,3 +1,4 @@
+import { sinGuiones } from '../foro/useApodo'
 import { useCallback, useState } from 'react'
 import { useServicios } from '../../app/servicios'
 import { MOTIVO_AL_RETIRAR, type Comentario } from '../../domain/foro'
@@ -20,7 +21,7 @@ function ComentarioPublicado({ comentario, onOculto }: { comentario: Comentario;
       <small className="suave">
         {comentario.temaTitulo} · {comentario.creadoEn.toLocaleDateString('es-PE')} · ❤️ {comentario.meAyudo}
       </small>
-      <b>{comentario.apodo}</b>
+      <b>{sinGuiones(comentario.apodo)}</b>
       <p className="comentario__texto">{comentario.texto}</p>
       <div className="moderacion">
         <button className="boton boton--borde" disabled={ocupado} onClick={ocultar}>Ocultar</button>

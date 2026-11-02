@@ -3,7 +3,7 @@ import type { RespuestaAsistente } from '../../ports/AssistantPort'
 import { vinetas } from './conversacion'
 
 export function respuestaDeRiesgo(): RespuestaAsistente {
-  const lineasDeAyuda = vinetas(config.ayuda.map((linea) => `${linea.nombre} — ${linea.detalle}`))
+  const lineasDeAyuda = vinetas(config.ayuda.map((linea) => `${linea.nombre}: ${linea.detalle}`))
   return {
     fuente: 'guia',
     alerta: true,

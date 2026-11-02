@@ -13,11 +13,15 @@ export interface Apodo {
 
 const APODO_INICIAL: Apodo = { parentesco: PARENTESCOS[0], grado: SIN_GRADO }
 
+// Antes los grados se escribían con guion ("3.° – 5.°"); se muestran siempre con "a".
+export const sinGuiones = (texto: string) => texto.replace(/\s*[–—]\s*/g, ' a ')
+
 export const textoDelApodo = ({ parentesco, grado }: Apodo) =>
-  grado === SIN_GRADO ? parentesco : `${parentesco} · ${grado}`
+  grado === SIN_GRADO ? parentesco : `${parentesco} · ${sinGuiones(grado)}`
 
 export function useApodo() {
-  const [apodo, setApodo] = usePersistente<Apodo>(CLAVES_DE_PROGRESO.apodoDelForo, APODO_INICIAL)
+  const [guardado, setApodo] = usePersistente<Apodo>(CLAVES_DE_PROGRESO.apodoDelForo, APODO_INICIAL)
+  const apodo = { ...guardado, grado: sinGuiones(guardado.grado) }
   const cambiar = (cambio: Partial<Apodo>) => setApodo((previo) => ({ ...previo, ...cambio }))
   return { apodo, texto: textoDelApodo(apodo), cambiar }
 }
