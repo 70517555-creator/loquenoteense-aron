@@ -9,3 +9,16 @@
 .episodio__cabeza .suave { margin: 0; }
 .episodio__reproductor { width: 100%; border: 0; border-radius: 12px; }
 .episodio__audio { width: 100%; }
+
+.actividades { list-style: none; margin: var(--e-4) 0 0; padding: 0; display: grid; gap: var(--e-5); }
+.actividad { display: grid; gap: var(--e-3); }
+.actividad__video { position: relative; aspect-ratio: 16 / 9; border-radius: var(--r-m); overflow: hidden; background: #1f2a44; }
+.actividad__video iframe, .actividad__portada { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.actividad__portada { padding: 0; cursor: pointer; background: none; }
+.actividad__portada img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.actividad__play {
+  position: absolute; inset: 0; margin: auto; width: 68px; height: 68px; border-radius: 50%;
+  display: grid; place-items: center; background: var(--rojo); color: #fff; box-shadow: 0 6px 20px rgb(0 0 0 / .35);
+  transition: transform .2s;
+}
+.actividad__portada:hover .actividad__play { transform: scale(1.06); }

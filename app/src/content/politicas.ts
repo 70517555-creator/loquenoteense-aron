@@ -91,7 +91,7 @@ export const politicaDePrivacidad: SeccionDePolitica[] = [
       'Google Firebase: publica la app y guarda el foro.',
       'Cloudflare: conecta el asistente con la inteligencia artificial.',
       'Groq: genera las respuestas del asistente.',
-      'YouTube y Spotify: muestran el video de bienvenida y el podcast. Al reproducirlos, estos servicios pueden aplicar sus propias políticas.',
+      'YouTube y Spotify: muestran el video de bienvenida, los videos de "Lo que hemos vivido" y el podcast. Al reproducirlos, estos servicios pueden aplicar sus propias políticas.',
     ],
   },
   {

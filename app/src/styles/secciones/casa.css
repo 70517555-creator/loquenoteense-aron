@@ -114,6 +114,8 @@
   backdrop-filter: blur(6px);
 }
 .casa__video:hover { background: color-mix(in srgb, currentColor 20%, transparent); }
+.casa__barra .logo { flex-shrink: 0; }
+.casa__enlaces { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--e-2); }
 .casa__saludo { font-size: var(--t-xxl); margin: 0; }
 .casa__frase { margin: var(--e-1) 0 var(--e-3); font-weight: 600; max-width: 30ch; }
 .casa__progreso { font-size: var(--t-s); margin: 0 0 var(--e-2); }

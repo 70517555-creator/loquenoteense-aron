@@ -7,6 +7,8 @@ import { urlDeInsercion, type VideoDeYouTube } from './youtube'
 
 interface Props {
   video: VideoDeYouTube
+  titulo: string
+  bienvenida: boolean
   onCerrar: () => void
 }
 
@@ -23,7 +25,7 @@ function controlarReproductor(marco: RefObject<HTMLIFrameElement | null>) {
   }
 }
 
-export function VideoBienvenida({ video, onCerrar }: Props) {
+export function VideoBienvenida({ video, titulo, bienvenida, onCerrar }: Props) {
   const marco = useRef<HTMLIFrameElement>(null)
   const botonCerrar = useRef<HTMLButtonElement>(null)
   const [conSonido, setConSonido] = useState(false)
@@ -37,7 +39,7 @@ export function VideoBienvenida({ video, onCerrar }: Props) {
   }
 
   return createPortal(
-    <div className="video-bienvenida" role="dialog" aria-modal="true" aria-label="Video de bienvenida" onClick={onCerrar}>
+    <div className="video-bienvenida" role="dialog" aria-modal="true" aria-label={titulo} onClick={onCerrar}>
       <div
         className={clases('video-bienvenida__caja', video.vertical && 'video-bienvenida__caja--vertical')}
         onClick={(e) => e.stopPropagation()}
@@ -49,20 +51,20 @@ export function VideoBienvenida({ video, onCerrar }: Props) {
           <iframe
             ref={marco}
             src={urlDeInsercion(video)}
-            title="Video de bienvenida"
+            title={titulo}
             allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
             allowFullScreen
           />
         </div>
         <div className="video-bienvenida__pie">
           {conSonido ? (
-            <p className="mano video-bienvenida__lema">Bienvenido, bienvenida ♡</p>
+            <p className="mano video-bienvenida__lema">{bienvenida ? 'Bienvenido, bienvenida ♡' : titulo}</p>
           ) : (
             <button className="boton boton--grande" onClick={activarSonido}>
               <Icono nombre="volume" tam={20} /> Activar sonido
             </button>
           )}
-          <button className="boton boton--borde" onClick={onCerrar}>Entrar a la app</button>
+          <button className="boton boton--borde" onClick={onCerrar}>{bienvenida ? 'Entrar a la app' : 'Cerrar'}</button>
         </div>
       </div>
     </div>,

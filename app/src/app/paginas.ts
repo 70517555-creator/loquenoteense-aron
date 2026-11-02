@@ -15,6 +15,7 @@ export const paginas = {
   foro: lazy(() => import('../features/foro/Foro')),
   psicologia: lazy(() => import('../features/psicologia/Psicologia')),
   escribe: lazy(() => import('../features/escribe/Escribe')),
+  vivido: lazy(() => import('../features/vivido/Vivido')),
   privacidad: lazy(() => import('../features/privacidad/Privacidad')),
   noEncontrado: lazy(() => import('../features/NoEncontrado')),
 }

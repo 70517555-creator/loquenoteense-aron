@@ -24,11 +24,14 @@ function Bienvenida({ momento, saludo, recorridas }: { momento: Momento; saludo:
     <header className="casa__cabecera">
       <div className="casa__barra">
         <Logo />
-        {videoDeBienvenida && (
-          <Link to={`/?${PARAMETRO_ABRIR_VIDEO}`} className="casa__video">
-            <Icono nombre="play" tam={16} /> Ver video
-          </Link>
-        )}
+        <span className="casa__enlaces">
+          {videoDeBienvenida && (
+            <Link to={`/?${PARAMETRO_ABRIR_VIDEO}`} className="casa__video">
+              <Icono nombre="play" tam={16} /> Ver video
+            </Link>
+          )}
+          <Link to="/vivido" className="casa__video">🎬 Videos</Link>
+        </span>
       </div>
       <p className="casa__saludo mano">{saludo} 💛</p>
       <p className="casa__frase">{FRASE_SEGUN_MOMENTO[momento]}</p>

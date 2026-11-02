@@ -4,6 +4,7 @@ import { useInstalar } from '../../hooks/useInstalar'
 import { Icono } from '../../ui/Icono'
 import { Logo } from '../../ui/Logo'
 import { FotoPortada } from './FotoPortada'
+import { MiniaturasDeVideos } from './MiniaturasDeVideos'
 import { fraseDeLaVisita } from './fraseDeLaVisita'
 import { useVideoDeBienvenida } from './useVideoDeBienvenida'
 import { VideoBienvenida } from './VideoBienvenida'
@@ -49,11 +50,11 @@ function InvitacionAInstalar() {
 
 export default function Inicio() {
   const { progreso } = useServicios()
-  const { video, abierto, abrir, cerrar } = useVideoDeBienvenida()
+  const { bienvenida, abierto, abrir, cerrar } = useVideoDeBienvenida()
 
   return (
     <main className="portada">
-      {video && abierto && <VideoBienvenida video={video} onCerrar={cerrar} />}
+      {abierto && <VideoBienvenida key={abierto.video.id} {...abierto} onCerrar={cerrar} />}
       <FotoPortada />
       <div className="portada__velo" />
       <MenuSuperior />
@@ -66,12 +67,8 @@ export default function Inicio() {
           <Link to="/casa" className="boton boton--claro boton--grande">
             Comenzar <Icono nombre="arrow" tam={20} />
           </Link>
-          {video && (
-            <button className="boton boton--fantasma" onClick={abrir}>
-              <Icono nombre="play" tam={18} /> Ver video
-            </button>
-          )}
         </div>
+        <MiniaturasDeVideos bienvenida={bienvenida} onAbrir={abrir} />
         <p className="portada__nota-chica">Situaciones reales. Voces de estudiantes. Retos para tu familia.</p>
         <InvitacionAInstalar />
       </section>
