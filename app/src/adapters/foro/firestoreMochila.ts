@@ -28,6 +28,12 @@ export const firestoreMochila: MochilaPort = {
     return (await getDocs(consulta)).docs.map((d) => aCartaDeEstudiante(d, uid)).sort(masRecientePrimero)
   },
 
+  async cartasPublicadas() {
+    const uid = await uidConSesion()
+    const publicadas = await getDocs(query(collection(db, RUTAS.cartas), where('estado', '==', 'aprobado')))
+    return publicadas.docs.map((d) => aCartaDeEstudiante(d, uid))
+  },
+
   async misCartas() {
     const uid = await uidConSesion()
     const propias = await getDocs(query(collection(db, RUTAS.cartas), where('autorUid', '==', uid)))

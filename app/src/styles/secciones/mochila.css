@@ -113,3 +113,34 @@
 .inicios .ficha { white-space: normal; text-align: left; max-width: 100%; height: auto; min-height: 36px; padding-block: 6px; }
 .carga__foro { text-align: center; }
 .visitas__dias { margin-top: var(--e-4); }
+
+/* Cartas de los chicos: hojas de cuaderno escritas a mano, pegadas con cinta. */
+.cartas-de-chicos { display: grid; gap: var(--e-2); }
+.hojas-de-carta { list-style: none; margin: var(--e-3) 0 0; padding: 0; display: grid; gap: var(--e-5); }
+@media (min-width: 760px) { .hojas-de-carta { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); } }
+.hoja-de-carta {
+  position: relative; display: grid; gap: var(--e-2); align-content: start;
+  padding: var(--e-5) var(--e-4) var(--e-4) calc(var(--e-4) + 18px);
+  border-radius: 4px; rotate: -0.8deg;
+  background:
+    linear-gradient(90deg, transparent 22px, rgba(214, 69, 69, 0.35) 22px 24px, transparent 24px),
+    repeating-linear-gradient(180deg, transparent 0 31px, rgba(80, 130, 190, 0.22) 31px 32px),
+    #fffdf6;
+  background-position: 0 0, 0 14px, 0 0;
+  box-shadow: 0 1px 1px rgba(60, 40, 20, 0.08), 0 8px 18px rgba(60, 40, 20, 0.12);
+}
+.hoja-de-carta:nth-child(even) { rotate: 0.9deg; }
+.hoja-de-carta::before {
+  content: ''; position: absolute; top: -10px; left: 50%; width: 92px; height: 22px; translate: -50% 0; rotate: -3deg;
+  background: rgba(246, 204, 79, 0.7); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+.hoja-de-carta:nth-child(even)::before { rotate: 4deg; background: rgba(160, 200, 170, 0.75); }
+.hoja-de-carta__texto { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; font-size: 1.4rem; line-height: 32px; color: #2c3e66; }
+.hoja-de-carta__firma { margin: 0; justify-self: end; font-size: 1.15rem; color: #2c3e66; opacity: 0.8; }
+.hoja-de-carta__firma::before { content: '— '; }
+.hoja-de-carta .me-ayudo { justify-self: start; }
+.etiqueta__cartas {
+  position: absolute; top: -10px; right: -10px; padding: 2px 7px; border-radius: var(--r-total);
+  background: var(--rojo); color: #fff; font-family: var(--f-texto); font-size: 0.72rem; font-weight: 800; line-height: 1.4;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25); white-space: nowrap;
+}

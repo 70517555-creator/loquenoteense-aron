@@ -4,7 +4,7 @@ import { FUENTE_DE_LOS_DATOS } from '../../content/cargas'
 import type { CargaDelHijo, RespuestaPosible } from '../../domain/tipos'
 import { clases } from '../../utils/clases'
 import { rotar } from '../../utils/listas'
-import { CartasDeEstudiantes } from './CartasDeEstudiantes'
+import { CartasDeEstudiantes, InvitacionAEscribir } from './CartasDeEstudiantes'
 import { EncuestaDeCasa } from './EncuestaDeCasa'
 import { RetoDeHoy } from './RetoDeHoy'
 
@@ -58,6 +58,8 @@ export function DetalleDeCarga({ carga, orden }: { carga: CargaDelHijo; orden: n
         <small>Lo que tu hijo quizá no te dice</small>
       </blockquote>
 
+      <CartasDeEstudiantes carga={carga.id} />
+
       <section className="carga__bloque">
         <h3 className="carga__subtitulo">🔎 Lo que pasa</h3>
         <p>{carga.loQuePasa}</p>
@@ -84,7 +86,7 @@ export function DetalleDeCarga({ carga, orden }: { carga: CargaDelHijo; orden: n
       <RetoDeHoy carga={carga.id} reto={carga.reto} />
 
       <EncuestaDeCasa carga={carga.id} />
-      <CartasDeEstudiantes carga={carga.id} />
+      <InvitacionAEscribir />
 
       <Link className="boton boton--borde carga__foro" to="/foro">💬 Conversa con otras familias en el foro</Link>
     </article>

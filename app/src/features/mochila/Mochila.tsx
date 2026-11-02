@@ -8,6 +8,7 @@ import { Encabezado } from '../../ui/Encabezado'
 import { clases } from '../../utils/clases'
 import { agregarSinRepetir } from '../../utils/listas'
 import { BolsilloSecreto } from './BolsilloSecreto'
+import { useCartasPorBolsillo } from './CartasDeEstudiantes'
 import { DetalleDeCarga } from './DetalleDeCarga'
 import { DibujoDeMochila } from './DibujoDeMochila'
 import { useCartas } from './useCartas'
@@ -18,6 +19,7 @@ function MochilaInteractiva({ cargas }: { cargas: CargaDelHijo[] }) {
   const [abiertas, setAbiertas] = usePersistente<string[]>(CLAVES_DE_PROGRESO.cargasAbiertas, [])
   const [activa, setActiva] = useState<string>()
   const cartas = useCartas()
+  const cartasDeChicos = useCartasPorBolsillo()
   const { sinLeer } = cartas
   const detalle = useRef<HTMLDivElement>(null)
   const indiceActivo = cargas.findIndex((c) => c.id === activa)
@@ -47,6 +49,9 @@ function MochilaInteractiva({ cargas }: { cargas: CargaDelHijo[] }) {
             aria-pressed={activa === carga.id}
           >
             {carga.etiqueta}
+            {!!cartasDeChicos[carga.id] && (
+              <span className="etiqueta__cartas" aria-label={`${cartasDeChicos[carga.id]} cartas de estudiantes`}>✉️ {cartasDeChicos[carga.id]}</span>
+            )}
           </button>
         ))}
         <button
