@@ -31,7 +31,7 @@ function Tarjeta({ pregunta }: { pregunta: TemaDelDia }) {
       </button>
       {escribiendo && <VentanaParaResponder pregunta={pregunta} onEnviado={comentarios.recargar} onCerrar={() => setEscribiendo(false)} />}
       <p className="pregunta-casa__eco" aria-live="polite">
-        {publicadas === undefined ? ' ' : (
+        {publicadas === undefined ? <span className="pregunta-casa__cargando">👪 Viendo cuántas familias respondieron…</span> : (
           <>
             👪 {textoDeRespuestas(publicadas)}
             {publicadas > 0 && <> <Link to={RUTA_DE_LAS_RESPUESTAS} className="sin-cortes">Leer respuestas →</Link></>}
