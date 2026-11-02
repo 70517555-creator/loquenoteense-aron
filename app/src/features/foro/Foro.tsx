@@ -21,7 +21,7 @@ function PreguntaDeLaSemana() {
   const [params] = useSearchParams()
   if (fallo) return <p className="aviso-suave">No pudimos cargar la pregunta de la semana. Revisa tu conexión.</p>
   if (!pregunta) return <Cargando />
-  return <ConversacionDelTema tema={pregunta} etiqueta="📌 Pregunta de la semana" autor="💬 Psicología pregunta" enfocar={params.has(PARAMETRO_RESPONDER)} />
+  return <ConversacionDelTema tema={pregunta} etiqueta="Pregunta de la semana" autor="💬 Respondes a" enfocar={params.has(PARAMETRO_RESPONDER)} resumida />
 }
 
 const SECCIONES = [

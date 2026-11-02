@@ -14,6 +14,7 @@ interface Props {
   etiqueta: string
   autor?: string
   enfocar?: boolean
+  resumida?: boolean
 }
 
 interface PropsDeLista {
@@ -51,7 +52,7 @@ function ListaDeComentarios({ comentarios, cargando, fallo, onQuitar }: PropsDeL
   )
 }
 
-export function ConversacionDelTema({ tema, etiqueta, autor, enfocar }: Props) {
+export function ConversacionDelTema({ tema, etiqueta, autor, enfocar, resumida }: Props) {
   const { datos, cargando, fallo, recargar } = useComentarios(tema.id)
   const { panel } = useServicios()
   const delEquipo = useEsDelEquipo()
@@ -67,12 +68,19 @@ export function ConversacionDelTema({ tema, etiqueta, autor, enfocar }: Props) {
 
   return (
     <section className="conversacion">
-      <article className="tarjeta tema-del-dia">
-        <span className="insignia">{autor ?? etiqueta} · {fechaLegible(tema.fecha)}</span>
-        <h2 className="mano titulo-grande sin-margen">{tema.titulo}</h2>
-        {tema.descripcion && <p className="sin-margen">{tema.descripcion}</p>}
-        <FormularioDeComentario tema={tema} onEnviado={recargar} enfocar={enfocar && !cargando} compacto />
-      </article>
+      {resumida ? (
+        <article className="tarjeta tema-resumido">
+          <p className="tema-resumido__contexto">{autor ?? etiqueta}: <b>{tema.titulo}</b></p>
+          <FormularioDeComentario tema={tema} onEnviado={recargar} enfocar={enfocar && !cargando} compacto />
+        </article>
+      ) : (
+        <article className="tarjeta tema-del-dia">
+          <span className="insignia">{autor ?? etiqueta} · {fechaLegible(tema.fecha)}</span>
+          <h2 className="mano titulo-grande sin-margen">{tema.titulo}</h2>
+          {tema.descripcion && <p className="sin-margen">{tema.descripcion}</p>}
+          <FormularioDeComentario tema={tema} onEnviado={recargar} enfocar={enfocar && !cargando} compacto />
+        </article>
+      )}
       <ListaDeComentarios comentarios={datos} cargando={cargando} fallo={fallo} onQuitar={delEquipo ? quitar : undefined} />
     </section>
   )
