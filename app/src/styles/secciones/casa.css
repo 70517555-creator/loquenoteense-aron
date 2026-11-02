@@ -532,3 +532,54 @@
   .pregunta-casa__escribir { min-height: 50px; }
 }
 .pregunta-casa__cargando { opacity: 0.55; }
+
+/* Sol y luna en un hueco libre del cielo, sin tocar textos, botones ni el techo. */
+/* Celular y tablet: arriba, entre el logo y los botones. En el celular sin rayos, para que quepa. */
+.sol, .luna, .casa--atardecer .sol {
+  left: 50%; right: auto; top: calc(30px + var(--seguro-arriba));
+  width: 34px; height: 34px; margin-left: -17px;
+}
+.sol { box-shadow: 0 0 26px 10px rgba(255, 210, 90, 0.5); }
+.casa--atardecer .sol { box-shadow: 0 0 30px 12px rgba(255, 140, 80, 0.45); }
+.sol__rayos { display: none; }
+@media (min-width: 640px) {
+  .sol, .luna, .casa--atardecer .sol { width: 52px; height: 52px; margin-left: -26px; top: calc(44px + var(--seguro-arriba)); }
+  .sol__rayos { display: block; }
+  .casa--atardecer .sol__rayos { display: none; }
+}
+/* Computadora: esquina de arriba a la derecha, fuera del techo. */
+@media (min-width: 1024px) and (orientation: landscape) {
+  .sol, .luna, .casa--atardecer .sol {
+    --astro: clamp(50px, 3.6vw, 72px);
+    left: auto; right: clamp(24px, 3.2vw, 64px); top: calc(var(--astro) * 0.5 + 12px + var(--seguro-arriba)); margin-left: 0;
+    width: var(--astro); height: var(--astro);
+  }
+}
+/* Al atardecer, en pantallas anchas, el sol baja junto a la casa como si se ocultara. */
+@media (min-width: 1280px) and (orientation: landscape) {
+  .casa--atardecer .sol { --astro: clamp(60px, 4.4vw, 88px); top: 46dvh; }
+}
+
+/* Corazón dibujado (el emoji se ve distinto en cada celular). */
+.casa__saludo { position: relative; }
+.casa__corazon {
+  display: inline-block; width: 0.7em; height: 0.7em; vertical-align: -0.04em; fill: var(--rojo);
+  filter: drop-shadow(0 2px 3px rgba(150, 30, 30, 0.3)); animation: latido 2.4s ease-in-out infinite; transform-origin: center;
+}
+@keyframes latido { 0%, 70%, 100% { scale: 1; } 80% { scale: 1.14; } 90% { scale: 0.98; } }
+
+/* Celular y tablet: el sol (o la luna) acompaña al saludo, a su derecha; el del cielo se oculta. */
+.casa__astro {
+  position: absolute; right: 6px; top: 50%; width: clamp(38px, 10vw, 56px); aspect-ratio: 1; translate: 0 -50%; border-radius: 50%;
+  background: radial-gradient(circle at 40% 38%, #fff6c4, #ffd75e 55%, #ffbf3a);
+  box-shadow: 0 0 28px 10px rgba(255, 210, 90, 0.5); animation: flotar 8s ease-in-out infinite;
+}
+.casa--atardecer .casa__astro { background: radial-gradient(circle at 45% 40%, #ffe2a6, #ff9e55 60%, #f2724a); box-shadow: 0 0 32px 12px rgba(255, 140, 80, 0.45); }
+.casa--noche .casa__astro { background: radial-gradient(circle at 38% 35%, #fffdf3, #ece6cf 70%, #d9d1b5); box-shadow: 0 0 26px 8px rgba(255, 250, 220, 0.35); }
+.cielo .sol, .cielo .luna { display: none; }
+@media (min-width: 1024px) and (orientation: landscape) {
+  .casa__astro { display: none; }
+  .cielo .sol, .cielo .luna { display: block; }
+}
+@media (prefers-reduced-motion: reduce) { .casa__corazon, .casa__astro { animation: none; } }
+@media (max-width: 380px) { .casa__astro { width: 30px; translate: 0 -72%; box-shadow: 0 0 20px 7px rgba(255, 210, 90, 0.5); } }

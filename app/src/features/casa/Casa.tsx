@@ -34,7 +34,13 @@ function Bienvenida({ momento, saludo, recorridas }: { momento: Momento; saludo:
           <Link to="/vivido" className="casa__video">🎬 Videos</Link>
         </span>
       </div>
-      <p className="casa__saludo mano">{saludo} 💛</p>
+      <p className="casa__saludo mano">
+        {saludo}{' '}
+        <svg className="casa__corazon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 21s-8.5-4.9-8.5-11A4.6 4.6 0 0 1 12 7.2 4.6 4.6 0 0 1 20.5 10c0 6.1-8.5 11-8.5 11z" />
+        </svg>
+        <span className="casa__astro" aria-hidden="true" />
+      </p>
       <p className="casa__frase">{FRASE_SEGUN_MOMENTO[momento]}</p>
       <p className="casa__progreso">
         Hoy recorriste <b>{recorridas}</b> de {habitaciones.length} habitaciones
