@@ -531,3 +531,4 @@
   .pregunta-casa__titulo { font-size: clamp(1.3rem, 3.6dvh, 1.7rem); }
   .pregunta-casa__escribir { min-height: 50px; }
 }
+.pregunta-casa__cargando { opacity: 0.55; }

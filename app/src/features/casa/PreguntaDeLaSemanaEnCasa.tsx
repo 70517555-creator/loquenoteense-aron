@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import type { TemaDelDia } from '../../domain/foro'
 import { useEnLinea } from '../../hooks/useEnLinea'
 import { useApodo } from '../foro/useApodo'
-import { useComentarios, usePreguntaDeLaSemana, useSemanaRespondida } from '../foro/useForo'
+import { useComentarios, usePreguntaDeLaSemanaInmediata, useSemanaRespondida } from '../foro/useForo'
 import { VentanaParaResponder } from './VentanaParaResponder'
 
 const RUTA_DE_LAS_RESPUESTAS = '/foro?seccion=semana'
@@ -19,7 +19,7 @@ function Tarjeta({ pregunta }: { pregunta: TemaDelDia }) {
   const { apodo } = useApodo()
   const [escribiendo, setEscribiendo] = useState(false)
 
-  const publicadas = comentarios.datos?.filter((c) => c.estado === 'aprobado' && c.rol === 'padre').length ?? 0
+  const publicadas = comentarios.datos?.filter((c) => c.estado === 'aprobado' && c.rol === 'padre').length
 
   return (
     <section className="pregunta-casa" aria-label="Pregunta de la semana">
@@ -30,9 +30,13 @@ function Tarjeta({ pregunta }: { pregunta: TemaDelDia }) {
         <span>{respondida ? '¿Quieres contar algo más?' : `Cuéntanos qué haces tú, ${apodo.parentesco.toLowerCase()}…`}</span>
       </button>
       {escribiendo && <VentanaParaResponder pregunta={pregunta} onEnviado={comentarios.recargar} onCerrar={() => setEscribiendo(false)} />}
-      <p className="pregunta-casa__eco">
-        👪 {textoDeRespuestas(publicadas)}
-        {publicadas > 0 && <> · <Link to={RUTA_DE_LAS_RESPUESTAS} className="sin-cortes">Leer respuestas →</Link></>}
+      <p className="pregunta-casa__eco" aria-live="polite">
+        {publicadas === undefined ? ' ' : (
+          <>
+            👪 {textoDeRespuestas(publicadas)}
+            {publicadas > 0 && <> <Link to={RUTA_DE_LAS_RESPUESTAS} className="sin-cortes">Leer respuestas →</Link></>}
+          </>
+        )}
       </p>
     </section>
   )
@@ -40,7 +44,7 @@ function Tarjeta({ pregunta }: { pregunta: TemaDelDia }) {
 
 export function PreguntaDeLaSemanaEnCasa() {
   const enLinea = useEnLinea()
-  const { datos: pregunta } = usePreguntaDeLaSemana()
-  if (!enLinea || !pregunta) return null
+  const pregunta = usePreguntaDeLaSemanaInmediata()
+  if (!enLinea) return null
   return <Tarjeta pregunta={pregunta} />
 }

@@ -26,14 +26,22 @@ export const PREFIJO_DE_SEMANA = 'semana-'
 
 export const preguntaPreparada = (lunes: string) => preguntasDeLaSemana[numeroDeSemana(lunes) % preguntasDeLaSemana.length]
 
+const temaDeLaSemana = (lunes: string, pregunta = preguntaPreparada(lunes)): TemaDelDia =>
+  ({ id: `${PREFIJO_DE_SEMANA}${lunes}`, fecha: lunes, ...pregunta })
+
 export function usePreguntaDeLaSemana() {
   const { foro } = useServicios()
   const lunes = lunesDeLaSemana()
-  return useConsulta(useCallback(async (): Promise<TemaDelDia> => {
+  return useConsulta(useCallback(async () => {
     const propia = await foro.preguntaDeLaSemana(lunes).catch(() => null)
-    const pregunta = propia ?? preguntaPreparada(lunes)
-    return { id: `${PREFIJO_DE_SEMANA}${lunes}`, fecha: lunes, ...pregunta }
+    return temaDeLaSemana(lunes, propia ?? undefined)
   }, [foro, lunes]))
+}
+
+// Muestra al instante la pregunta preparada mientras llega la que haya escrito psicología.
+export function usePreguntaDeLaSemanaInmediata(): TemaDelDia {
+  const { datos } = usePreguntaDeLaSemana()
+  return datos ?? temaDeLaSemana(lunesDeLaSemana())
 }
 
 export function useTemasAnteriores() {
