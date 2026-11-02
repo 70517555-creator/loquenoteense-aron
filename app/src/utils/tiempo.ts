@@ -16,6 +16,16 @@ export function fechaDeHoy(fecha = new Date()): string {
   return `${fecha.getFullYear()}-${dosDigitos(fecha.getMonth() + 1)}-${dosDigitos(fecha.getDate())}`
 }
 
+export function lunesDeLaSemana(fecha = new Date()): string {
+  const lunes = new Date(fecha.getFullYear(), fecha.getMonth(), fecha.getDate() - ((fecha.getDay() + 6) % 7))
+  return fechaDeHoy(lunes)
+}
+
+export function numeroDeSemana(lunesIso: string): number {
+  const [anio, mes, dia] = lunesIso.split('-').map(Number)
+  return Math.floor(Date.UTC(anio, mes - 1, dia) / (7 * MS_POR_DIA))
+}
+
 const FORMATO_DE_FECHA = new Intl.DateTimeFormat('es-PE', { weekday: 'long', day: 'numeric', month: 'long' })
 
 export function fechaLegible(fechaIso: string): string {

@@ -5,6 +5,7 @@ import { useAccion } from '../../hooks/useAccion'
 import { useConsulta } from '../../hooks/useConsulta'
 import { Cargando } from '../../ui/Cargando'
 import { fechaDeHoy, fechaLegible } from '../../utils/tiempo'
+import { PreguntaDeLaSemanaDelPanel } from './PreguntaDeLaSemanaDelPanel'
 
 interface Borrador {
   titulo: string
@@ -87,6 +88,7 @@ export function ProgramarTemas() {
 
   return (
     <section className="conversacion">
+      <PreguntaDeLaSemanaDelPanel />
       <FormularioDeTema borrador={borrador} onCambiar={setBorrador} onGuardado={alGuardar} />
 
       <h3 className="titulo-tarjeta">Próximos temas</h3>

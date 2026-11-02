@@ -29,6 +29,11 @@ export const firestoreForo: ForoPort = {
     return (await getDocs(consulta)).docs.map(aTema)
   },
 
+  async preguntaDeLaSemana(lunes) {
+    const pregunta = await getDoc(doc(db, RUTAS.preguntas, lunes))
+    return pregunta.exists() ? { titulo: pregunta.get('titulo'), descripcion: pregunta.get('descripcion') ?? '' } : null
+  },
+
   async comentarios(temaId) {
     const uid = await uidConSesion()
     const documentos = await aprobadosYPropios(RUTAS.comentarios(temaId), uid)

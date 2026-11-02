@@ -9,6 +9,8 @@ export interface TemaDelDia {
   fecha: string
 }
 
+export type PreguntaDeLaSemana = Pick<TemaDelDia, 'titulo' | 'descripcion'>
+
 export interface Comentario {
   id: string
   temaId: string

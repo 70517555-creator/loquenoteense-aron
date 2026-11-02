@@ -7,7 +7,7 @@ import { Fichas } from '../../ui/Fichas'
 import { ConversacionDelTema } from './ConversacionDelTema'
 import { PropuestasDeTemas } from './PropuestasDeTemas'
 import { TemasAnteriores } from './TemasAnteriores'
-import { useTemaDeHoy } from './useForo'
+import { usePreguntaDeLaSemana, useTemaDeHoy } from './useForo'
 
 function TemaDeHoy() {
   const { datos: tema, fallo } = useTemaDeHoy()
@@ -16,7 +16,15 @@ function TemaDeHoy() {
   return <ConversacionDelTema tema={tema} etiqueta="Tema de hoy" />
 }
 
+function PreguntaDeLaSemana() {
+  const { datos: pregunta, fallo } = usePreguntaDeLaSemana()
+  if (fallo) return <p className="aviso-suave">No pudimos cargar la pregunta de la semana. Revisa tu conexión.</p>
+  if (!pregunta) return <Cargando />
+  return <ConversacionDelTema tema={pregunta} etiqueta="📌 Pregunta de la semana" autor="💬 Psicología pregunta" />
+}
+
 const SECCIONES = [
+  { id: 'semana', titulo: 'Pregunta de la semana', Contenido: PreguntaDeLaSemana },
   { id: 'hoy', titulo: 'Tema de hoy', Contenido: TemaDeHoy },
   { id: 'propuestas', titulo: 'Temas propuestos', Contenido: PropuestasDeTemas },
   { id: 'anteriores', titulo: 'Anteriores', Contenido: TemasAnteriores },

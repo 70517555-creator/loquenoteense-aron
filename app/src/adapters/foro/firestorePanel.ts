@@ -114,6 +114,12 @@ export const firestorePanel: PanelDePsicologiaPort = {
 
   borrarTema: (tema) => deleteDoc(doc(db, RUTAS.temas, tema.id)),
 
+  async fijarPreguntaDeLaSemana(lunes, pregunta) {
+    await setDoc(doc(db, RUTAS.preguntas, lunes), { ...pregunta, creadoPor: await correoActual(), creadoEn: serverTimestamp() })
+  },
+
+  quitarPreguntaDeLaSemana: (lunes) => deleteDoc(doc(db, RUTAS.preguntas, lunes)),
+
   async reportes() {
     const reportes = await getDocs(collection(db, RUTAS.reportes))
     return reportes.docs.map(aReporte).sort(masRecientePrimero)

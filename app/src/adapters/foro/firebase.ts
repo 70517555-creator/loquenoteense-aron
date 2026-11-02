@@ -10,6 +10,7 @@ export const db = initializeFirestore(app, { ignoreUndefinedProperties: true })
 
 export const RUTAS = {
   temas: 'temas',
+  preguntas: 'preguntas',
   comentarios: (temaId: string) => `temas/${temaId}/comentarios`,
   propuestas: 'propuestas',
   reportes: 'reportes',

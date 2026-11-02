@@ -1,11 +1,12 @@
 import type {
-  Comentario, Decision, NuevoComentario, Propuesta, Psicologo, Reporte, ResumenDelForo, TemaDelDia,
+  Comentario, Decision, NuevoComentario, PreguntaDeLaSemana, Propuesta, Psicologo, Reporte, ResumenDelForo, TemaDelDia,
 } from '../domain/foro'
 import type { CartaDeEstudiante, ConteoDeCasa } from '../domain/mochila'
 
 export interface ForoPort {
   temaDeLaFecha(fecha: string): Promise<TemaDelDia | null>
   temasAnteriores(hasta: string): Promise<TemaDelDia[]>
+  preguntaDeLaSemana(lunes: string): Promise<PreguntaDeLaSemana | null>
   comentarios(temaId: string): Promise<Comentario[]>
   comentar(nuevo: NuevoComentario): Promise<void>
   marcarMeAyudo(comentario: Comentario): Promise<void>
@@ -34,6 +35,8 @@ export interface PanelDePsicologiaPort {
   temasProgramados(desde: string): Promise<TemaDelDia[]>
   programarTema(tema: Omit<TemaDelDia, 'id'>, propuesta?: Propuesta): Promise<void>
   borrarTema(tema: TemaDelDia): Promise<void>
+  fijarPreguntaDeLaSemana(lunes: string, pregunta: PreguntaDeLaSemana): Promise<void>
+  quitarPreguntaDeLaSemana(lunes: string): Promise<void>
   reportes(): Promise<Reporte[]>
   resolverReporte(reporte: Reporte): Promise<void>
   ocultarReportado(reporte: Reporte): Promise<void>

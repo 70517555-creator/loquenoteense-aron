@@ -2,6 +2,8 @@
 .conversacion { display: grid; gap: var(--e-4); }
 .tema-del-dia { display: grid; gap: var(--e-2); background: linear-gradient(160deg, var(--ambar-suave), var(--papel)); border: 1.5px solid #f3dca6; }
 .tema-del-dia .insignia { justify-self: start; min-height: 30px; font-size: var(--t-xs); }
+.tema-del-dia__autor { font-weight: 800; color: var(--salvia-oscuro); }
+.invitacion-foro { margin: 0; background: var(--lila); border: 1.5px dashed #c9b8ef; text-align: center; }
 
 .comentarios, .propuestas, .temas-anteriores, .lista-panel { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--e-3); }
 .comentario { display: grid; gap: var(--e-1); padding: var(--e-4); border-radius: var(--r-m); background: var(--papel); box-shadow: var(--sombra-1); border-left: 4px solid var(--linea); }

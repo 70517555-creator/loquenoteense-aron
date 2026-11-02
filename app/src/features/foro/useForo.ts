@@ -1,12 +1,13 @@
 import { useCallback } from 'react'
 import { CLAVES_DE_PROGRESO } from '../../app/clavesDeProgreso'
 import { useServicios } from '../../app/servicios'
+import { preguntasDeLaSemana } from '../../content/preguntasDeLaSemana'
 import { temasDeReserva } from '../../content/temasDeReserva'
 import type { TemaDelDia } from '../../domain/foro'
 import { useConsulta } from '../../hooks/useConsulta'
 import { usePersistente } from '../../hooks/usePersistente'
 import { agregarSinRepetir } from '../../utils/listas'
-import { diaDelAnio, fechaDeHoy } from '../../utils/tiempo'
+import { diaDelAnio, fechaDeHoy, lunesDeLaSemana, numeroDeSemana } from '../../utils/tiempo'
 
 export const PREFIJO_DE_RESERVA = 'reserva-'
 
@@ -19,6 +20,20 @@ export function useTemaDeHoy() {
   const { foro } = useServicios()
   const hoy = fechaDeHoy()
   return useConsulta(useCallback(async () => (await foro.temaDeLaFecha(hoy)) ?? temaDeReserva(hoy), [foro, hoy]))
+}
+
+export const PREFIJO_DE_SEMANA = 'semana-'
+
+export const preguntaPreparada = (lunes: string) => preguntasDeLaSemana[numeroDeSemana(lunes) % preguntasDeLaSemana.length]
+
+export function usePreguntaDeLaSemana() {
+  const { foro } = useServicios()
+  const lunes = lunesDeLaSemana()
+  return useConsulta(useCallback(async (): Promise<TemaDelDia> => {
+    const propia = await foro.preguntaDeLaSemana(lunes).catch(() => null)
+    const pregunta = propia ?? preguntaPreparada(lunes)
+    return { id: `${PREFIJO_DE_SEMANA}${lunes}`, fecha: lunes, ...pregunta }
+  }, [foro, lunes]))
 }
 
 export function useTemasAnteriores() {
