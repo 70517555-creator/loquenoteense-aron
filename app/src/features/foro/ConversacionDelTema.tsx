@@ -68,12 +68,11 @@ export function ConversacionDelTema({ tema, etiqueta, autor, enfocar }: Props) {
   return (
     <section className="conversacion">
       <article className="tarjeta tema-del-dia">
-        <span className="insignia">{etiqueta} · {fechaLegible(tema.fecha)}</span>
-        {autor && <small className="tema-del-dia__autor">{autor}</small>}
+        <span className="insignia">{autor ?? etiqueta} · {fechaLegible(tema.fecha)}</span>
         <h2 className="mano titulo-grande sin-margen">{tema.titulo}</h2>
-        {tema.descripcion && <p>{tema.descripcion}</p>}
+        {tema.descripcion && <p className="sin-margen">{tema.descripcion}</p>}
+        <FormularioDeComentario tema={tema} onEnviado={recargar} enfocar={enfocar && !cargando} compacto />
       </article>
-      <FormularioDeComentario tema={tema} onEnviado={recargar} enfocar={enfocar && !cargando} />
       <ListaDeComentarios comentarios={datos} cargando={cargando} fallo={fallo} onQuitar={delEquipo ? quitar : undefined} />
     </section>
   )
