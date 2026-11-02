@@ -237,7 +237,7 @@
 .portada > .mural { position: relative; z-index: 1; display: flex; justify-content: center; padding: 0 var(--e-4) clamp(var(--e-2), 1.5dvh, var(--e-4)); }
 
 /* En pantallas anchas, fotos tipo polaroid clavadas en el espacio de la izquierda. */
-@media (min-width: 900px) and (orientation: landscape) {
+@media (min-width: 1200px) and (orientation: landscape) {
   .portada > .mural {
     position: absolute; z-index: 2; left: clamp(var(--e-4), 4.5vw, 88px); top: 50%; translate: 0 -46%; padding: 0;
   }
@@ -263,4 +263,41 @@
   .mural .miniatura__etiqueta {
     padding: 4px 0 2px; color: #3a3226; text-shadow: none; font-family: var(--f-mano); font-size: clamp(1rem, 2.4dvh, 1.35rem); font-weight: 700;
   }
+}
+
+/* Proporciones en celulares y tablets: botón ancho y cómodo, fotos justo debajo y el grupo centrado. */
+@media (max-width: 1199px), (orientation: portrait) {
+  .portada__heroe { margin: auto auto 0; padding-bottom: 0; }
+  .portada > .mural { margin-bottom: auto; padding-top: clamp(var(--e-3), 3dvh, var(--e-6)); }
+  .portada__acciones { width: 100%; justify-content: center; }
+  .boton--comenzar {
+    width: min(100%, 440px); min-height: clamp(58px, 8.5dvh, 76px); padding-inline: var(--e-5);
+    font-size: clamp(1.4rem, 1rem + 1.6vw, 2rem);
+  }
+  .miniatura__imagen { width: clamp(120px, min(36vw, 20dvh), 210px); }
+}
+
+/* Pantallas muy grandes: todo crece para no verse perdido. */
+@media (min-width: 1800px) and (min-height: 850px) {
+  .logo { font-size: 1.75rem; }
+  .portada__menu { gap: var(--e-7); }
+  .portada__menu a { font-size: 1.25rem; }
+  .portada__heroe { max-width: 1200px; }
+  .portada__bajada { font-size: clamp(1.35rem, 0.6rem + 0.7vw, 1.9rem); max-width: 40ch; }
+  .boton--comenzar { min-height: clamp(96px, 10dvh, 124px); padding-inline: clamp(140px, 8vw, 200px); font-size: clamp(2.4rem, 1rem + 1.3vw, 3.2rem); }
+  .portada__lema { font-size: clamp(1.6rem, 1.6dvh, 2.2rem); }
+  .mural .miniatura__imagen { width: clamp(260px, 14vw, 360px); }
+  .mural .miniatura__play { width: 60px; height: 60px; }
+  .mural .miniatura__etiqueta { font-size: clamp(1.4rem, 1.2vw, 1.9rem); }
+  .portada > .mural { left: clamp(88px, 6vw, 160px); }
+}
+
+/* Retoques finos. */
+.portada__bajada { text-wrap: balance; }
+.boton--comenzar svg { width: 0.85em; height: 0.85em; }
+@media (max-width: 1199px), (orientation: portrait) {
+  .boton--comenzar { font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2rem); }
+}
+@media (min-width: 1800px) and (min-height: 850px) {
+  .portada__titulo { font-size: clamp(6rem, min(5.2vw, 10dvh), 9rem); }
 }
