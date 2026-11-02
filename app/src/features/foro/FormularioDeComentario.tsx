@@ -16,6 +16,7 @@ interface Props {
   tema: TemaDelDia
   onEnviado: () => void
   enfocar?: boolean
+  compacto?: boolean
 }
 
 function AvisoDeRiesgo() {
@@ -30,7 +31,7 @@ function AvisoDeRiesgo() {
   )
 }
 
-export function FormularioDeComentario({ tema, onEnviado, enfocar }: Props) {
+export function FormularioDeComentario({ tema, onEnviado, enfocar, compacto }: Props) {
   const { foro } = useServicios()
   const { texto: apodo } = useApodo()
   const { ocupado, error, ejecutar } = useAccion()
@@ -43,9 +44,9 @@ export function FormularioDeComentario({ tema, onEnviado, enfocar }: Props) {
 
   useEffect(() => {
     if (!enfocar) return
-    caja.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
-    caja.current?.focus({ preventScroll: true })
-  }, [enfocar])
+    if (!compacto) caja.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    caja.current?.focus({ preventScroll: !compacto })
+  }, [enfocar, compacto])
 
   const enviar = async (e: FormEvent) => {
     e.preventDefault()
@@ -60,15 +61,15 @@ export function FormularioDeComentario({ tema, onEnviado, enfocar }: Props) {
   }
 
   return (
-    <form className="tarjeta formulario-foro" onSubmit={enviar}>
-      <h3 className="titulo-tarjeta">✍️ Escribe tu respuesta</h3>
+    <form className={compacto ? 'formulario-foro formulario-foro--compacto' : 'tarjeta formulario-foro'} onSubmit={enviar}>
+      {!compacto && <h3 className="titulo-tarjeta">✍️ Escribe tu respuesta</h3>}
       <textarea
         ref={caja}
         className="formulario-foro__caja"
         value={texto}
         onChange={(e) => setTexto(e.target.value)}
         maxLength={LARGO_MAXIMO_COMENTARIO}
-        rows={4}
+        rows={compacto ? 3 : 4}
         placeholder="Escribe aquí lo que te ha funcionado, lo que te cuesta o tu pregunta…"
         aria-label="Tu comentario"
       />

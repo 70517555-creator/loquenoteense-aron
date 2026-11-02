@@ -1,31 +1,46 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import type { TemaDelDia } from '../../domain/foro'
 import { useEnLinea } from '../../hooks/useEnLinea'
-import { RUTA_PARA_RESPONDER_LA_SEMANA, useComentarios, usePreguntaDeLaSemana, useSemanaRespondida } from '../foro/useForo'
+import { useApodo } from '../foro/useApodo'
+import { useComentarios, usePreguntaDeLaSemana, useSemanaRespondida } from '../foro/useForo'
+import { VentanaParaResponder } from './VentanaParaResponder'
 
-function Respuestas({ temaId }: { temaId: string }) {
-  const { datos } = useComentarios(temaId)
-  const publicadas = datos?.filter((c) => c.estado === 'aprobado' && c.rol === 'padre').length ?? 0
+const RUTA_DE_LAS_RESPUESTAS = '/foro?seccion=semana'
+
+function textoDeRespuestas(publicadas: number) {
+  if (publicadas === 0) return 'Sé de las primeras familias en responder'
+  return publicadas === 1 ? '1 familia ya respondió' : `${publicadas} familias ya respondieron`
+}
+
+function Tarjeta({ pregunta }: { pregunta: TemaDelDia }) {
+  const comentarios = useComentarios(pregunta.id)
+  const { respondida } = useSemanaRespondida()
+  const { apodo } = useApodo()
+  const [escribiendo, setEscribiendo] = useState(false)
+
+  const publicadas = comentarios.datos?.filter((c) => c.estado === 'aprobado' && c.rol === 'padre').length ?? 0
+
   return (
-    <p className="pregunta-casa__eco">
-      👪 {publicadas === 0 ? 'Sé de las primeras familias en responder' : `${publicadas} ${publicadas === 1 ? 'familia ya respondió' : 'familias ya respondieron'}`}
-    </p>
+    <section className="pregunta-casa" aria-label="Pregunta de la semana">
+      <span className="pregunta-casa__etiqueta">💬 Pregunta de la semana · Psicología</span>
+      <h2 className="pregunta-casa__titulo mano">{pregunta.titulo}</h2>
+      <button className="pregunta-casa__escribir" onClick={() => setEscribiendo(true)}>
+        <span className="pregunta-casa__avatar" aria-hidden="true">✍️</span>
+        <span>{respondida ? '¿Quieres contar algo más?' : `Cuéntanos qué haces tú, ${apodo.parentesco.toLowerCase()}…`}</span>
+      </button>
+      {escribiendo && <VentanaParaResponder pregunta={pregunta} onEnviado={comentarios.recargar} onCerrar={() => setEscribiendo(false)} />}
+      <p className="pregunta-casa__eco">
+        👪 {textoDeRespuestas(publicadas)}
+        {publicadas > 0 && <> · <Link to={RUTA_DE_LAS_RESPUESTAS} className="sin-cortes">Leer respuestas →</Link></>}
+      </p>
+    </section>
   )
 }
 
 export function PreguntaDeLaSemanaEnCasa() {
   const enLinea = useEnLinea()
   const { datos: pregunta } = usePreguntaDeLaSemana()
-  const { respondida } = useSemanaRespondida()
   if (!enLinea || !pregunta) return null
-
-  return (
-    <Link to={RUTA_PARA_RESPONDER_LA_SEMANA} className="pregunta-casa">
-      <span className="pregunta-casa__etiqueta">💬 Pregunta de la semana · Psicología</span>
-      <b className="pregunta-casa__titulo mano">{pregunta.titulo}</b>
-      <Respuestas temaId={pregunta.id} />
-      <span className="boton pregunta-casa__boton">
-        {respondida ? '👀 Ver lo que dicen otras familias' : '✍️ Responder (es anónimo)'}
-      </span>
-    </Link>
-  )
+  return <Tarjeta pregunta={pregunta} />
 }

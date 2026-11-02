@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { asistenteHabitacion, foroHabitacion, habitaciones } from '../../app/habitaciones'
+import { asistenteHabitacion, habitaciones } from '../../app/habitaciones'
 import { useMomentoDelDia, type Momento } from '../../hooks/useMomentoDelDia'
 import { useVisitasDeHoy } from '../../hooks/useVisitasDeHoy'
 import { BarraDeProgreso } from '../../ui/BarraDeProgreso'
@@ -11,7 +11,7 @@ import { ContadorDeVisitas } from './ContadorDeVisitas'
 import { PreguntaDeLaSemanaEnCasa } from './PreguntaDeLaSemanaEnCasa'
 import { Cielo } from './paisaje/Cielo'
 import { Suelo } from './paisaje/Suelo'
-import { Balcon, Ventana, VentanaDelAtico } from './Ventana'
+import { Ventana, VentanaDelAtico } from './Ventana'
 
 const FRASE_SEGUN_MOMENTO: Record<Momento, string> = {
   manana: 'Un nuevo día para acercarte un poquito más.',
@@ -99,7 +99,6 @@ export default function Casa() {
           {habitaciones.map((habitacion, i) => (
             <Ventana key={habitacion.id} habitacion={habitacion} posicion={i} visitada={fueVisitada(habitacion.id)} />
           ))}
-          <Balcon habitacion={foroHabitacion} />
         </div>
         <Entrada />
       </div>

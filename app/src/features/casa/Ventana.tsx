@@ -64,31 +64,3 @@ export function VentanaDelAtico({ habitacion }: { habitacion: Habitacion }) {
     </Link>
   )
 }
-
-const FAMILIAS_EN_EL_BALCON = 5
-const BURBUJAS_DE_CONVERSACION = 3
-
-export function Balcon({ habitacion }: { habitacion: Habitacion }) {
-  return (
-    <Link to={habitacion.ruta} className="ventana balcon">
-      <span className="balcon__letrero">
-        <Icono nombre={habitacion.icono} tam={14} /> ¡Entra a conversar!
-      </span>
-      <span className="ventana__marco">
-        <span className="balcon__sala">
-          <span className="balcon__familias" aria-hidden="true">
-            {Array.from({ length: FAMILIAS_EN_EL_BALCON }, (_, i) => <i key={i} />)}
-          </span>
-          <span className="balcon__burbujas" aria-hidden="true">
-            {Array.from({ length: BURBUJAS_DE_CONVERSACION }, (_, i) => <i key={i} />)}
-          </span>
-          <span className="balcon__baranda" aria-hidden="true" />
-        </span>
-      </span>
-      <b className="ventana__titulo balcon__titulo">
-        {habitacion.titulo}
-        <small>{habitacion.frase}</small>
-      </b>
-    </Link>
-  )
-}

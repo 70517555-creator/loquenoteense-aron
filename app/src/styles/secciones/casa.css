@@ -371,7 +371,7 @@
 @media (min-width: 1024px) and (orientation: landscape) {
   .casa {
     --alto-libre: calc(100dvh - var(--alto-pestanas) - var(--seguro-abajo) - 74px);
-    --ancho-casa: min(820px, 56vw, calc((var(--alto-libre) - 320px) / 0.3));
+    --ancho-casa: min(820px, 56vw, calc((var(--alto-libre) - 320px) / 0.37));
     display: grid; grid-template-columns: minmax(240px, 380px) var(--ancho-casa);
     grid-template-rows: minmax(0, 1fr); justify-content: center; column-gap: clamp(32px, 5vw, 96px);
     padding: var(--e-7) var(--e-6) calc(var(--alto-pestanas) + var(--seguro-abajo) + var(--e-5));
@@ -387,7 +387,7 @@
   .fachada { gap: var(--e-4) var(--e-4); padding: var(--e-5) var(--e-5) var(--e-4); }
   .techo { height: 72px; }
   .ventana--atico { margin-top: -88px; margin-bottom: -10px; }
-  .fachada { grid-template-columns: repeat(4, minmax(0, 1fr)) minmax(0, 1.2fr); }
+  .fachada { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .balcon { grid-column: 5; grid-row: 1 / span 2; }
   .balcon .ventana__marco { flex: 1; display: flex; }
   .balcon__sala { flex: 1; height: auto; }
@@ -476,3 +476,58 @@
 .balcon__letrero { font-size: 0.85rem; padding: 4px 12px; background: var(--rojo); color: #fff; animation: letrero 2.4s ease-in-out infinite; }
 @keyframes letrero { 0%, 100% { rotate: -3deg; } 50% { rotate: 2deg; } }
 @media (prefers-reduced-motion: reduce) { .balcon__letrero { animation: none; } }
+
+/* Caja para escribir ahí mismo, como el "¿Qué estás pensando?" de las redes. */
+.pregunta-casa { cursor: default; }
+.pregunta-casa:hover { transform: none; }
+.pregunta-casa__titulo { margin: 0; }
+.pregunta-casa__escribir {
+  display: flex; align-items: center; gap: var(--e-3); width: 100%; min-height: 56px; padding: var(--e-2) var(--e-4) var(--e-2) var(--e-2);
+  border: 2px solid #f0c36a; border-radius: var(--r-total); background: #fff; color: var(--tinta-suave);
+  font: inherit; font-size: var(--t-m, 1rem); font-weight: 600; text-align: left; cursor: text;
+  box-shadow: 0 4px 14px rgba(200, 140, 20, 0.18); transition: border-color 0.2s, box-shadow 0.2s;
+  animation: invitar-caja 2.8s ease-in-out infinite;
+}
+.pregunta-casa__escribir:hover, .pregunta-casa__escribir:focus-visible { border-color: var(--rojo); box-shadow: 0 6px 18px rgba(200, 48, 44, 0.25); }
+.pregunta-casa__avatar { flex: none; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(180deg, #e2453f, var(--rojo)); font-size: 1.2rem; }
+@keyframes invitar-caja { 0%, 100% { box-shadow: 0 4px 14px rgba(200, 140, 20, 0.18); } 50% { box-shadow: 0 4px 14px rgba(200, 140, 20, 0.18), 0 0 0 6px rgba(240, 195, 106, 0.35); } }
+@media (prefers-reduced-motion: reduce) { .pregunta-casa__escribir { animation: none; } }
+.pregunta-casa__eco a { color: var(--rojo); font-weight: 800; }
+.formulario-foro--compacto { gap: var(--e-2); }
+.formulario-foro--compacto .formulario-foro__caja { min-height: 84px; background: #fff; }
+.formulario-foro--compacto .apodo { display: flex; flex-wrap: wrap; gap: var(--e-2); }
+.formulario-foro--compacto .apodo select { flex: 1 1 120px; }
+.formulario-foro--compacto .privacidad { font-size: var(--t-xs); margin: 0; }
+.formulario-foro--compacto .boton { justify-self: stretch; }
+
+/* Ventanita para responder encima de la casa (en el celular sube desde abajo). */
+.responder {
+  position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; padding: var(--e-4);
+  background: rgba(20, 14, 30, 0.55); backdrop-filter: blur(3px); animation: aparecer 0.25s var(--suave);
+}
+.responder__caja {
+  display: grid; gap: var(--e-3); width: min(100%, 560px); max-height: calc(100dvh - 2 * var(--e-4)); overflow: auto;
+  padding: var(--e-5); border-radius: var(--r-l); background: linear-gradient(160deg, #fff8e6, #ffffff 60%);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+}
+.responder__cabecera { display: flex; align-items: center; justify-content: space-between; gap: var(--e-3); }
+.responder__cerrar { display: grid; place-items: center; width: 40px; height: 40px; border: 0; border-radius: 50%; background: var(--papel); color: var(--tinta); cursor: pointer; }
+.responder__descripcion { margin: 0; color: var(--tinta-suave); }
+.responder__ver { justify-self: center; font-size: var(--t-s); font-weight: 700; color: var(--rojo); }
+@media (max-width: 640px) {
+  .responder { place-items: end stretch; padding: 0; }
+  .responder__caja { width: 100%; max-height: 92dvh; border-radius: var(--r-l) var(--r-l) 0 0; padding: var(--e-4) var(--e-4) calc(var(--e-4) + var(--seguro-abajo)); animation: subir 0.3s var(--suave); }
+}
+@keyframes subir { from { translate: 0 40px; opacity: 0; } to { translate: 0 0; opacity: 1; } }
+@media (max-height: 720px) {
+  .responder__descripcion { display: none; }
+  .responder__caja { gap: var(--e-2); padding-block: var(--e-3); }
+  .responder .formulario-foro--compacto .formulario-foro__caja { min-height: 64px; }
+  .responder .apodo legend { margin-bottom: 0; }
+}
+.pregunta-casa__eco .sin-cortes { white-space: nowrap; }
+@media (min-width: 1024px) and (orientation: landscape) and (max-height: 720px) {
+  .pregunta-casa { padding: var(--e-3) var(--e-4); gap: var(--e-1); margin-top: var(--e-3); }
+  .pregunta-casa__titulo { font-size: clamp(1.3rem, 3.6dvh, 1.7rem); }
+  .pregunta-casa__escribir { min-height: 50px; }
+}
