@@ -173,3 +173,11 @@ main { animation: aparecer 0.35s var(--suave); }
 }
 .privacidad { margin: var(--e-2) 0 0; font-size: var(--t-xs); color: var(--tinta-suave); }
 .privacidad .icono { display: inline-block; vertical-align: -2px; }
+
+.pestana { position: relative; }
+.pestana__aviso {
+  position: absolute; top: 6px; left: calc(50% + 8px); width: 10px; height: 10px; border-radius: 50%;
+  background: var(--rojo); box-shadow: 0 0 0 2px var(--papel); animation: avisar 1.8s ease-in-out infinite;
+}
+@keyframes avisar { 0%, 100% { scale: 1; } 50% { scale: 1.3; } }
+@media (prefers-reduced-motion: reduce) { .pestana__aviso { animation: none; } }

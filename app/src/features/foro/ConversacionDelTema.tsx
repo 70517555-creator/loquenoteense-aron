@@ -13,6 +13,7 @@ interface Props {
   tema: TemaDelDia
   etiqueta: string
   autor?: string
+  enfocar?: boolean
 }
 
 interface PropsDeLista {
@@ -47,7 +48,7 @@ function ListaDeComentarios({ comentarios, cargando, fallo, onQuitar }: PropsDeL
   )
 }
 
-export function ConversacionDelTema({ tema, etiqueta, autor }: Props) {
+export function ConversacionDelTema({ tema, etiqueta, autor, enfocar }: Props) {
   const { datos, cargando, fallo, recargar } = useComentarios(tema.id)
   const { panel } = useServicios()
   const delEquipo = useEsDelEquipo()
@@ -70,7 +71,7 @@ export function ConversacionDelTema({ tema, etiqueta, autor }: Props) {
         {tema.descripcion && <p>{tema.descripcion}</p>}
       </article>
       <ListaDeComentarios comentarios={datos} cargando={cargando} fallo={fallo} onQuitar={delEquipo ? quitar : undefined} />
-      <FormularioDeComentario tema={tema} onEnviado={recargar} />
+      <FormularioDeComentario tema={tema} onEnviado={recargar} enfocar={enfocar && !cargando} />
     </section>
   )
 }

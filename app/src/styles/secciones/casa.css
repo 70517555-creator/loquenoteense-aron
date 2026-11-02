@@ -439,3 +439,40 @@
 @keyframes resplandor { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.1); } }
 @keyframes balanceo { 0%, 100% { rotate: -2.5deg; } 50% { rotate: 2.5deg; } }
 @keyframes mecer-planta { 0%, 100% { rotate: -3deg; } 50% { rotate: 3deg; } }
+
+/* Pregunta de la semana en la casa: invita a responder sin entrar a buscar. */
+.pregunta-casa {
+  display: grid; gap: var(--e-2); margin-top: var(--e-4); padding: var(--e-4);
+  border-radius: var(--r-l); text-decoration: none; color: var(--tinta);
+  background: linear-gradient(160deg, #fff8e6, #ffffff 70%);
+  border: 2px solid #f3d38a; box-shadow: 0 10px 26px rgba(60, 40, 10, 0.18);
+  transition: transform 0.2s var(--suave), box-shadow 0.2s;
+}
+.pregunta-casa:hover { transform: translateY(-2px); box-shadow: 0 14px 30px rgba(60, 40, 10, 0.24); }
+.pregunta-casa__etiqueta { justify-self: start; padding: 2px 10px; border-radius: var(--r-total); font-size: var(--t-xs); font-weight: 800; color: var(--tinta); background: var(--ambar); }
+.pregunta-casa__titulo { font-size: clamp(1.45rem, 1.1rem + 1vw, 1.9rem); line-height: 1.1; }
+.pregunta-casa__eco { margin: 0; font-size: var(--t-s); font-weight: 700; color: var(--tinta-suave); }
+.pregunta-casa__boton {
+  justify-self: stretch; min-height: 52px; font-size: var(--t-l); color: #fff;
+  background: linear-gradient(180deg, #e2453f, var(--rojo)); box-shadow: 0 6px 16px rgba(200, 48, 44, 0.4);
+  animation: invitar 2.8s ease-in-out infinite;
+}
+@keyframes invitar { 0%, 100% { scale: 1; } 50% { scale: 1.025; } }
+@media (prefers-reduced-motion: reduce) { .pregunta-casa__boton { animation: none; } }
+@media (min-width: 1024px) and (orientation: landscape) {
+  .pregunta-casa { margin-block: var(--e-4) auto; }
+  .casa .barra-progreso { margin-bottom: 0; }
+}
+
+/* Balcón más vivo: luz cálida, familias de colores y letrero que invita. */
+.balcon .balcon__sala { background: radial-gradient(ellipse at 50% 90%, #ffe7a8 0%, #ffcf7a 45%, #f3a95c 100%); }
+.balcon .ventana__marco { box-shadow: inset 0 0 0 2px var(--madera-2), 0 0 26px 4px rgba(255, 190, 90, 0.45); }
+.balcon__familias i:nth-child(1) { background: #c8302c; }
+.balcon__familias i:nth-child(2) { background: #2f6fa8; }
+.balcon__familias i:nth-child(3) { background: #7a4a2e; }
+.balcon__familias i:nth-child(4) { background: #3f8f5a; }
+.balcon__familias i:nth-child(5) { background: #b8569a; }
+.balcon__burbujas i { animation-duration: 4.5s; }
+.balcon__letrero { font-size: 0.85rem; padding: 4px 12px; background: var(--rojo); color: #fff; animation: letrero 2.4s ease-in-out infinite; }
+@keyframes letrero { 0%, 100% { rotate: -3deg; } 50% { rotate: 2deg; } }
+@media (prefers-reduced-motion: reduce) { .balcon__letrero { animation: none; } }

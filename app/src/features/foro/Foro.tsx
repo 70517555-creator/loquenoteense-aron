@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { useEnLinea } from '../../hooks/useEnLinea'
 import { useSeleccionEnUrl } from '../../hooks/useSeleccionEnUrl'
 import { Cargando } from '../../ui/Cargando'
@@ -7,7 +7,7 @@ import { Fichas } from '../../ui/Fichas'
 import { ConversacionDelTema } from './ConversacionDelTema'
 import { PropuestasDeTemas } from './PropuestasDeTemas'
 import { TemasAnteriores } from './TemasAnteriores'
-import { usePreguntaDeLaSemana, useTemaDeHoy } from './useForo'
+import { PARAMETRO_RESPONDER, usePreguntaDeLaSemana, useTemaDeHoy } from './useForo'
 
 function TemaDeHoy() {
   const { datos: tema, fallo } = useTemaDeHoy()
@@ -18,9 +18,10 @@ function TemaDeHoy() {
 
 function PreguntaDeLaSemana() {
   const { datos: pregunta, fallo } = usePreguntaDeLaSemana()
+  const [params] = useSearchParams()
   if (fallo) return <p className="aviso-suave">No pudimos cargar la pregunta de la semana. Revisa tu conexión.</p>
   if (!pregunta) return <Cargando />
-  return <ConversacionDelTema tema={pregunta} etiqueta="📌 Pregunta de la semana" autor="💬 Psicología pregunta" />
+  return <ConversacionDelTema tema={pregunta} etiqueta="📌 Pregunta de la semana" autor="💬 Psicología pregunta" enfocar={params.has(PARAMETRO_RESPONDER)} />
 }
 
 const SECCIONES = [

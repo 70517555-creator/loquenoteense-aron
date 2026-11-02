@@ -14,4 +14,5 @@ export const CLAVES_DE_PROGRESO = {
   apodoDelForo: 'foro-apodo',
   votosDelForo: 'foro-votos',
   politicaAceptada: 'foro-politica-aceptada',
+  semanaRespondida: 'foro-semana-respondida',
 } as const

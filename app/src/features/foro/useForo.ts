@@ -58,3 +58,12 @@ export function useVotosPropios() {
   const registrarVoto = (id: string) => setVotos((previos) => agregarSinRepetir(previos, id))
   return { yaVoto, registrarVoto }
 }
+
+export const PARAMETRO_RESPONDER = 'responder'
+export const RUTA_PARA_RESPONDER_LA_SEMANA = `/foro?seccion=semana&${PARAMETRO_RESPONDER}=1`
+
+export function useSemanaRespondida() {
+  const [lunesRespondido, setLunesRespondido] = usePersistente<string | null>(CLAVES_DE_PROGRESO.semanaRespondida, null)
+  const lunes = lunesDeLaSemana()
+  return { respondida: lunesRespondido === lunes, marcarRespondida: () => setLunesRespondido(lunes) }
+}

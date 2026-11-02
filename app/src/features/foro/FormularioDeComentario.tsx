@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react'
+import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { useServicios } from '../../app/servicios'
 import { LARGO_MAXIMO_COMENTARIO, type TemaDelDia } from '../../domain/foro'
@@ -10,10 +10,12 @@ import { ElegirApodo } from './ElegirApodo'
 import { useApodo } from './useApodo'
 import { AceptarNormas } from './AceptarNormas'
 import { useAceptacionDeNormas } from './useAceptacionDeNormas'
+import { PREFIJO_DE_SEMANA, useSemanaRespondida } from './useForo'
 
 interface Props {
   tema: TemaDelDia
   onEnviado: () => void
+  enfocar?: boolean
 }
 
 function AvisoDeRiesgo() {
@@ -28,7 +30,7 @@ function AvisoDeRiesgo() {
   )
 }
 
-export function FormularioDeComentario({ tema, onEnviado }: Props) {
+export function FormularioDeComentario({ tema, onEnviado, enfocar }: Props) {
   const { foro } = useServicios()
   const { texto: apodo } = useApodo()
   const { ocupado, error, ejecutar } = useAccion()
@@ -36,6 +38,14 @@ export function FormularioDeComentario({ tema, onEnviado }: Props) {
   const [texto, setTexto] = useState('')
   const [enviado, setEnviado] = useState<{ urgente: boolean }>()
   const limpio = texto.trim()
+  const caja = useRef<HTMLTextAreaElement>(null)
+  const { marcarRespondida } = useSemanaRespondida()
+
+  useEffect(() => {
+    if (!enfocar) return
+    caja.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    caja.current?.focus({ preventScroll: true })
+  }, [enfocar])
 
   const enviar = async (e: FormEvent) => {
     e.preventDefault()
@@ -44,6 +54,7 @@ export function FormularioDeComentario({ tema, onEnviado }: Props) {
     if (await ejecutar(() => foro.comentar({ tema, texto: limpio, apodo, urgente }))) {
       setTexto('')
       setEnviado({ urgente })
+      if (tema.id.startsWith(PREFIJO_DE_SEMANA)) marcarRespondida()
       onEnviado()
     }
   }
@@ -51,8 +62,10 @@ export function FormularioDeComentario({ tema, onEnviado }: Props) {
   return (
     <form className="tarjeta formulario-foro" onSubmit={enviar}>
       <h3 className="titulo-tarjeta">Comparte tu experiencia</h3>
-      <ElegirApodo />
+      <small className="suave">Respondes a: <b>{tema.titulo}</b></small>
       <textarea
+        ref={caja}
+        className="formulario-foro__caja"
         value={texto}
         onChange={(e) => setTexto(e.target.value)}
         maxLength={LARGO_MAXIMO_COMENTARIO}
@@ -60,6 +73,7 @@ export function FormularioDeComentario({ tema, onEnviado }: Props) {
         placeholder="Escribe aquí lo que te ha funcionado, lo que te cuesta o tu pregunta…"
         aria-label="Tu comentario"
       />
+      <ElegirApodo />
       <p className="privacidad">
         <Icono nombre="lock" tam={14} /> No escribas nombres, colegios ni datos de tu hijo u otras personas.
         Psicología revisa cada comentario antes de publicarlo. <Link to="/privacidad#normas-del-foro">Normas del foro</Link>

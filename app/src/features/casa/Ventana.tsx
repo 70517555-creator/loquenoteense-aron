@@ -72,7 +72,7 @@ export function Balcon({ habitacion }: { habitacion: Habitacion }) {
   return (
     <Link to={habitacion.ruta} className="ventana balcon">
       <span className="balcon__letrero">
-        <Icono nombre={habitacion.icono} tam={14} /> Tema de hoy
+        <Icono nombre={habitacion.icono} tam={14} /> ¡Entra a conversar!
       </span>
       <span className="ventana__marco">
         <span className="balcon__sala">

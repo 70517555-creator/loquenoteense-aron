@@ -60,3 +60,5 @@
 .indicador { display: grid; justify-items: start; gap: 2px; }
 .indicador__emoji { font-size: 1.4rem; }
 .indicador__numero { font-size: var(--t-xl); line-height: 1; }
+.formulario-foro__caja { min-height: 120px; font-size: var(--t-m, 1rem); }
+.formulario-foro__caja:focus { outline: 3px solid color-mix(in srgb, var(--rojo) 45%, transparent); outline-offset: 2px; }
