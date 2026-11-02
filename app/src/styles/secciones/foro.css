@@ -10,6 +10,8 @@
 .comentario--psicologia { border-left-color: var(--salvia-oscuro); background: #f3faf5; }
 .comentario--propio { border-left-style: dashed; opacity: 0.92; }
 .comentario__autor { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-2); }
+.comentario__quitar { margin-left: auto; display: grid; place-items: center; width: 36px; height: 36px; border: 0; border-radius: 50%; background: var(--rojo-suave); color: var(--rojo-oscuro); cursor: pointer; }
+.comentario__quitar:hover { background: var(--rojo); color: #fff; }
 .comentario__autor .insignia { min-height: 26px; padding: 0 var(--e-3); font-size: var(--t-xs); }
 .comentario__texto { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
 .comentario__rechazo { margin: 0; font-size: var(--t-s); color: var(--rojo-oscuro); }

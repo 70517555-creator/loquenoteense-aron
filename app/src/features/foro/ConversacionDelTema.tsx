@@ -1,9 +1,11 @@
-import type { Comentario, TemaDelDia } from '../../domain/foro'
+import { useServicios } from '../../app/servicios'
+import { MOTIVO_AL_RETIRAR, type Comentario, type TemaDelDia } from '../../domain/foro'
 import { Cargando } from '../../ui/Cargando'
 import { fechaLegible } from '../../utils/tiempo'
 import { FormularioDeComentario } from './FormularioDeComentario'
 import { TarjetaDeComentario } from './TarjetaDeComentario'
 import { useComentarios } from './useForo'
+import { useEsDelEquipo } from './useEsDelEquipo'
 
 const POCOS_COMENTARIOS = 3
 
@@ -17,6 +19,7 @@ interface PropsDeLista {
   comentarios?: Comentario[]
   cargando: boolean
   fallo: boolean
+  onQuitar?: (comentario: Comentario) => void
 }
 
 function InvitacionACompartir({ primera }: { primera: boolean }) {
@@ -28,7 +31,7 @@ function InvitacionACompartir({ primera }: { primera: boolean }) {
   )
 }
 
-function ListaDeComentarios({ comentarios, cargando, fallo }: PropsDeLista) {
+function ListaDeComentarios({ comentarios, cargando, fallo, onQuitar }: PropsDeLista) {
   if (fallo) return <p className="aviso-suave">No pudimos cargar los comentarios. Revisa tu conexión.</p>
   if (cargando && !comentarios) return <Cargando />
   const publicados = comentarios?.filter((c) => c.estado === 'aprobado').length ?? 0
@@ -36,7 +39,7 @@ function ListaDeComentarios({ comentarios, cargando, fallo }: PropsDeLista) {
     <>
       {!!comentarios?.length && (
         <ul className="comentarios">
-          {comentarios.map((c) => <TarjetaDeComentario key={c.id} comentario={c} />)}
+          {comentarios.map((c) => <TarjetaDeComentario key={c.id} comentario={c} onQuitar={onQuitar} />)}
         </ul>
       )}
       {publicados < POCOS_COMENTARIOS && <InvitacionACompartir primera={publicados === 0} />}
@@ -46,6 +49,17 @@ function ListaDeComentarios({ comentarios, cargando, fallo }: PropsDeLista) {
 
 export function ConversacionDelTema({ tema, etiqueta, autor }: Props) {
   const { datos, cargando, fallo, recargar } = useComentarios(tema.id)
+  const { panel } = useServicios()
+  const delEquipo = useEsDelEquipo()
+  const quitar = async (comentario: Comentario) => {
+    if (!confirm('¿Quitar este comentario del foro? Dejará de verse para todas las familias.')) return
+    try {
+      await panel.moderarComentario(comentario, 'rechazado', MOTIVO_AL_RETIRAR)
+      recargar()
+    } catch {
+      alert('No se pudo quitar. Revisa tu conexión e inténtalo otra vez.')
+    }
+  }
 
   return (
     <section className="conversacion">
@@ -55,7 +69,7 @@ export function ConversacionDelTema({ tema, etiqueta, autor }: Props) {
         <h2 className="mano titulo-grande sin-margen">{tema.titulo}</h2>
         {tema.descripcion && <p>{tema.descripcion}</p>}
       </article>
-      <ListaDeComentarios comentarios={datos} cargando={cargando} fallo={fallo} />
+      <ListaDeComentarios comentarios={datos} cargando={cargando} fallo={fallo} onQuitar={delEquipo ? quitar : undefined} />
       <FormularioDeComentario tema={tema} onEnviado={recargar} />
     </section>
   )

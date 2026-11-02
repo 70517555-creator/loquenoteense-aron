@@ -30,7 +30,12 @@ function MeAyudo({ comentario }: { comentario: Comentario }) {
   )
 }
 
-export function TarjetaDeComentario({ comentario }: { comentario: Comentario }) {
+interface Props {
+  comentario: Comentario
+  onQuitar?: (comentario: Comentario) => void
+}
+
+export function TarjetaDeComentario({ comentario, onQuitar }: Props) {
   const dePsicologia = comentario.rol === 'psicologia'
   const publicado = comentario.estado === 'aprobado'
 
@@ -40,6 +45,11 @@ export function TarjetaDeComentario({ comentario }: { comentario: Comentario }) 
         <b>{comentario.apodo}</b>
         {dePsicologia && <span className="insignia">Psicología del colegio</span>}
         {comentario.esMio && publicado && <small className="suave">(tú)</small>}
+        {onQuitar && publicado && (
+          <button className="comentario__quitar" onClick={() => onQuitar(comentario)} aria-label="Quitar este comentario del foro" title="Quitar del foro (solo psicología)">
+            <Icono nombre="close" tam={16} />
+          </button>
+        )}
       </div>
       {comentario.respondeA && <small className="suave">En respuesta a {comentario.respondeA}</small>}
       <p className="comentario__texto">{comentario.texto}</p>
