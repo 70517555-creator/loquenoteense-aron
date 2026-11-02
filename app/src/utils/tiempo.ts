@@ -32,3 +32,18 @@ export function fechaLegible(fechaIso: string): string {
   const [anio, mes, dia] = fechaIso.split('-').map(Number)
   return FORMATO_DE_FECHA.format(new Date(anio, mes - 1, dia))
 }
+
+const FORMATO_RELATIVO = new Intl.RelativeTimeFormat('es-PE', { numeric: 'auto' })
+const MS_POR_HORA = 3_600_000
+const MS_POR_MINUTO = 60_000
+const DIAS_EN_FORMATO_RELATIVO = 6
+
+// "hace 5 minutos", "hace 3 horas", "ayer"; desde la semana pasada, la fecha corta.
+export function haceCuanto(fecha: Date, ahora = new Date()): string {
+  const diferencia = fecha.getTime() - ahora.getTime()
+  const distancia = Math.abs(diferencia)
+  if (distancia >= MS_POR_DIA * (DIAS_EN_FORMATO_RELATIVO + 1)) return fecha.toLocaleDateString('es-PE', { day: 'numeric', month: 'short' })
+  if (distancia >= MS_POR_DIA) return FORMATO_RELATIVO.format(Math.round(diferencia / MS_POR_DIA), 'day')
+  if (distancia >= MS_POR_HORA) return FORMATO_RELATIVO.format(Math.round(diferencia / MS_POR_HORA), 'hour')
+  return FORMATO_RELATIVO.format(Math.round(diferencia / MS_POR_MINUTO), 'minute')
+}

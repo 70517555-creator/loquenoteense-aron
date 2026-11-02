@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useServicios } from '../../app/servicios'
 import { MOTIVO_AL_RETIRAR, type Comentario, type TemaDelDia } from '../../domain/foro'
 import { Cargando } from '../../ui/Cargando'
@@ -8,6 +9,7 @@ import { useComentarios } from './useForo'
 import { useEsDelEquipo } from './useEsDelEquipo'
 
 const POCOS_COMENTARIOS = 3
+const COMENTARIOS_A_LA_VISTA = 5
 
 interface Props {
   tema: TemaDelDia
@@ -34,18 +36,26 @@ function InvitacionACompartir({ primera }: { primera: boolean }) {
 }
 
 function ListaDeComentarios({ comentarios, cargando, fallo, onQuitar }: PropsDeLista) {
+  const [verTodos, setVerTodos] = useState(false)
   if (fallo) return <p className="aviso-suave">No pudimos cargar los comentarios. Revisa tu conexión.</p>
   if (cargando && !comentarios) return <Cargando />
   const publicados = comentarios?.filter((c) => c.estado === 'aprobado').length ?? 0
+  const visibles = verTodos ? comentarios : comentarios?.slice(0, COMENTARIOS_A_LA_VISTA)
+  const ocultos = (comentarios?.length ?? 0) - (visibles?.length ?? 0)
   return (
     <>
       {publicados < POCOS_COMENTARIOS && <InvitacionACompartir primera={publicados === 0} />}
       {!!comentarios?.length && (
         <>
-          <h3 className="titulo-tarjeta conversacion__subtitulo">Lo que comparten las familias</h3>
+          <h3 className="conversacion__subtitulo">💬 Lo que comparten las familias <span className="suave">({publicados})</span></h3>
           <ul className="comentarios">
-            {comentarios.map((c) => <TarjetaDeComentario key={c.id} comentario={c} onQuitar={onQuitar} />)}
+            {visibles?.map((c) => <TarjetaDeComentario key={c.id} comentario={c} onQuitar={onQuitar} />)}
           </ul>
+          {ocultos > 0 && (
+            <button className="boton boton--borde comentarios__mas" onClick={() => setVerTodos(true)}>
+              Ver {ocultos} {ocultos === 1 ? 'respuesta más' : 'respuestas más'}
+            </button>
+          )}
         </>
       )}
     </>
