@@ -1,9 +1,10 @@
 import { sinGuiones } from '../foro/useApodo'
-import { useCallback, useState, type ReactNode } from 'react'
+import { useCallback, useEffect, useState, type ReactNode } from 'react'
 import { useServicios } from '../../app/servicios'
 import { tituloDeCarga } from '../../content/cargas'
 import { MOTIVOS_DE_RECHAZO, type Comentario, type Decision, type Propuesta, type Psicologo } from '../../domain/foro'
-import { MOTIVOS_DE_RECHAZO_DE_CARTA, type CartaDeEstudiante } from '../../domain/mochila'
+import { MOTIVOS_DE_RECHAZO_DE_CARTA, type CartaDeEstudiante, type ConsejoDeCarta } from '../../domain/mochila'
+import { pedirConsejoALaIA } from '../mochila/useConsejoDeCarta'
 import { useAccion } from '../../hooks/useAccion'
 import { useConsulta } from '../../hooks/useConsulta'
 import { Cargando } from '../../ui/Cargando'
@@ -103,12 +104,48 @@ function PropuestaPorRevisar({ propuesta, onListo }: { propuesta: Propuesta; onL
   )
 }
 
+function ConsejoPorAprobar({ carta, consejo, onCambiar }: { carta: CartaDeEstudiante; consejo: ConsejoDeCarta; onCambiar: (c: ConsejoDeCarta) => void }) {
+  const { asistente } = useServicios()
+  const [preparando, setPreparando] = useState(false)
+
+  const preparar = useCallback(async () => {
+    setPreparando(true)
+    try {
+      const texto = await pedirConsejoALaIA(asistente, carta)
+      if (texto) onCambiar({ texto, de: 'ia' })
+    } catch {
+      // Sin IA: psicología puede escribirlo a mano o aprobar sin consejo.
+    } finally {
+      setPreparando(false)
+    }
+  }, [asistente, carta, onCambiar])
+
+  useEffect(() => { if (!carta.urgente) preparar() }, [carta.urgente, preparar])
+
+  return (
+    <label className="consejo-por-aprobar">
+      <span>💛 Consejo para los papás (se publica debajo de la carta)</span>
+      <textarea
+        rows={5}
+        value={consejo.texto}
+        placeholder={preparando ? '✨ La IA está preparando una sugerencia…' : 'Escribe un consejo corto, o déjalo vacío para publicar la carta sola.'}
+        onChange={(e) => onCambiar({ texto: e.target.value, de: 'psicologia' })}
+      />
+      <small className="suave">
+        {consejo.de === 'ia' && consejo.texto ? 'Lo preparó la IA: léelo y cámbialo si quieres. Si lo editas, se publica como consejo de psicología.' : ''}
+        {' '}<button type="button" className="enlace-discreto" disabled={preparando} onClick={preparar}>{preparando ? 'Preparando…' : '✨ Pedir otra sugerencia a la IA'}</button>
+      </small>
+    </label>
+  )
+}
+
 function CartaPorRevisar({ carta, onListo }: { carta: CartaDeEstudiante; onListo: () => void }) {
   const { panel } = useServicios()
   const { ocupado, error, ejecutar } = useAccion()
+  const [consejo, setConsejo] = useState<ConsejoDeCarta>({ texto: '', de: 'ia' })
 
   const decidir = async (decision: Decision, motivo?: string) => {
-    if (await ejecutar(() => panel.moderarCarta(carta, decision, motivo))) onListo()
+    if (await ejecutar(() => panel.moderarCarta(carta, decision, motivo, consejo))) onListo()
   }
 
   return (
@@ -117,6 +154,7 @@ function CartaPorRevisar({ carta, onListo }: { carta: CartaDeEstudiante; onListo
       <small className="suave">✉️ Carta de estudiante · {carta.nivel} · tema: {tituloDeCarga(carta.carga)}</small>
       <p className="comentario__texto">{carta.texto}</p>
       <small className="suave">Revisa que no tenga nombres, grados, secciones ni datos que permitan reconocer a alguien.</small>
+      <ConsejoPorAprobar carta={carta} consejo={consejo} onCambiar={setConsejo} />
       {error && <p className="aviso-suave">{error}</p>}
       <BotonesDeModeracion ocupado={ocupado} motivos={MOTIVOS_DE_RECHAZO_DE_CARTA} onDecidir={decidir} />
     </li>

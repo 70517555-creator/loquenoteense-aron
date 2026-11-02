@@ -9,6 +9,12 @@ export interface ResultadoDeCasa {
   miRespuesta?: RespuestaDeCasa
 }
 
+// Consejo para los papás que acompaña a una carta: lo escribe psicología o lo prepara la IA.
+export interface ConsejoDeCarta {
+  texto: string
+  de: 'psicologia' | 'ia'
+}
+
 export interface CartaDeEstudiante {
   id: string
   carga: string
@@ -20,6 +26,7 @@ export interface CartaDeEstudiante {
   creadoEn: Date
   esMia: boolean
   motivoRechazo?: string
+  consejo?: ConsejoDeCarta
 }
 
 export interface NuevaCartaDeEstudiante {

@@ -72,7 +72,11 @@ export const firestorePanel: PanelDePsicologiaPort = {
   moderarPropuesta: (propuesta, decision, motivo) =>
     updateDoc(doc(db, RUTAS.propuestas, propuesta.id), cambiosDeModeracion(decision, motivo)),
 
-  moderarCarta: (carta, decision, motivo) => updateDoc(doc(db, RUTAS.cartas, carta.id), cambiosDeModeracion(decision, motivo)),
+  moderarCarta: (carta, decision, motivo, consejo) =>
+    updateDoc(doc(db, RUTAS.cartas, carta.id), {
+      ...cambiosDeModeracion(decision, motivo),
+      ...(decision === 'aprobado' && consejo?.texto.trim() ? { consejo: consejo.texto.trim(), consejoDe: consejo.de } : {}),
+    }),
 
   async responder(comentario, texto, nombre) {
     const usuario = await usuarioActual()

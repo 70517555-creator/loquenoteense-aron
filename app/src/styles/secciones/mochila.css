@@ -129,12 +129,12 @@
   background-position: 0 0, 0 14px, 0 0;
   box-shadow: 0 1px 1px rgba(60, 40, 20, 0.08), 0 8px 18px rgba(60, 40, 20, 0.12);
 }
-.hoja-de-carta:nth-child(even) { rotate: 0.9deg; }
+.carta-con-consejo:nth-child(even) .hoja-de-carta { rotate: 0.9deg; }
 .hoja-de-carta::before {
   content: ''; position: absolute; top: -10px; left: 50%; width: 92px; height: 22px; translate: -50% 0; rotate: -3deg;
   background: rgba(246, 204, 79, 0.7); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
-.hoja-de-carta:nth-child(even)::before { rotate: 4deg; background: rgba(160, 200, 170, 0.75); }
+.carta-con-consejo:nth-child(even) .hoja-de-carta::before { rotate: 4deg; background: rgba(160, 200, 170, 0.75); }
 .hoja-de-carta__texto { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; font-size: 1.4rem; line-height: 32px; color: #2c3e66; }
 .hoja-de-carta__firma { margin: 0; justify-self: end; font-size: 1.15rem; color: #2c3e66; opacity: 0.8; }
 .hoja-de-carta__firma::before { content: '— '; }
@@ -144,3 +144,22 @@
   background: var(--rojo); color: #fff; font-family: var(--f-texto); font-size: 0.72rem; font-weight: 800; line-height: 1.4;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25); white-space: nowrap;
 }
+
+.carta-con-consejo { display: grid; gap: var(--e-3); align-content: start; }
+.consejo-de-carta {
+  position: relative; display: grid; gap: var(--e-1); margin: 0 var(--e-2); padding: var(--e-3) var(--e-4);
+  border-radius: var(--r-m); background: var(--ambar-suave, #fff4d6); box-shadow: inset 0 0 0 1.5px #f3dca6; --lineas: 5;
+}
+.consejo-de-carta::before {
+  content: ''; position: absolute; top: -9px; left: 28px; width: 16px; height: 16px; rotate: 45deg;
+  background: inherit; box-shadow: inset 1.5px 1.5px 0 0 #f3dca6;
+}
+.consejo-de-carta--psicologia { background: #eaf5ee; box-shadow: inset 0 0 0 1.5px #bcdcc6; }
+.consejo-de-carta--psicologia::before { box-shadow: inset 1.5px 1.5px 0 0 #bcdcc6; }
+.consejo-de-carta--preparando { margin: 0 var(--e-2); color: var(--tinta-suave); font-size: var(--t-s); animation: latir-suave 1.6s ease-in-out infinite; }
+.consejo-de-carta__texto { margin: 0; white-space: pre-wrap; line-height: 1.55; font-size: 0.97rem; }
+@keyframes latir-suave { 50% { opacity: 0.5; } }
+.voces__cartas { display: grid; gap: var(--e-2); margin-bottom: var(--e-6); }
+.consejo-por-aprobar { display: grid; gap: var(--e-1); font-weight: 700; font-size: var(--t-s); }
+.consejo-por-aprobar textarea { font-weight: 400; font-size: var(--t-m, 1rem); line-height: 1.5; }
+.hoja-de-carta__quitar { position: absolute; top: 8px; right: 8px; z-index: 1; }

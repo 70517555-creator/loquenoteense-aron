@@ -203,7 +203,8 @@ service cloud.firestore {
         && aceptoLaPolitica()
         && nuevo().creadoEn == request.time;
 
-      allow update: if (esPsicologo() && soloCambia(['estado', 'motivoRechazo']) && nuevo().estado in ['aprobado', 'rechazado'])
+      allow update: if (esPsicologo() && soloCambia(['estado', 'motivoRechazo', 'consejo', 'consejoDe']) && nuevo().estado in ['aprobado', 'rechazado']
+          && (!('consejo' in nuevo()) || (textoValido(nuevo().consejo, 1500) && nuevo().consejoDe in ['psicologia', 'ia'])))
         || sumaUnVoto('meHizoPensar', /databases/$(database)/documents/cartas/$(id)/votos/$(request.auth.uid));
 
       allow delete: if esPsicologo();

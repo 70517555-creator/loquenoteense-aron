@@ -23,8 +23,8 @@
 .comentario__quitar:hover { background: var(--rojo); color: #fff; }
 .comentario__autor .insignia { min-height: 24px; padding: 0 var(--e-3); font-size: var(--t-xs); }
 .comentario__texto { margin: var(--e-1) 0 0; white-space: pre-wrap; overflow-wrap: anywhere; font-size: 0.97rem; line-height: 1.6; }
-.comentario__texto--recortado { display: -webkit-box; -webkit-line-clamp: 4; line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
-.comentario__leer { justify-self: start; padding: 0; border: 0; background: none; color: var(--rojo); font: inherit; font-size: var(--t-s); font-weight: 800; cursor: pointer; }
+.texto-recortado { display: -webkit-box; -webkit-line-clamp: var(--lineas, 4); line-clamp: var(--lineas, 4); -webkit-box-orient: vertical; overflow: hidden; }
+.leer-mas { justify-self: start; padding: 0; border: 0; background: none; color: var(--rojo); font: inherit; font-size: var(--t-s); font-weight: 800; cursor: pointer; }
 .comentario__rechazo { margin: 0; font-size: var(--t-s); color: var(--rojo-oscuro); }
 .comentario__acciones { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-4); margin-top: var(--e-1); }
 .comentario__acciones .me-ayudo { min-height: 30px; font-size: var(--t-xs); }

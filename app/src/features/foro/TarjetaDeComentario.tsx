@@ -1,7 +1,7 @@
-import { useLayoutEffect, useRef, useState } from 'react'
 import { useServicios } from '../../app/servicios'
 import type { Comentario } from '../../domain/foro'
 import { Icono } from '../../ui/Icono'
+import { TextoRecortable } from '../../ui/TextoRecortable'
 import { clases } from '../../utils/clases'
 import { haceCuanto } from '../../utils/tiempo'
 import { BotonDeVoto } from './BotonDeVoto'
@@ -43,26 +43,6 @@ function MeAyudo({ comentario }: { comentario: Comentario }) {
   )
 }
 
-function TextoRecortable({ texto }: { texto: string }) {
-  const parrafo = useRef<HTMLParagraphElement>(null)
-  const [abierto, setAbierto] = useState(false)
-  const [esLargo, setEsLargo] = useState(false)
-
-  useLayoutEffect(() => {
-    const p = parrafo.current
-    if (p && !abierto) setEsLargo(p.scrollHeight > p.clientHeight + 2)
-  }, [texto, abierto])
-
-  return (
-    <>
-      <p ref={parrafo} className={clases('comentario__texto', !abierto && 'comentario__texto--recortado')}>{texto}</p>
-      {(esLargo || abierto) && (
-        <button className="comentario__leer" onClick={() => setAbierto(!abierto)}>{abierto ? 'Ver menos' : 'Leer más'}</button>
-      )}
-    </>
-  )
-}
-
 interface Props {
   comentario: Comentario
   onQuitar?: (comentario: Comentario) => void
@@ -89,7 +69,7 @@ export function TarjetaDeComentario({ comentario, onQuitar }: Props) {
           )}
         </div>
         <small className="comentario__meta">{detalles.filter(Boolean).join(' · ')}</small>
-        <TextoRecortable texto={comentario.texto} />
+        <TextoRecortable texto={comentario.texto} className="comentario__texto" />
         {comentario.esMio && <EstadoPropio comentario={comentario} />}
         {publicado && (
           <div className="comentario__acciones">

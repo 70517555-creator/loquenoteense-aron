@@ -1,7 +1,7 @@
 import type {
   Comentario, Decision, NuevoComentario, PreguntaDeLaSemana, Propuesta, Psicologo, Reporte, ResumenDelForo, TemaDelDia,
 } from '../domain/foro'
-import type { CartaDeEstudiante, ConteoDeCasa } from '../domain/mochila'
+import type { CartaDeEstudiante, ConsejoDeCarta, ConteoDeCasa } from '../domain/mochila'
 
 export interface ForoPort {
   temaDeLaFecha(fecha: string): Promise<TemaDelDia | null>
@@ -29,7 +29,7 @@ export interface PanelDePsicologiaPort {
   pendientes(): Promise<Pendientes>
   moderarComentario(comentario: Comentario, decision: Decision, motivo?: string): Promise<void>
   moderarPropuesta(propuesta: Propuesta, decision: Decision, motivo?: string): Promise<void>
-  moderarCarta(carta: CartaDeEstudiante, decision: Decision, motivo?: string): Promise<void>
+  moderarCarta(carta: CartaDeEstudiante, decision: Decision, motivo?: string, consejo?: ConsejoDeCarta): Promise<void>
   responder(comentario: Comentario, texto: string, nombre: string): Promise<void>
   propuestasAprobadas(): Promise<Propuesta[]>
   temasProgramados(desde: string): Promise<TemaDelDia[]>

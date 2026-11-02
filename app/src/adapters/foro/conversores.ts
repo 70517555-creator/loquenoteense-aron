@@ -64,6 +64,7 @@ export const aCartaDeEstudiante = (d: DocumentSnapshot, uid?: string): CartaDeEs
   creadoEn: fecha(d.get('creadoEn')),
   esMia: d.get('autorUid') === uid,
   motivoRechazo: d.get('motivoRechazo'),
+  consejo: d.get('consejo') ? { texto: d.get('consejo'), de: d.get('consejoDe') === 'psicologia' ? 'psicologia' : 'ia' } : undefined,
 })
 
 export const aConteoDeCasa = (d: DocumentSnapshot): ConteoDeCasa => ({

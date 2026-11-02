@@ -1,19 +1,60 @@
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useServicios } from '../../app/servicios'
 import type { CartaDeEstudiante } from '../../domain/mochila'
 import { useConsulta } from '../../hooks/useConsulta'
+import { MOTIVO_AL_RETIRAR } from '../../domain/foro'
+import { Icono } from '../../ui/Icono'
+import { TextoRecortable } from '../../ui/TextoRecortable'
+import { clases } from '../../utils/clases'
 import { BotonDeVoto } from '../foro/BotonDeVoto'
+import { useEsDelEquipo } from '../foro/useEsDelEquipo'
+import { useConsejoDeCarta } from './useConsejoDeCarta'
 
-function HojaDeCarta({ carta }: { carta: CartaDeEstudiante }) {
-  const { mochila } = useServicios()
+function ConsejoDeLaCarta({ carta }: { carta: CartaDeEstudiante }) {
+  const { consejo, preparando } = useConsejoDeCarta(carta)
+  if (preparando) return <p className="consejo-de-carta consejo-de-carta--preparando">✨ Preparando un consejo para ti…</p>
+  if (!consejo) return null
   return (
-    <li className="hoja-de-carta">
-      <p className="hoja-de-carta__texto mano">{carta.texto}</p>
-      <p className="hoja-de-carta__firma mano">Un estudiante de {carta.nivel.toLowerCase()}</p>
-      <BotonDeVoto id={carta.id} total={carta.meHizoPensar} votar={() => mochila.meHizoPensar(carta)}>
-        💛 Me hizo pensar
-      </BotonDeVoto>
+    <div className={clases('consejo-de-carta', consejo.de === 'psicologia' && 'consejo-de-carta--psicologia')}>
+      <b>{consejo.de === 'psicologia' ? '💚 Lo que dice psicología' : '✨ Una idea para ti'}</b>
+      <TextoRecortable texto={consejo.texto} className="consejo-de-carta__texto" />
+      {consejo.de === 'ia' && <small className="suave">Sugerencia preparada con inteligencia artificial. No reemplaza a psicología del colegio.</small>}
+    </div>
+  )
+}
+
+export function HojaDeCarta({ carta }: { carta: CartaDeEstudiante }) {
+  const { mochila, panel } = useServicios()
+  const delEquipo = useEsDelEquipo()
+  const [quitada, setQuitada] = useState(false)
+  if (quitada) return null
+
+  const quitar = async () => {
+    if (!confirm('¿Quitar esta carta? Dejará de verse para todas las familias.')) return
+    try {
+      await panel.moderarCarta(carta, 'rechazado', MOTIVO_AL_RETIRAR)
+      setQuitada(true)
+    } catch {
+      alert('No se pudo quitar. Revisa tu conexión e inténtalo otra vez.')
+    }
+  }
+
+  return (
+    <li className="carta-con-consejo">
+      <div className="hoja-de-carta">
+        {delEquipo && (
+          <button className="comentario__quitar hoja-de-carta__quitar" onClick={quitar} aria-label="Quitar esta carta" title="Quitar carta (solo psicología)">
+            <Icono nombre="close" tam={14} />
+          </button>
+        )}
+        <p className="hoja-de-carta__texto mano">{carta.texto}</p>
+        <p className="hoja-de-carta__firma mano">Un estudiante de {carta.nivel.toLowerCase()}</p>
+        <BotonDeVoto id={carta.id} total={carta.meHizoPensar} votar={() => mochila.meHizoPensar(carta)}>
+          💛 Me hizo pensar
+        </BotonDeVoto>
+      </div>
+      <ConsejoDeLaCarta carta={carta} />
     </li>
   )
 }
@@ -37,9 +78,13 @@ export function InvitacionAEscribir() {
   return <Link className="enlace-discreto" to="/escribe">¿Eres estudiante? Escribe una carta anónima</Link>
 }
 
-export function useCartasPorBolsillo(): Record<string, number> {
+export function useCartasPublicadas() {
   const { mochila } = useServicios()
-  const { datos } = useConsulta(useCallback(() => mochila.cartasPublicadas(), [mochila]))
+  return useConsulta(useCallback(() => mochila.cartasPublicadas(), [mochila])).datos
+}
+
+export function useCartasPorBolsillo(): Record<string, number> {
+  const datos = useCartasPublicadas()
   const conteo: Record<string, number> = {}
   for (const carta of datos ?? []) conteo[carta.carga] = (conteo[carta.carga] ?? 0) + 1
   return conteo
