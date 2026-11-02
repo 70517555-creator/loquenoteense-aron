@@ -144,3 +144,19 @@
 }
 @media (max-width: 700px) { .portada__acciones .boton--comenzar { flex: 1 1 100%; } }
 @media (prefers-reduced-motion: reduce) { .boton--comenzar { animation: none; } }
+
+/* Todo entra en una sola pantalla: los tamaños se ajustan a la altura disponible. */
+.portada { height: 100dvh; min-height: 520px; }
+.portada__barra { padding-block: calc(clamp(var(--e-2), 2dvh, var(--e-4)) + var(--seguro-arriba)) clamp(var(--e-1), 1dvh, var(--e-4)); }
+.portada__heroe { padding-block: clamp(var(--e-2), 2dvh, var(--e-5)) clamp(var(--e-2), 2.5dvh, var(--e-6)); }
+.portada .nota-pegada { font-size: clamp(0.9rem, 2.3dvh, 1.65rem); margin-block: clamp(var(--e-1), 1dvh, var(--e-3)) clamp(var(--e-2), 2dvh, var(--e-5)); }
+.portada__titulo { font-size: clamp(2.2rem, min(12vw, 9dvh), 6rem); margin-bottom: clamp(var(--e-1), 1dvh, var(--e-4)); }
+.portada__bajada { font-size: clamp(1rem, 2.6dvh, var(--t-l)); margin-bottom: clamp(var(--e-2), 2.2dvh, var(--e-5)); }
+.boton--comenzar { min-height: clamp(50px, 8dvh, 68px); }
+.miniaturas { margin-top: clamp(var(--e-2), 1.6dvh, var(--e-4)); }
+.miniatura__imagen { width: clamp(92px, min(30vw, 17dvh), 150px); }
+.portada__nota-chica { display: none; }
+.portada__lema { font-size: clamp(1.05rem, 2.4dvh, 1.5rem); padding-bottom: calc(clamp(var(--e-2), 2dvh, var(--e-5)) + var(--seguro-abajo)); }
+@media (min-width: 701px) and (orientation: landscape) {
+  .portada .nota-pegada { font-size: clamp(1rem, 3dvh, 2.1rem); }
+}
