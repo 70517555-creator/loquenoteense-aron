@@ -2,8 +2,12 @@ import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 import { VitePWA } from 'vite-plugin-pwa'
 
+// Fecha y hora de cada publicación, para saber qué versión tiene cada celular.
+const VERSION = new Intl.DateTimeFormat('es-PE', { timeZone: 'America/Lima', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }).format(new Date())
+
 export default defineConfig({
   build: { emptyOutDir: true },
+  define: { __VERSION__: JSON.stringify(VERSION) },
   plugins: [
     react(),
     VitePWA({

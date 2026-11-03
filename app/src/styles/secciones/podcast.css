@@ -171,3 +171,4 @@
   .retro-player__boton { width: 38px; height: 38px; }
   .retro-player__play { width: 58px; height: 58px; }
 }
+.episodio__escuchado { display: inline-flex; align-items: center; gap: 6px; margin: var(--e-1) 0 0; font-size: var(--t-s); font-weight: 800; color: var(--rojo); }

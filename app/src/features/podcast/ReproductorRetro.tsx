@@ -11,6 +11,7 @@ interface Props {
   episodio: Episodio
   onEmpezar?: () => void
   accion?: React.ReactNode
+  reproducciones?: number
 }
 
 // El ecualizador lee el audio de verdad; si el navegador no lo permite, las barras se mueven solas.
@@ -69,7 +70,7 @@ function useEcualizador(audio: React.RefObject<HTMLAudioElement | null>, lienzo:
   return { conectar, reanudar: () => contexto.current?.resume() }
 }
 
-export function ReproductorRetro({ episodio, onEmpezar, accion }: Props) {
+export function ReproductorRetro({ episodio, onEmpezar, accion, reproducciones }: Props) {
   const audio = useRef<HTMLAudioElement>(null)
   const lienzo = useRef<HTMLCanvasElement>(null)
   const [sonando, setSonando] = useState(false)
@@ -133,7 +134,7 @@ export function ReproductorRetro({ episodio, onEmpezar, accion }: Props) {
         <canvas ref={lienzo} className="retro-player__barras" aria-hidden="true" />
         <div className="retro-player__lcd">
           <span className="retro-player__marquesina">
-            <span>EPISODIO {episodio.numero} · {episodio.titulo.toUpperCase()} · LO QUE NO TE ENSEÑARON ·&nbsp;</span>
+            <span>EPISODIO {episodio.numero} · {episodio.titulo.toUpperCase()}{reproducciones ? ` · ${reproducciones} ${reproducciones === 1 ? 'REPRODUCCIÓN' : 'REPRODUCCIONES'}` : ''} · LO QUE NO TE ENSEÑARON ·&nbsp;</span>
           </span>
           <span className="retro-player__estado">{sonando ? '► REPRODUCIENDO' : tiempo > 0 ? '❚❚ EN PAUSA' : '■ LISTO'}</span>
           <span className="retro-player__tiempo">{formatoMinutosSegundos(tiempo * 1000)} / {formatoMinutosSegundos(duracion * 1000)}</span>

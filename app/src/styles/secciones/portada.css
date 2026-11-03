@@ -312,3 +312,11 @@
 }
 .portada__visitas b { color: #ffd75e; font-size: 1.2em; font-weight: 900; }
 @media (max-width: 640px) and (max-height: 700px) { .portada__visitas { margin-top: 6px; padding: 3px 12px; font-size: 0.85rem; } }
+.portada__visitas ~ .boton--fantasma, .portada__visitas ~ .portada__ios { margin-top: clamp(12px, 1.8dvh, 18px); }
+.portada__heroe:has(.boton--fantasma, .portada__ios) .portada__visitas { margin-top: 6px; }
+@media (max-width: 640px) and (max-height: 700px) {
+  .portada__heroe .boton--fantasma { min-height: 32px; padding-block: 2px; font-size: 0.88rem; }
+  .portada__visitas ~ .boton--fantasma { margin-top: 8px; }
+  .portada:has(.portada__heroe .boton--fantasma) .miniatura__etiqueta { font-size: 0.72rem; line-height: 1.1; }
+  .portada:has(.portada__heroe .boton--fantasma) .portada__lema { display: none; }
+}

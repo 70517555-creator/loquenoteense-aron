@@ -1,8 +1,8 @@
 import { Check, FacebookLogo, LinkSimple, ShareNetwork, WhatsappLogo } from '@phosphor-icons/react'
-import { useCallback, useState } from 'react'
+import { useState } from 'react'
 import { useServicios } from '../../app/servicios'
+import type { ReaccionesDelEpisodio } from '../../domain/podcast'
 import type { Episodio } from '../../domain/tipos'
-import { useConsulta } from '../../hooks/useConsulta'
 
 export const PARAMETRO_EPISODIO = 'episodio'
 
@@ -12,9 +12,8 @@ const mensajeDe = (e: Episodio) =>
   `Escucha el episodio ${e.numero} del podcast "Lo que no te enseñaron": ${e.titulo} (${e.duracion}). Para papás y mamás del colegio.`
 
 // En el celular abre el menú de compartir del teléfono; en la computadora, WhatsApp, Facebook o copiar el enlace.
-export function CompartirEpisodio({ episodio }: { episodio: Episodio }) {
+export function CompartirEpisodio({ episodio, datos }: { episodio: Episodio; datos?: ReaccionesDelEpisodio }) {
   const { podcast } = useServicios()
-  const { datos } = useConsulta(useCallback(() => podcast.reacciones(episodio.id), [podcast, episodio.id]))
   const [sumadas, setSumadas] = useState(0)
   const [opciones, setOpciones] = useState(false)
   const [copiado, setCopiado] = useState(false)

@@ -221,25 +221,25 @@ service cloud.firestore {
       let reaccion = getAfter(voto).data.reaccion;
       let antes = resource == null ? {} : resource.data;
       return conSesion()
-        && nuevo().keys().hasOnly(['ayudo', 'identifique', 'intentare', 'emociono', 'compartido'])
+        && nuevo().keys().hasOnly(['ayudo', 'identifique', 'intentare', 'emociono', 'compartido', 'reproducciones'])
         && !exists(voto)
         && existsAfter(voto)
         && nuevo().diff(antes).affectedKeys().hasOnly([reaccion])
         && nuevo().get(reaccion, 0) == antes.get(reaccion, 0) + 1;
     }
 
-    // Cada vez que alguien comparte el episodio, el contador sube de a uno.
-    function sumaUnCompartido() {
+    // Cada vez que alguien comparte o escucha el episodio, ese contador sube de a uno.
+    function sumaUnoA(campo) {
       let antes = resource == null ? {} : resource.data;
       return conSesion()
-        && nuevo().keys().hasOnly(['ayudo', 'identifique', 'intentare', 'emociono', 'compartido'])
-        && nuevo().diff(antes).affectedKeys().hasOnly(['compartido'])
-        && nuevo().compartido == antes.get('compartido', 0) + 1;
+        && nuevo().keys().hasOnly(['ayudo', 'identifique', 'intentare', 'emociono', 'compartido', 'reproducciones'])
+        && nuevo().diff(antes).affectedKeys().hasOnly([campo])
+        && nuevo().get(campo, 0) == antes.get(campo, 0) + 1;
     }
 
     match /reacciones/{episodio} {
       allow read: if true;
-      allow create, update: if episodio.matches('^[a-z0-9-]{1,30}$') && (sumaUnaReaccion(episodio) || sumaUnCompartido());
+      allow create, update: if episodio.matches('^[a-z0-9-]{1,30}$') && (sumaUnaReaccion(episodio) || sumaUnoA('compartido') || sumaUnoA('reproducciones'));
       allow delete: if esCoordinador();
 
       match /votos/{uid} {

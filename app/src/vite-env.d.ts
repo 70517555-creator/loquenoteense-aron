@@ -5,6 +5,8 @@ interface ImportMetaEnv {
   readonly VITE_PRIVACY_EMAIL?: string
 }
 
+declare const __VERSION__: string
+
 interface ImportMeta {
   readonly env: ImportMetaEnv
 }

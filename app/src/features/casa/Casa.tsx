@@ -52,6 +52,7 @@ function Bienvenida({ momento, saludo, recorridas }: { momento: Momento; saludo:
       <AvisoDeEpisodio />
       <PreguntaDeLaSemanaEnCasa />
       <Link to="/privacidad" className="casa__privacidad">Privacidad y normas</Link>
+      <small className="casa__version">Versión del {__VERSION__}</small>
     </header>
   )
 }

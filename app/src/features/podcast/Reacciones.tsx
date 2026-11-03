@@ -1,8 +1,7 @@
 import { HandHeart, Lightbulb, Plant, SmileyMelting, type Icon } from '@phosphor-icons/react'
-import { useCallback, useState } from 'react'
+import { useState } from 'react'
 import { useServicios } from '../../app/servicios'
-import { REACCIONES, sinReacciones, type Reaccion } from '../../domain/podcast'
-import { useConsulta } from '../../hooks/useConsulta'
+import { REACCIONES, sinReacciones, type Reaccion, type ReaccionesDelEpisodio } from '../../domain/podcast'
 import { clases } from '../../utils/clases'
 
 const DETALLE: Record<Reaccion, { texto: string; Icono: Icon }> = {
@@ -12,9 +11,14 @@ const DETALLE: Record<Reaccion, { texto: string; Icono: Icon }> = {
   emociono: { texto: 'Me emocionó', Icono: SmileyMelting },
 }
 
-export function Reacciones({ episodio }: { episodio: string }) {
+interface Props {
+  episodio: string
+  datos?: ReaccionesDelEpisodio
+  fallo: boolean
+}
+
+export function Reacciones({ episodio, datos, fallo }: Props) {
   const { podcast } = useServicios()
-  const { datos, fallo } = useConsulta(useCallback(() => podcast.reacciones(episodio), [podcast, episodio]))
   const [elegida, setElegida] = useState<Reaccion>()
   const [enviando, setEnviando] = useState(false)
   if (!datos && !fallo) return null

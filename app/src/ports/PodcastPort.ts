@@ -4,4 +4,5 @@ export interface PodcastPort {
   reacciones(episodio: string): Promise<ReaccionesDelEpisodio>
   reaccionar(episodio: string, reaccion: Reaccion): Promise<void>
   contarCompartido(episodio: string): Promise<void>
+  contarReproduccion(episodio: string): Promise<void>
 }
