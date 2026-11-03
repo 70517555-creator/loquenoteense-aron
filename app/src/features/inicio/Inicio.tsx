@@ -3,6 +3,7 @@ import { useServicios } from '../../app/servicios'
 import { useInstalar } from '../../hooks/useInstalar'
 import { Icono } from '../../ui/Icono'
 import { Logo } from '../../ui/Logo'
+import { ContadorDeVisitas } from '../casa/ContadorDeVisitas'
 import { FotoPortada } from './FotoPortada'
 import { MiniaturasDeVideos } from './MiniaturasDeVideos'
 import { fraseDeLaVisita } from './fraseDeLaVisita'
@@ -69,6 +70,7 @@ export default function Inicio() {
             Comenzar <Icono nombre="arrow" tam={20} />
           </Link>
         </div>
+        <ContadorDeVisitas className="portada__visitas" />
         <p className="portada__nota-chica">Situaciones reales. Voces de estudiantes. Retos para tu familia.</p>
         <InvitacionAInstalar />
       </section>
