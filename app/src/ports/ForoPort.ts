@@ -29,7 +29,7 @@ export interface PanelDePsicologiaPort {
   pendientes(): Promise<Pendientes>
   moderarComentario(comentario: Comentario, decision: Decision, motivo?: string): Promise<void>
   moderarPropuesta(propuesta: Propuesta, decision: Decision, motivo?: string): Promise<void>
-  moderarCarta(carta: CartaDeEstudiante, decision: Decision, motivo?: string, consejo?: ConsejoDeCarta): Promise<void>
+  moderarCarta(carta: CartaDeEstudiante, decision: Decision, motivo?: string, consejo?: ConsejoDeCarta, carga?: string): Promise<void>
   responder(comentario: Comentario, texto: string, nombre: string): Promise<void>
   propuestasAprobadas(): Promise<Propuesta[]>
   temasProgramados(desde: string): Promise<TemaDelDia[]>

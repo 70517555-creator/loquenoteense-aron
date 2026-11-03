@@ -47,6 +47,9 @@ export const CONTEO_VACIO: ConteoDeCasa = { si: 0, aveces: 0, no: 0 }
 // Con pocas respuestas un porcentaje engaña: esperamos a tener una muestra razonable.
 export const MINIMO_PARA_PORCENTAJE = 10
 
+// Las cartas del bolsillo secreto llegan sin tema: la IA lo sugiere y psicología lo confirma al aprobar.
+export const CARGA_POR_CLASIFICAR = 'por-clasificar'
+
 export const NIVELES_DE_ESTUDIANTE = ['Secundaria', '6.° de primaria']
 
 export const LARGO_MAXIMO_CARTA_DE_ESTUDIANTE = 800

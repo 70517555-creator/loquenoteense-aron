@@ -163,3 +163,6 @@
 .consejo-por-aprobar { display: grid; gap: var(--e-1); font-weight: 700; font-size: var(--t-s); }
 .consejo-por-aprobar textarea { font-weight: 400; font-size: var(--t-m, 1rem); line-height: 1.5; }
 .hoja-de-carta__quitar { position: absolute; top: 8px; right: 8px; z-index: 1; }
+.carta-nueva .aceptar-normas { display: flex; align-items: flex-start; gap: var(--e-2); margin-top: var(--e-3); font-size: var(--t-s); line-height: 1.4; cursor: pointer; }
+.carta-nueva .aceptar-normas input { flex: none; width: 20px; height: 20px; margin-top: 1px; padding: 0; accent-color: var(--rojo); }
+.carta-enviada p { margin: 0 0 var(--e-3); }

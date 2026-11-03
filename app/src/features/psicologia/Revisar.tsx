@@ -1,11 +1,12 @@
-import { Confetti, Envelope, Heart, Sparkle, WarningCircle } from '@phosphor-icons/react'
+import { Confetti, Envelope, Heart, Sparkle, Tag, WarningCircle } from '@phosphor-icons/react'
 import { Ico } from '../../ui/Ico'
 import { sinGuiones } from '../foro/useApodo'
 import { useCallback, useEffect, useState, type ReactNode } from 'react'
 import { useServicios } from '../../app/servicios'
-import { tituloDeCarga } from '../../content/cargas'
+import { cargas, tituloDeCarga } from '../../content/cargas'
 import { MOTIVOS_DE_RECHAZO, type Comentario, type Decision, type Propuesta, type Psicologo } from '../../domain/foro'
-import { MOTIVOS_DE_RECHAZO_DE_CARTA, type CartaDeEstudiante, type ConsejoDeCarta } from '../../domain/mochila'
+import { CARGA_POR_CLASIFICAR, MOTIVOS_DE_RECHAZO_DE_CARTA, type CartaDeEstudiante, type ConsejoDeCarta } from '../../domain/mochila'
+import { clasificarCarta } from '../mochila/clasificarCarta'
 import { pedirConsejoALaIA } from '../mochila/useConsejoDeCarta'
 import { useAccion } from '../../hooks/useAccion'
 import { useConsulta } from '../../hooks/useConsulta'
@@ -141,21 +142,57 @@ function ConsejoPorAprobar({ carta, consejo, onCambiar }: { carta: CartaDeEstudi
   )
 }
 
+function TemaDeLaCarta({ carta, carga, onCambiar }: { carta: CartaDeEstudiante; carga?: string; onCambiar: (id: string) => void }) {
+  const { asistente } = useServicios()
+  const [clasificando, setClasificando] = useState(carta.carga === CARGA_POR_CLASIFICAR)
+  const [sugerida, setSugerida] = useState<string>()
+
+  useEffect(() => {
+    if (carta.carga !== CARGA_POR_CLASIFICAR) return
+    let vigente = true
+    clasificarCarta(asistente, carta.texto, cargas)
+      .then((id) => { if (vigente && id) { setSugerida(id); onCambiar(id) } })
+      .catch(() => {})
+      .finally(() => vigente && setClasificando(false))
+    return () => { vigente = false }
+  }, [asistente, carta, onCambiar])
+
+  return (
+    <label className="consejo-por-aprobar">
+      <span><Ico icono={Tag} /> Tema de la mochila donde se publicará</span>
+      <select value={carga ?? ''} onChange={(e) => onCambiar(e.target.value)}>
+        <option value="" disabled>{clasificando ? 'La IA está eligiendo el tema…' : 'Elige el tema'}</option>
+        {cargas.map((c) => <option key={c.id} value={c.id}>{c.titulo}</option>)}
+      </select>
+      {sugerida && <small className="suave">Lo eligió la IA leyendo la carta. Cámbialo si no corresponde.</small>}
+    </label>
+  )
+}
+
 function CartaPorRevisar({ carta, onListo }: { carta: CartaDeEstudiante; onListo: () => void }) {
   const { panel } = useServicios()
   const { ocupado, error, ejecutar } = useAccion()
   const [consejo, setConsejo] = useState<ConsejoDeCarta>({ texto: '', de: 'ia' })
+  const [carga, setCarga] = useState<string | undefined>(carta.carga === CARGA_POR_CLASIFICAR ? undefined : carta.carga)
+  const [falta, setFalta] = useState(false)
+  const elegirTema = useCallback((id: string) => {
+    setCarga(id)
+    setFalta(false)
+  }, [])
 
   const decidir = async (decision: Decision, motivo?: string) => {
-    if (await ejecutar(() => panel.moderarCarta(carta, decision, motivo, consejo))) onListo()
+    if (decision === 'aprobado' && !carga) return setFalta(true)
+    if (await ejecutar(() => panel.moderarCarta(carta, decision, motivo, consejo, carga))) onListo()
   }
 
   return (
     <li className={clases('tarjeta', 'por-revisar', carta.urgente && 'por-revisar--urgente')}>
       {carta.urgente && <span className="insignia insignia--urgente"><Ico icono={WarningCircle} peso="fill" /> Posible riesgo: el estudiante vio las líneas de ayuda</span>}
-      <small className="suave"><Ico icono={Envelope} /> Carta de estudiante · {carta.nivel} · tema: {tituloDeCarga(carta.carga)}</small>
+      <small className="suave"><Ico icono={Envelope} /> Carta de estudiante · {carta.nivel} · {carta.carga === CARGA_POR_CLASIFICAR ? 'escrita en el bolsillo secreto' : `tema: ${tituloDeCarga(carta.carga)}`}</small>
       <p className="comentario__texto">{carta.texto}</p>
       <small className="suave">Revisa que no tenga nombres, grados, secciones ni datos que permitan reconocer a alguien.</small>
+      <TemaDeLaCarta carta={carta} carga={carga} onCambiar={elegirTema} />
+      {falta && <p className="aviso-suave">Elige el tema antes de aprobar.</p>}
       <ConsejoPorAprobar carta={carta} consejo={consejo} onCambiar={setConsejo} />
       {error && <p className="aviso-suave">{error}</p>}
       <BotonesDeModeracion ocupado={ocupado} motivos={MOTIVOS_DE_RECHAZO_DE_CARTA} onDecidir={decidir} />

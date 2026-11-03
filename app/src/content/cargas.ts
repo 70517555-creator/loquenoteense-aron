@@ -108,4 +108,4 @@ export const cargas: CargaDelHijo[] = [
   },
 ]
 
-export const tituloDeCarga = (id: string) => cargas.find((c) => c.id === id)?.titulo ?? id
+export const tituloDeCarga = (id: string) => cargas.find((c) => c.id === id)?.titulo ?? (id === 'por-clasificar' ? 'Por clasificar' : id)
