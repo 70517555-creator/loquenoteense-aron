@@ -7,6 +7,7 @@ export type ConteoDeReacciones = Record<Reaccion, number>
 export interface ReaccionesDelEpisodio {
   conteo: ConteoDeReacciones
   miReaccion?: Reaccion
+  compartido: number
 }
 
 export const sinReacciones = (): ConteoDeReacciones => ({ ayudo: 0, identifique: 0, intentare: 0, emociono: 0 })

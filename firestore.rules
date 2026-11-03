@@ -221,16 +221,25 @@ service cloud.firestore {
       let reaccion = getAfter(voto).data.reaccion;
       let antes = resource == null ? {} : resource.data;
       return conSesion()
-        && nuevo().keys().hasOnly(['ayudo', 'identifique', 'intentare', 'emociono'])
+        && nuevo().keys().hasOnly(['ayudo', 'identifique', 'intentare', 'emociono', 'compartido'])
         && !exists(voto)
         && existsAfter(voto)
         && nuevo().diff(antes).affectedKeys().hasOnly([reaccion])
         && nuevo().get(reaccion, 0) == antes.get(reaccion, 0) + 1;
     }
 
+    // Cada vez que alguien comparte el episodio, el contador sube de a uno.
+    function sumaUnCompartido() {
+      let antes = resource == null ? {} : resource.data;
+      return conSesion()
+        && nuevo().keys().hasOnly(['ayudo', 'identifique', 'intentare', 'emociono', 'compartido'])
+        && nuevo().diff(antes).affectedKeys().hasOnly(['compartido'])
+        && nuevo().compartido == antes.get('compartido', 0) + 1;
+    }
+
     match /reacciones/{episodio} {
       allow read: if true;
-      allow create, update: if episodio.matches('^[a-z0-9-]{1,30}$') && sumaUnaReaccion(episodio);
+      allow create, update: if episodio.matches('^[a-z0-9-]{1,30}$') && (sumaUnaReaccion(episodio) || sumaUnCompartido());
       allow delete: if esCoordinador();
 
       match /votos/{uid} {

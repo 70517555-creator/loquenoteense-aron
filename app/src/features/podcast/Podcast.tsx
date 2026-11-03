@@ -1,5 +1,6 @@
 import { ChatCircleDots, Headphones } from '@phosphor-icons/react'
 import { useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import type { Episodio } from '../../domain/tipos'
 import { useContenido } from '../../hooks/useContenido'
 import { useEnLinea } from '../../hooks/useEnLinea'
@@ -8,6 +9,7 @@ import { Encabezado } from '../../ui/Encabezado'
 import { Ilustracion } from '../../ui/Ilustracion'
 import { clases } from '../../utils/clases'
 import { ConversacionDelTema } from '../foro/ConversacionDelTema'
+import { CompartirEpisodio, PARAMETRO_EPISODIO } from './CompartirEpisodio'
 import { Reacciones } from './Reacciones'
 import { ReproductorRetro } from './ReproductorRetro'
 import { estaPublicado, useEpisodiosEscuchados } from './useEpisodioNuevo'
@@ -48,6 +50,7 @@ function EpisodioEnEscena({ episodio }: { episodio: Episodio }) {
         </div>
       </header>
       <ReproductorRetro episodio={episodio} onEmpezar={() => marcar(episodio.id)} />
+      <CompartirEpisodio episodio={episodio} />
       <Reacciones episodio={episodio.id} />
       <h3 className="episodio-en-escena__subtitulo"><ChatCircleDots size={24} weight="duotone" /> Comenta el episodio</h3>
       <ConversacionDelTema tema={temaDelEpisodio(episodio)} etiqueta="Podcast" autor="Comentas" resumida sinTablero />
@@ -82,7 +85,8 @@ function OtrosEpisodios({ episodios, activo, onElegir }: { episodios: Episodio[]
 export default function Podcast() {
   const episodios = useContenido('episodios')
   const enLinea = useEnLinea()
-  const [elegido, setElegido] = useState<string>()
+  const [params] = useSearchParams()
+  const [elegido, setElegido] = useState(params.get(PARAMETRO_EPISODIO) ?? undefined)
   const publicados = episodios?.filter(estaPublicado) ?? []
   const activo = publicados.find((e) => e.id === elegido) ?? publicados.at(-1)
 

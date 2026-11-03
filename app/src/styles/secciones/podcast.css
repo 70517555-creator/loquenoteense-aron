@@ -147,3 +147,21 @@
   .aviso-episodio__texto small { display: none; }
   .aviso-episodio__accion { padding: 4px 12px; }
 }
+
+/* Compartir el episodio. */
+.compartir-episodio { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-2) var(--e-3); }
+.compartir-episodio__boton {
+  display: inline-flex; align-items: center; gap: var(--e-2); min-height: 50px; padding: 0 var(--e-5); border: 0; border-radius: var(--r-total);
+  background: linear-gradient(180deg, #ff6b5e, var(--rojo)); color: #fff; font: inherit; font-weight: 900; font-size: var(--t-m); cursor: pointer;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 6px 14px rgba(200, 48, 44, 0.35); transition: transform 0.15s var(--suave);
+}
+.compartir-episodio__boton:hover { transform: translateY(-2px); }
+.compartir-episodio__cuenta { color: var(--tinta-suave); font-size: var(--t-s); font-weight: 700; }
+.compartir-episodio__opciones { flex-basis: 100%; display: flex; flex-wrap: wrap; gap: var(--e-2); animation: aparecer 0.25s var(--suave) both; }
+.compartir-episodio__opcion {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 42px; padding: 0 var(--e-4); border: 1.5px solid var(--linea); border-radius: var(--r-total);
+  background: #fff; color: var(--tinta); font: inherit; font-weight: 800; font-size: var(--t-s); text-decoration: none; cursor: pointer;
+}
+.compartir-episodio__opcion--whatsapp { color: #128c4a; border-color: #b6e6c9; }
+.compartir-episodio__opcion--facebook { color: #1b5fcc; border-color: #c4d6f5; }
+@media (max-width: 480px) { .compartir-episodio__boton { flex: 1 1 100%; justify-content: center; } .compartir-episodio { justify-content: center; } }
