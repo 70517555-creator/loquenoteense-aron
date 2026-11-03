@@ -18,7 +18,7 @@ export const consejoSobreGritos = 'Los signos de exclamación o las mayúsculas 
 export const lenguajeCercano = /me siento|me preocupa|me gustaria|quiero entender|cuentame|te quiero|me importas/
 
 export const estructuraRecomendada =
-  '✍️ Una estructura que funciona:\n' +
+  'Una estructura que funciona:\n' +
   '1. Lo que observaste: “Vi que…”\n' +
   '2. Lo que sientes: “Me preocupa…”\n' +
   '3. Una pregunta abierta: “¿Qué está pasando?”\n' +

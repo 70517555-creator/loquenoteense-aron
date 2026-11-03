@@ -1,3 +1,5 @@
+import { Confetti } from '@phosphor-icons/react'
+import { Ico } from '../../ui/Ico'
 import { useTemporizador } from '../../hooks/useTemporizador'
 import { Icono } from '../../ui/Icono'
 import { clases } from '../../utils/clases'
@@ -13,7 +15,7 @@ export function Reloj({ minutos }: { minutos: number }) {
       </div>
       <div className="fila">
         {terminado ? (
-          <span className="insignia">¡Tiempo cumplido! 🎉</span>
+          <span className="insignia">¡Tiempo cumplido! <Ico icono={Confetti} /></span>
         ) : (
           <button className="boton" onClick={alternar}>
             <Icono nombre={corriendo ? 'pause' : 'play'} tam={18} /> {corriendo ? 'Pausar' : 'Empezar reto'}

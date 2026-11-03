@@ -1,3 +1,5 @@
+import { UsersThree } from '@phosphor-icons/react'
+import { Ico } from '../../ui/Ico'
 import { useCallback } from 'react'
 import { useServicios } from '../../app/servicios'
 import { DIAS_EN_EL_RESUMEN } from '../../domain/estadisticas'
@@ -29,7 +31,7 @@ export function Visitas() {
 
   return (
     <div className="tarjeta">
-      <h3 className="carga__subtitulo">👪 Visitas de las familias</h3>
+      <h3 className="carga__subtitulo"><Ico icono={UsersThree} /> Visitas de las familias</h3>
       <ul className="indicadores">
         <li className="indicador"><b className="indicador__numero">{hoy.cuenta}</b><small className="suave">Hoy</small></li>
         <li className="indicador"><b className="indicador__numero">{semana}</b><small className="suave">Últimos 7 días</small></li>

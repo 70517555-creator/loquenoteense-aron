@@ -19,10 +19,10 @@ function consejosPara(original: string, normalizado: string): string[] {
 }
 
 function valoracion(consejos: string[], esCercano: boolean): string {
-  if (consejos.length) return `🔍 Algunas cosas a cuidar:\n${vinetas(consejos)}`
+  if (consejos.length) return `Algunas cosas a cuidar:\n${vinetas(consejos)}`
   return esCercano
-    ? '✅ Tu mensaje suena cercano y respetuoso. ¡Adelante!'
-    : '✅ No veo frases que suenen a reclamo. Para hacerlo aún más cercano, empieza contando cómo te sientes.'
+    ? 'Tu mensaje suena cercano y respetuoso. ¡Adelante!'
+    : 'No veo frases que suenen a reclamo. Para hacerlo aún más cercano, empieza contando cómo te sientes.'
 }
 
 export const antesDeHablar: EstrategiaDeRespuesta = ({ mensajes }) => {

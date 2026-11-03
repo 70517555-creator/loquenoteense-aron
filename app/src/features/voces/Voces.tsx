@@ -1,3 +1,5 @@
+import { Envelope, Microphone } from '@phosphor-icons/react'
+import { Ico } from '../../ui/Ico'
 import type { Voz } from '../../domain/tipos'
 import { useContenido } from '../../hooks/useContenido'
 import { Cargando } from '../../ui/Cargando'
@@ -30,7 +32,7 @@ function CartasRecientes() {
   if (!cartas?.length) return null
   return (
     <section className="voces__cartas">
-      <h2 className="mano titulo-tarjeta sin-margen">✉️ Lo que nos escriben los chicos</h2>
+      <h2 className="mano titulo-tarjeta sin-margen"><Ico icono={Envelope} /> Lo que nos escriben los chicos</h2>
       <p className="suave sin-margen">Cartas anónimas y reales de estudiantes del colegio. Psicología las revisó antes de publicarlas.</p>
       <NotaDeConsejos />
       <ul className="hojas-de-carta">{[...cartas].sort(masRecientePrimero).map((c) => <HojaDeCarta key={c.id} carta={c} />)}</ul>
@@ -45,7 +47,7 @@ export default function Voces() {
       <Encabezado titulo="Voces reales" icono="mic" />
       <div className="contenedor">
         <CartasRecientes />
-        <h2 className="mano titulo-tarjeta">🎙️ Lo que dijeron en la encuesta</h2>
+        <h2 className="mano titulo-tarjeta"><Ico icono={Microphone} /> Lo que dijeron en la encuesta</h2>
         <p className="entrada">Esto dijeron los estudiantes de nuestro colegio. Sus nombres se mantienen en reserva.</p>
         {voces ? (
           <ul className="voces">

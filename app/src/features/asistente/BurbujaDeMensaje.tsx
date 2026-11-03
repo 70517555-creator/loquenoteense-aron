@@ -1,3 +1,5 @@
+import { BookOpen, Sparkle } from '@phosphor-icons/react'
+import { Ico } from '../../ui/Ico'
 import { Link } from 'react-router-dom'
 import type { Enlace } from '../../ports/AssistantPort'
 import { Icono } from '../../ui/Icono'
@@ -6,8 +8,8 @@ import { clases } from '../../utils/clases'
 import type { Burbuja } from './useConversacion'
 
 const ETIQUETA_DE_FUENTE = {
-  ia: '✨ Respuesta con IA · revisa siempre con tu criterio',
-  guia: '📘 Guía del colegio',
+  ia: <><Ico icono={Sparkle} /> Respuesta con IA · revisa siempre con tu criterio</>,
+  guia: <><Ico icono={BookOpen} /> Guía del colegio</>,
 }
 
 function EnlacesSugeridos({ enlaces }: { enlaces: Enlace[] }) {

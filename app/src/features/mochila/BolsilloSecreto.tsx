@@ -1,3 +1,5 @@
+import { Envelope, EnvelopeOpen, LockSimple, PencilSimpleLine } from '@phosphor-icons/react'
+import { Ico } from '../../ui/Ico'
 import { useState, type FormEvent } from 'react'
 import type { Carta } from '../../domain/tipos'
 import { hayRiesgo } from '../../domain/riesgo'
@@ -26,7 +28,7 @@ function EscribirCarta({ de, onGuardada, onCancelar }: { de: Carta['de']; onGuar
 
   return (
     <form className="carta-nueva" onSubmit={guardar}>
-      <h3 className="carga__subtitulo">{de === 'hijo' ? '✍️ Escribe lo que no te animas a decir' : '💌 Escríbele a tu hijo/a'}</h3>
+      <h3 className="carga__subtitulo">{de === 'hijo' ? <><Ico icono={PencilSimpleLine} /> Escribe lo que no te animas a decir</> : <><Ico icono={Envelope} /> Escríbele a tu hijo/a</>}</h3>
       <p className="suave">Puedes empezar con una de estas frases:</p>
       <div className="inicios">
         {INICIOS[de].map((inicio) => (
@@ -69,7 +71,7 @@ function SobreDeCarta({ carta, onAbrir, onBorrar }: { carta: Carta; onAbrir: () 
   return (
     <li className="sobre">
       <div className="sobre__cabeza">
-        <span aria-hidden="true">{abierta ? '📖' : '✉️'}</span>
+        {abierta ? <Ico icono={EnvelopeOpen} /> : <Ico icono={Envelope} />}
         <b>{REMITENTE[carta.de]}</b>
         <small className="suave">{fechaCorta(carta.fecha)}</small>
         {!carta.leida && <span className="sobre__nueva">Nueva</span>}
@@ -115,7 +117,7 @@ export function BolsilloSecreto({ cartas: { cartas, guardar, marcarLeida, borrar
       <p>
         Hay cosas que cuesta decir mirando a los ojos. Aquí tu hijo puede dejarte una carta con lo que no se anima a decir en voz alta, y tú puedes responderle.
       </p>
-      <p className="privacidad">🔒 Las cartas se guardan solo en este celular. No se envían a nadie, ni siquiera al colegio.</p>
+      <p className="privacidad"><Ico icono={LockSimple} /> Las cartas se guardan solo en este celular. No se envían a nadie, ni siquiera al colegio.</p>
 
       {escribiendo ? (
         <EscribirCarta de={escribiendo} onGuardada={alGuardar} onCancelar={() => setEscribiendo(undefined)} />
@@ -125,7 +127,7 @@ export function BolsilloSecreto({ cartas: { cartas, guardar, marcarLeida, borrar
           <button className="boton boton--borde" onClick={() => empezar('familia')}>Soy la familia: escribir</button>
         </div>
       )}
-      {guardada && <p className="aviso-suave">✉️ Carta guardada en el bolsillo. Avísale que tiene una carta esperando.</p>}
+      {guardada && <p className="aviso-suave"><Ico icono={Envelope} /> Carta guardada en el bolsillo. Avísale que tiene una carta esperando.</p>}
 
       {cartas.length > 0 && (
         <ul className="sobres">

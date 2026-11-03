@@ -4,7 +4,7 @@ import { ultimoMensajeDelPadre } from './conversacion'
 import { respuestaDeRiesgo } from './seguridad'
 
 const AVISO_SIN_INTERNET = 'Sin internet: te respondo con la guía del colegio.'
-const AVISO_SERVICIO_NO_DISPONIBLE = 'Nuestro asistente está descansando 💛 Mientras tanto, te respondo con la guía del colegio.'
+const AVISO_SERVICIO_NO_DISPONIBLE = 'Nuestro asistente está descansando. Mientras tanto, te respondo con la guía del colegio.'
 
 const estaSinConexion = () => typeof navigator !== 'undefined' && !navigator.onLine
 

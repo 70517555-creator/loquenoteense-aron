@@ -1,3 +1,5 @@
+import { CalendarBlank, HourglassMedium, ThumbsUp } from '@phosphor-icons/react'
+import { Ico } from '../../ui/Ico'
 import { useState, type FormEvent } from 'react'
 import { useServicios } from '../../app/servicios'
 import { GRADOS } from '../../content/grados'
@@ -64,12 +66,12 @@ function TarjetaDePropuesta({ propuesta }: { propuesta: Propuesta }) {
     <li className="tarjeta propuesta">
       <p className="propuesta__texto">{propuesta.texto}</p>
       {propuesta.nivel && <small className="suave">{propuesta.nivel}</small>}
-      {propuesta.fechaProgramada && <span className="insignia">📅 Tema del {fechaLegible(propuesta.fechaProgramada)}</span>}
-      {propuesta.estado === 'pendiente' && <span className="insignia insignia--suave">⏳ Tu propuesta está en revisión</span>}
+      {propuesta.fechaProgramada && <span className="insignia"><Ico icono={CalendarBlank} /> Tema del {fechaLegible(propuesta.fechaProgramada)}</span>}
+      {propuesta.estado === 'pendiente' && <span className="insignia insignia--suave"><Ico icono={HourglassMedium} /> Tu propuesta está en revisión</span>}
       {propuesta.estado === 'rechazado' && <p className="comentario__rechazo">No se publicó. {propuesta.motivoRechazo}</p>}
       {publicada && (
         <BotonDeVoto id={propuesta.id} total={propuesta.votos} votar={() => foro.votar(propuesta)}>
-          👍 A mí también me interesa
+          <Ico icono={ThumbsUp} /> A mí también me interesa
         </BotonDeVoto>
       )}
     </li>

@@ -1,4 +1,6 @@
-import { useCallback, useState, type FormEvent } from 'react'
+import { CheckCircle, Envelope, Eye, EyeSlash, HandPalm, Heart, HourglassMedium } from '@phosphor-icons/react'
+import { Ico } from '../../ui/Ico'
+import { useCallback, useState, type FormEvent, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { useServicios } from '../../app/servicios'
 import {
@@ -21,10 +23,10 @@ const INICIOS = [
   'Gracias por…',
 ]
 
-const ESTADOS: Record<CartaDeEstudiante['estado'], string> = {
-  pendiente: '⏳ Psicología la está leyendo',
-  aprobado: '✅ Ya la pueden leer las familias',
-  rechazado: '✋ No se publicó',
+const ESTADOS: Record<CartaDeEstudiante['estado'], ReactNode> = {
+  pendiente: <><Ico icono={HourglassMedium} /> Psicología la está leyendo</>,
+  aprobado: <><Ico icono={CheckCircle} /> Ya la pueden leer las familias</>,
+  rechazado: <><Ico icono={HandPalm} /> No se publicó</>,
 }
 
 function AvisoDeRiesgo() {
@@ -51,7 +53,7 @@ function MisCartas({ cartas }: { cartas: CartaDeEstudiante[] }) {
             <p className="sobre__texto mano">{carta.texto}</p>
             {carta.estado === 'aprobado' && (
               <b className="mis-cartas__eco">
-                💛 {carta.meHizoPensar === 1 ? 'A 1 familia' : `A ${carta.meHizoPensar} familias`} le hizo pensar tu carta
+                <Ico icono={Heart} peso="fill" /> {carta.meHizoPensar === 1 ? 'A 1 familia' : `A ${carta.meHizoPensar} familias`} le hizo pensar tu carta
               </b>
             )}
             {carta.estado === 'rechazado' && carta.motivoRechazo && <small className="suave">Motivo: {carta.motivoRechazo}</small>}
@@ -88,7 +90,7 @@ function FormularioDeCarta({ onEnviada }: { onEnviada: () => void }) {
   if (enviada) {
     return (
       <div className="tarjeta centrado">
-        <h2 className="mano titulo-tarjeta">¡Tu carta va en camino! ✉️</h2>
+        <h2 className="mano titulo-tarjeta">¡Tu carta va en camino! <Ico icono={Envelope} /></h2>
         <p>Psicología la leerá y, si está todo bien, aparecerá en la mochila para que la lean las familias del colegio. Nadie sabrá que la escribiste tú.</p>
         {enviada.urgente && <AvisoDeRiesgo />}
         <button className="boton boton--borde" onClick={() => setEnviada(undefined)}>Escribir otra carta</button>
@@ -167,9 +169,9 @@ export default function Escribe() {
             Tu carta irá a <b>la mochila</b> que leen las familias del colegio.
           </p>
           <ul className="escribe__garantias">
-            <li>🙈 <b>Es anónima:</b> no pedimos tu nombre, ni grado, ni sección.</li>
-            <li>👀 <b>Psicología la lee primero</b> y solo publica lo que cuida a todos.</li>
-            <li>💛 <b>Verás cuántas familias</b> dijeron que tu carta les hizo pensar.</li>
+            <li><Ico icono={EyeSlash} /> <b>Es anónima:</b> no pedimos tu nombre, ni grado, ni sección.</li>
+            <li><Ico icono={Eye} /> <b>Psicología la lee primero</b> y solo publica lo que cuida a todos.</li>
+            <li><Ico icono={Heart} /> <b>Verás cuántas familias</b> dijeron que tu carta les hizo pensar.</li>
           </ul>
         </div>
         <FormularioDeCarta onEnviada={mias.recargar} />

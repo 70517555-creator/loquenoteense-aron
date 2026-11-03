@@ -1,3 +1,5 @@
+import { ThumbsUp } from '@phosphor-icons/react'
+import { Ico } from '../../ui/Ico'
 import { useCallback, useState, type FormEvent } from 'react'
 import { useServicios } from '../../app/servicios'
 import type { Propuesta, TemaDelDia } from '../../domain/foro'
@@ -103,7 +105,7 @@ export function ProgramarTemas() {
       <ul className="lista-panel">
         {sinProgramar.map((p) => (
           <li key={p.id} className="tarjeta tema-anterior">
-            <small className="suave">👍 {p.votos}{p.nivel && ` · ${p.nivel}`}</small>
+            <small className="suave"><Ico icono={ThumbsUp} /> {p.votos}{p.nivel && ` · ${p.nivel}`}</small>
             <b>{p.texto}</b>
             <button className="enlace-discreto" onClick={() => usarPropuesta(p)}>Usar como tema</button>
           </li>

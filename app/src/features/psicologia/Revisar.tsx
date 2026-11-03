@@ -1,3 +1,5 @@
+import { Confetti, Envelope, Heart, Sparkle, WarningCircle } from '@phosphor-icons/react'
+import { Ico } from '../../ui/Ico'
 import { sinGuiones } from '../foro/useApodo'
 import { useCallback, useEffect, useState, type ReactNode } from 'react'
 import { useServicios } from '../../app/servicios'
@@ -64,7 +66,7 @@ function ComentarioPorRevisar({ comentario, psicologo, onListo }: PropsDeComenta
 
   return (
     <li className={clases('tarjeta', 'por-revisar', comentario.urgente && 'por-revisar--urgente')}>
-      {comentario.urgente && <span className="insignia insignia--urgente">⚠️ Posible riesgo: atender primero</span>}
+      {comentario.urgente && <span className="insignia insignia--urgente"><Ico icono={WarningCircle} peso="fill" /> Posible riesgo: atender primero</span>}
       <small className="suave">Tema: {comentario.temaTitulo}</small>
       <b>{sinGuiones(comentario.apodo)}</b>
       <p className="comentario__texto">{comentario.texto}</p>
@@ -124,16 +126,16 @@ function ConsejoPorAprobar({ carta, consejo, onCambiar }: { carta: CartaDeEstudi
 
   return (
     <label className="consejo-por-aprobar">
-      <span>💛 Consejo para los papás (se publica debajo de la carta)</span>
+      <span><Ico icono={Heart} /> Consejo para los papás (se publica debajo de la carta)</span>
       <textarea
         rows={5}
         value={consejo.texto}
-        placeholder={preparando ? '✨ La IA está preparando una sugerencia…' : 'Escribe un consejo corto, o déjalo vacío para publicar la carta sola.'}
+        placeholder={preparando ? 'La IA está preparando una sugerencia…' : 'Escribe un consejo corto, o déjalo vacío para publicar la carta sola.'}
         onChange={(e) => onCambiar({ texto: e.target.value, de: 'psicologia' })}
       />
       <small className="suave">
         {consejo.de === 'ia' && consejo.texto ? 'Lo preparó la IA: léelo y cámbialo si quieres. Si lo editas, se publica como consejo de psicología.' : ''}
-        {' '}<button type="button" className="enlace-discreto" disabled={preparando} onClick={preparar}>{preparando ? 'Preparando…' : '✨ Pedir otra sugerencia a la IA'}</button>
+        {' '}<button type="button" className="enlace-discreto" disabled={preparando} onClick={preparar}>{preparando ? 'Preparando…' : <><Ico icono={Sparkle} /> Pedir otra sugerencia a la IA</>}</button>
       </small>
     </label>
   )
@@ -150,8 +152,8 @@ function CartaPorRevisar({ carta, onListo }: { carta: CartaDeEstudiante; onListo
 
   return (
     <li className={clases('tarjeta', 'por-revisar', carta.urgente && 'por-revisar--urgente')}>
-      {carta.urgente && <span className="insignia insignia--urgente">⚠️ Posible riesgo: el estudiante vio las líneas de ayuda</span>}
-      <small className="suave">✉️ Carta de estudiante · {carta.nivel} · tema: {tituloDeCarga(carta.carga)}</small>
+      {carta.urgente && <span className="insignia insignia--urgente"><Ico icono={WarningCircle} peso="fill" /> Posible riesgo: el estudiante vio las líneas de ayuda</span>}
+      <small className="suave"><Ico icono={Envelope} /> Carta de estudiante · {carta.nivel} · tema: {tituloDeCarga(carta.carga)}</small>
       <p className="comentario__texto">{carta.texto}</p>
       <small className="suave">Revisa que no tenga nombres, grados, secciones ni datos que permitan reconocer a alguien.</small>
       <ConsejoPorAprobar carta={carta} consejo={consejo} onCambiar={setConsejo} />
@@ -172,7 +174,7 @@ export function Revisar({ psicologo }: { psicologo: Psicologo }) {
   return (
     <section className="conversacion">
       <button className="boton boton--fantasma" onClick={recargar}>Actualizar</button>
-      {sinPendientes && <p className="suave centrado">🎉 No hay nada por revisar.</p>}
+      {sinPendientes && <p className="suave centrado"><Ico icono={Confetti} /> No hay nada por revisar.</p>}
       <ul className="lista-panel">
         {datos?.comentarios.map((c) => <ComentarioPorRevisar key={c.id} comentario={c} psicologo={psicologo} onListo={recargar} />)}
         {datos?.cartas.map((c) => <CartaPorRevisar key={c.id} carta={c} onListo={recargar} />)}

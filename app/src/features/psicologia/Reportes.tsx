@@ -1,3 +1,5 @@
+import { Confetti } from '@phosphor-icons/react'
+import { Ico } from '../../ui/Ico'
 import { useCallback } from 'react'
 import { useServicios } from '../../app/servicios'
 import type { Reporte } from '../../domain/foro'
@@ -31,7 +33,7 @@ export function Reportes() {
 
   if (fallo) return <p className="aviso-suave">No pudimos cargar los reportes.</p>
   if (cargando && !datos) return <Cargando />
-  if (!datos?.length) return <p className="suave centrado">No hay reportes. 🙌</p>
+  if (!datos?.length) return <p className="suave centrado">No hay reportes. <Ico icono={Confetti} /></p>
   return (
     <ul className="lista-panel">
       {datos.map((r) => <TarjetaDeReporte key={r.id} reporte={r} onResuelto={recargar} />)}

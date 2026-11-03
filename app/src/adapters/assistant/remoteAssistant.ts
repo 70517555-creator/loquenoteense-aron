@@ -10,11 +10,14 @@ const aFormatoDeChat = (mensajes: Mensaje[]) =>
     content: m.texto.slice(0, MAX_CARACTERES_POR_MENSAJE),
   }))
 
+// La web usa íconos propios: los emojis que mande la IA se quitan.
+const EMOJIS = /[\p{Extended_Pictographic}\u{FE0F}\u{200D}]+ ?/gu
+
 async function leerRespuesta(res: Response): Promise<string> {
   if (!res.ok) throw new Error(`El asistente respondió ${res.status}`)
   const { reply } = (await res.json()) as { reply?: string }
   if (!reply) throw new Error('Respuesta vacía')
-  return reply
+  return reply.replace(EMOJIS, '')
 }
 
 export function crearRemoteAssistant(url: string): AssistantPort {

@@ -3,7 +3,7 @@ import { respuestaDeLaGuia, ultimoMensajeDelPadre, type EstrategiaDeRespuesta } 
 import { detectarTema } from '../temas'
 import { contiene, normalizar } from '../../../utils/texto'
 
-const CONSEJO = '💡 Consejo: pregúntale a tu hijo qué significa para él. “¿Me enseñas?” abre muchas puertas.'
+const CONSEJO = 'Consejo: pregúntale a tu hijo qué significa para él. “¿Me enseñas?” abre muchas puertas.'
 
 const PALABRA_DESCONOCIDA =
   'Todavía no tengo esa palabra en mi diccionario. La jerga cambia muy rápido.\n\n' +

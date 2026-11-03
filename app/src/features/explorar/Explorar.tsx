@@ -1,3 +1,5 @@
+import { ChartBar } from '@phosphor-icons/react'
+import { Ico } from '../../ui/Ico'
 import { useState } from 'react'
 import type { DatoReal, Situacion } from '../../domain/tipos'
 import { useContenido } from '../../hooks/useContenido'
@@ -30,7 +32,7 @@ function DosMiradas({ situacion }: { situacion: Situacion }) {
 function DatoDeContexto({ dato }: { dato: DatoReal }) {
   return (
     <p className="dato-real">
-      <b>📊 Dato real:</b> {dato.texto}{' '}
+      <b><Ico icono={ChartBar} /> Dato real:</b> {dato.texto}{' '}
       <a href={dato.enlace} target="_blank" rel="noopener noreferrer">Fuente: {dato.fuente}</a>
     </p>
   )

@@ -1,3 +1,5 @@
+import { Confetti, Heart, Question } from '@phosphor-icons/react'
+import { Ico } from '../../ui/Ico'
 import { Link } from 'react-router-dom'
 import type { Escenario } from '../../domain/tipos'
 import { useContenido } from '../../hooks/useContenido'
@@ -46,7 +48,7 @@ function Retroalimentacion({ escenario, eleccion }: { escenario: Escenario; elec
   const acerto = eleccion === escenario.mejor
   return (
     <div className="retro" aria-live="polite">
-      <b>{acerto ? '💛 Buena elección. ' : '🤔 Piénsalo otra vez. '}</b>
+      <b>{acerto ? <><Ico icono={Heart} peso="fill" /> Buena elección. </> : <><Ico icono={Question} /> Piénsalo otra vez. </>}</b>
       {escenario.opciones[eleccion].feedback}
       {!acerto && (
         <p className="retro__extra">
@@ -61,7 +63,7 @@ function Resultado({ cuestionario }: { cuestionario: Cuestionario }) {
   const { aciertos, total, mejorResultado, reiniciar } = cuestionario
   return (
     <div className="tarjeta centrado">
-      <h2 className="mano titulo-grande">¡Terminaste! 🎉</h2>
+      <h2 className="mano titulo-grande">¡Terminaste! <Ico icono={Confetti} /></h2>
       <p>
         Elegiste la respuesta que más abre el diálogo en <b>{aciertos} de {total}</b> situaciones.
       </p>

@@ -1,3 +1,5 @@
+import { Heart, HouseLine } from '@phosphor-icons/react'
+import { Ico } from '../../ui/Ico'
 import { useCallback, useState } from 'react'
 import { useServicios } from '../../app/servicios'
 import {
@@ -12,7 +14,7 @@ function Resultado({ conteo, miRespuesta }: { conteo: ConteoDeCasa; miRespuesta:
   if (total < MINIMO_PARA_PORCENTAJE) {
     return (
       <p className="encuesta__nota">
-        💛 Gracias. {total === 1 ? <>Eres la <b>primera familia</b> en responder.</> : <>Eres de las primeras <b>{total}</b> familias en responder.</>}
+        <Ico icono={Heart} peso="fill" /> Gracias. {total === 1 ? <>Eres la <b>primera familia</b> en responder.</> : <>Eres de las primeras <b>{total}</b> familias en responder.</>}
         {' '}Cuando seamos más, aquí verás lo que se vive en las casas del colegio.
       </p>
     )
@@ -54,7 +56,7 @@ export function EncuestaDeCasa({ carga }: { carga: string }) {
 
   return (
     <section className="carga__bloque encuesta">
-      <h3 className="carga__subtitulo">🏠 ¿Esto te pasa en casa?</h3>
+      <h3 className="carga__subtitulo"><Ico icono={HouseLine} /> ¿Esto te pasa en casa?</h3>
       {fallo && !datos ? (
         <p className="suave">No pudimos cargar lo que responden otras familias. Revisa tu internet o inténtalo más tarde.</p>
       ) : miRespuesta ? (

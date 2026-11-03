@@ -20,7 +20,7 @@ const ajusteSegunGrado = (grado?: string) =>
 export const retoAMedida: EstrategiaDeRespuesta = ({ mensajes, grado }) => {
   const reto = elegirReto(ultimoMensajeDelPadre(mensajes))
   const texto = [
-    `🎯 Tu reto para esta semana: ${reto.titulo} (${reto.minutos} min)\n${reto.descripcion}`,
+    `Tu reto para esta semana: ${reto.titulo} (${reto.minutos} min)\n${reto.descripcion}`,
     enumerar(reto.pasos),
     ajusteSegunGrado(grado),
   ].join('\n\n')

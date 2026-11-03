@@ -1,7 +1,9 @@
+import { HandHeart, HourglassMedium } from '@phosphor-icons/react'
 import { useCallback, useLayoutEffect, useRef, useState, type CSSProperties } from 'react'
 import { createPortal } from 'react-dom'
 import { useServicios } from '../../app/servicios'
 import type { Comentario } from '../../domain/foro'
+import { Ico } from '../../ui/Ico'
 import { Icono } from '../../ui/Icono'
 import { useCerrarConEscape } from '../../hooks/useCerrarConEscape'
 import { clases } from '../../utils/clases'
@@ -12,13 +14,17 @@ import { sinGuiones } from './useApodo'
 
 const rutaDelComentario = (c: Comentario) => `temas/${c.temaId}/comentarios/${c.id}`
 
-const AVATARES: [inicio: string, emoji: string][] = [
-  ['Mamá', '👩'], ['Papá', '👨'], ['Abuela', '👵'], ['Abuelo', '👴'], ['Apoderada', '🙋‍♀️'], ['Apoderado', '🙋‍♂️'],
+// Avatar como en las apps de mensajes: la inicial de quien escribe, con un color por parentesco.
+const COLOR_DE_AVATAR: [inicio: string, color: string][] = [
+  ['Mamá', '#c8302c'], ['Papá', '#1f4e8c'], ['Abuela', '#8a4fa3'], ['Abuelo', '#2f6f5e'], ['Apoderad', '#b07812'],
 ]
 
-function avatarDe(comentario: Comentario) {
-  if (comentario.rol === 'psicologia') return '💚'
-  return AVATARES.find(([inicio]) => comentario.apodo.startsWith(inicio))?.[1] ?? '🙂'
+function Avatar({ comentario }: { comentario: Comentario }) {
+  if (comentario.rol === 'psicologia') {
+    return <span className="nota__avatar nota__avatar--psicologia" aria-hidden="true"><HandHeart size={20} weight="fill" /></span>
+  }
+  const color = COLOR_DE_AVATAR.find(([inicio]) => comentario.apodo.startsWith(inicio))?.[1] ?? '#6b5a50'
+  return <span className="nota__avatar" style={{ background: color }} aria-hidden="true">{comentario.apodo.trim().charAt(0).toUpperCase()}</span>
 }
 
 function separarApodo(apodo: string) {
@@ -28,7 +34,7 @@ function separarApodo(apodo: string) {
 
 function EstadoPropio({ comentario }: { comentario: Comentario }) {
   if (comentario.estado === 'pendiente') {
-    return <span className="insignia insignia--suave">⏳ En revisión: solo tú lo ves por ahora</span>
+    return <span className="insignia insignia--suave"><Ico icono={HourglassMedium} /> En revisión: solo tú lo ves por ahora</span>
   }
   if (comentario.estado === 'rechazado') {
     return <p className="comentario__rechazo">No se publicó. {comentario.motivoRechazo}</p>
@@ -72,7 +78,7 @@ function Encabezado({ comentario, onQuitar }: Props) {
   const detalles = [grado, comentario.respondeA && `en respuesta a ${sinGuiones(comentario.respondeA)}`, haceCuanto(comentario.creadoEn)]
   return (
     <header className="nota__cabeza">
-      <span className="nota__avatar" aria-hidden="true">{avatarDe(comentario)}</span>
+      <Avatar comentario={comentario} />
       <div className="nota__quien">
         <b>{quien}{comentario.esMio && publicado && <small className="suave"> (tú)</small>}</b>
         {comentario.rol === 'psicologia' && <span className="nota__rol">Psicología del colegio</span>}

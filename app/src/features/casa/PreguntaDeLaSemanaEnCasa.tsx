@@ -1,3 +1,5 @@
+import { ChatCircleText, PencilSimpleLine, UsersThree } from '@phosphor-icons/react'
+import { Ico } from '../../ui/Ico'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import type { TemaDelDia } from '../../domain/foro'
@@ -23,17 +25,17 @@ function Tarjeta({ pregunta }: { pregunta: TemaDelDia }) {
 
   return (
     <section className="pregunta-casa" aria-label="Pregunta de la semana">
-      <span className="pregunta-casa__etiqueta">💬 Pregunta de la semana · Psicología</span>
+      <span className="pregunta-casa__etiqueta"><Ico icono={ChatCircleText} /> Pregunta de la semana · Psicología</span>
       <h2 className="pregunta-casa__titulo mano">{pregunta.titulo}</h2>
       <button className="pregunta-casa__escribir" onClick={() => setEscribiendo(true)}>
-        <span className="pregunta-casa__avatar" aria-hidden="true">✍️</span>
+        <span className="pregunta-casa__avatar" aria-hidden="true"><PencilSimpleLine size={24} weight="bold" /></span>
         <span>{respondida ? '¿Quieres contar algo más?' : `Cuéntanos qué haces tú, ${apodo.parentesco.toLowerCase()}…`}</span>
       </button>
       {escribiendo && <VentanaParaResponder pregunta={pregunta} onEnviado={comentarios.recargar} onCerrar={() => setEscribiendo(false)} />}
       <p className="pregunta-casa__eco" aria-live="polite">
-        {publicadas === undefined ? <span className="pregunta-casa__cargando">👪 Viendo cuántas familias respondieron…</span> : (
+        {publicadas === undefined ? <span className="pregunta-casa__cargando"><Ico icono={UsersThree} /> Viendo cuántas familias respondieron…</span> : (
           <>
-            👪 {textoDeRespuestas(publicadas)}
+            <Ico icono={UsersThree} /> {textoDeRespuestas(publicadas)}
             {publicadas > 0 && <> <Link to={RUTA_DE_LAS_RESPUESTAS} className="sin-cortes">Leer respuestas →</Link></>}
           </>
         )}

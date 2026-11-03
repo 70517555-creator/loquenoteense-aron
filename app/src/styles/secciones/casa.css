@@ -600,3 +600,4 @@
   .casa__astro { display: block; width: 40px; translate: 0 -62%; }
   .casa__saludo { font-size: clamp(2.3rem, 3.1vw, 3.1rem); }
 }
+.pregunta-casa__avatar { color: #fff; }

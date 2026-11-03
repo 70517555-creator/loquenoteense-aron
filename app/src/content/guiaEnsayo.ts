@@ -29,7 +29,7 @@ export const respuestasDelHijoCerrado = [
 ]
 
 export const consejoSegunTono: Record<Tono, string> = {
-  reproche: '💡 Ojo: esa frase sonó a reclamo y tu hijo se cerró. Prueba empezar por lo que sientes: “Me preocupa verte así”.',
-  apertura: '💡 Muy bien: hablaste desde la calma y le diste espacio. Así se abre la conversación.',
-  neutro: '💡 Vas bien. Prueba con una pregunta abierta o nombrando lo que crees que siente.',
+  reproche: 'Ojo: esa frase sonó a reclamo y tu hijo se cerró. Prueba empezar por lo que sientes: “Me preocupa verte así”.',
+  apertura: 'Muy bien: hablaste desde la calma y le diste espacio. Así se abre la conversación.',
+  neutro: 'Vas bien. Prueba con una pregunta abierta o nombrando lo que crees que siente.',
 }

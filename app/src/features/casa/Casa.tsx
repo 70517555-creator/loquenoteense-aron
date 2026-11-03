@@ -1,3 +1,5 @@
+import { FilmSlate } from '@phosphor-icons/react'
+import { Ico } from '../../ui/Ico'
 import { Link } from 'react-router-dom'
 import { asistenteHabitacion, habitaciones } from '../../app/habitaciones'
 import { useMomentoDelDia, type Momento } from '../../hooks/useMomentoDelDia'
@@ -32,7 +34,7 @@ function Bienvenida({ momento, saludo, recorridas }: { momento: Momento; saludo:
               <Icono nombre="play" tam={16} /> Ver video
             </Link>
           )}
-          <Link to="/vivido" className="casa__video">🎬 Videos</Link>
+          <Link to="/vivido" className="casa__video"><Ico icono={FilmSlate} /> Videos</Link>
         </span>
       </div>
       <p className="casa__saludo mano">

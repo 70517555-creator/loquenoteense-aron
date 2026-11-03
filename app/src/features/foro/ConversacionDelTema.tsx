@@ -1,3 +1,5 @@
+import { Heart, PushPin } from '@phosphor-icons/react'
+import { Ico } from '../../ui/Ico'
 import { useState, type ReactNode } from 'react'
 import { useServicios } from '../../app/servicios'
 import { MOTIVO_AL_RETIRAR, type Comentario, type TemaDelDia } from '../../domain/foro'
@@ -24,7 +26,7 @@ interface Props {
 function InvitacionACompartir({ primera }: { primera: boolean }) {
   return (
     <p className="tarjeta invitacion-foro">
-      💛 {primera ? 'Las primeras familias que comparten ayudan a todas las demás.' : 'Cada experiencia suma.'}{' '}
+      <Ico icono={Heart} peso="fill" /> {primera ? 'Las primeras familias que comparten ayudan a todas las demás.' : 'Cada experiencia suma.'}{' '}
       Tu experiencia puede ser justo lo que otra mamá o papá del colegio necesita leer hoy. Es anónimo y psicología lo revisa antes de publicarlo.
     </p>
   )
@@ -52,7 +54,7 @@ function ListaDeComentarios({ comentarios, cargando, fallo, onQuitar, tarjeta, s
   const visibles = (verTodos ? comentarios : comentarios?.slice(0, COMENTARIOS_A_LA_VISTA)) ?? []
   const ocultos = (comentarios?.length ?? 0) - visibles.length
   const invitacion = publicados < POCOS_COMENTARIOS && <InvitacionACompartir primera={publicados === 0} />
-  const titulo = <h3 className="mural-foro__titulo">📌 Lo que comparten las familias <span>({publicados})</span></h3>
+  const titulo = <h3 className="mural-foro__titulo"><Ico icono={PushPin} peso="fill" /> Lo que comparten las familias <span>({publicados})</span></h3>
   const verMas = ocultos > 0 && (
     <button className="boton mural-foro__mas" onClick={() => setVerTodos(true)}>
       Ver {ocultos} {ocultos === 1 ? 'nota más' : 'notas más'}

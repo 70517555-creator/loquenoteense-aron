@@ -15,7 +15,7 @@ export const traductorDeEmociones: EstrategiaDeRespuesta = ({ mensajes }) => {
 
   if (frase) {
     return respuestaDeLaGuia(
-      `💬 Lo que quizá quiere decir:\n${frase.significado}\n\n🤝 Cómo podrías responder:\n${frase.responder}`,
+      `Lo que quizá quiere decir:\n${frase.significado}\n\nCómo podrías responder:\n${frase.responder}`,
       tema?.enlaces,
     )
   }

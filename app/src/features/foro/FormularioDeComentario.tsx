@@ -1,3 +1,5 @@
+import { PencilSimpleLine } from '@phosphor-icons/react'
+import { Ico } from '../../ui/Ico'
 import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { useServicios } from '../../app/servicios'
@@ -62,7 +64,7 @@ export function FormularioDeComentario({ tema, onEnviado, enfocar, compacto }: P
 
   return (
     <form className={compacto ? 'formulario-foro formulario-foro--compacto' : 'tarjeta formulario-foro'} onSubmit={enviar}>
-      {!compacto && <h3 className="titulo-tarjeta">✍️ Escribe tu respuesta</h3>}
+      {!compacto && <h3 className="titulo-tarjeta"><Ico icono={PencilSimpleLine} /> Escribe tu respuesta</h3>}
       <textarea
         ref={caja}
         className="formulario-foro__caja"

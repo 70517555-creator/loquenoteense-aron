@@ -1,3 +1,5 @@
+import { Trophy } from '@phosphor-icons/react'
+import { Ico } from '../../ui/Ico'
 import { Link } from 'react-router-dom'
 import type { Reto } from '../../domain/tipos'
 import { useContenido } from '../../hooks/useContenido'
@@ -62,7 +64,7 @@ function TarjetaDeReto({ retos }: { retos: Reto[] }) {
   return (
     <>
       <p className="suave centrado">
-        🏆 Retos cumplidos: <b>{progreso.totalCumplidos}</b> de {retos.length}
+        <Ico icono={Trophy} /> Retos cumplidos: <b>{progreso.totalCumplidos}</b> de {retos.length}
       </p>
       <div className="tarjeta">
         <AnteriorSiguiente onAnterior={anterior} onSiguiente={siguiente} etiquetaAnterior="Reto anterior" etiquetaSiguiente="Reto siguiente">

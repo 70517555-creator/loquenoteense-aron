@@ -1,3 +1,5 @@
+import { Envelope, Sparkle } from '@phosphor-icons/react'
+import { Ico } from '../../ui/Ico'
 import { useRef, useState, type CSSProperties } from 'react'
 import { CLAVES_DE_PROGRESO } from '../../app/clavesDeProgreso'
 import type { CargaDelHijo } from '../../domain/tipos'
@@ -50,7 +52,7 @@ function MochilaInteractiva({ cargas }: { cargas: CargaDelHijo[] }) {
           >
             {carga.etiqueta}
             {!!cartasDeChicos[carga.id] && (
-              <span className="etiqueta__cartas" aria-label={`${cartasDeChicos[carga.id]} cartas de estudiantes`}>✉️ {cartasDeChicos[carga.id]}</span>
+              <span className="etiqueta__cartas" aria-label={`${cartasDeChicos[carga.id]} cartas de estudiantes`}><Ico icono={Envelope} peso="fill" /> {cartasDeChicos[carga.id]}</span>
             )}
           </button>
         ))}
@@ -60,7 +62,7 @@ function MochilaInteractiva({ cargas }: { cargas: CargaDelHijo[] }) {
           aria-pressed={activa === BOLSILLO}
           aria-label={`Bolsillo secreto${sinLeer ? `: ${sinLeer} carta(s) sin leer` : ''}`}
         >
-          <span aria-hidden="true">✉️</span> Bolsillo secreto
+          <Ico icono={Envelope} /> Bolsillo secreto
           {sinLeer > 0 && <span className="carta-del-bolsillo__aviso">{sinLeer}</span>}
         </button>
       </div>
@@ -77,7 +79,7 @@ function MochilaInteractiva({ cargas }: { cargas: CargaDelHijo[] }) {
         )}
       </div>
       {vistas === cargas.length && (
-        <p className="aviso-suave">✨ Abriste toda su mochila. Entender lo que carga ya lo hace sentir menos solo.</p>
+        <p className="aviso-suave"><Ico icono={Sparkle} /> Abriste toda su mochila. Entender lo que carga ya lo hace sentir menos solo.</p>
       )}
     </>
   )

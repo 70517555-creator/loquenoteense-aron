@@ -1,3 +1,5 @@
+import { Heart } from '@phosphor-icons/react'
+import { Ico } from '../../ui/Ico'
 import { sinGuiones } from '../foro/useApodo'
 import { useCallback, useState } from 'react'
 import { useServicios } from '../../app/servicios'
@@ -19,7 +21,7 @@ function ComentarioPublicado({ comentario, onOculto }: { comentario: Comentario;
   return (
     <li className={clases('tarjeta', 'por-revisar', comentario.rol === 'psicologia' && 'comentario--psicologia')}>
       <small className="suave">
-        {comentario.temaTitulo} · {comentario.creadoEn.toLocaleDateString('es-PE')} · ❤️ {comentario.meAyudo}
+        {comentario.temaTitulo} · {comentario.creadoEn.toLocaleDateString('es-PE')} · <Ico icono={Heart} peso="fill" /> {comentario.meAyudo}
       </small>
       <b>{sinGuiones(comentario.apodo)}</b>
       <p className="comentario__texto">{comentario.texto}</p>

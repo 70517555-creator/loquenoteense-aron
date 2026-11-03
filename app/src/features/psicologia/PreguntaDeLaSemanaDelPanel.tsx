@@ -1,3 +1,5 @@
+import { PushPin } from '@phosphor-icons/react'
+import { Ico } from '../../ui/Ico'
 import { useCallback, useState, type FormEvent } from 'react'
 import { useServicios } from '../../app/servicios'
 import { useAccion } from '../../hooks/useAccion'
@@ -33,7 +35,7 @@ export function PreguntaDeLaSemanaDelPanel() {
 
   return (
     <form className="tarjeta formulario-foro" onSubmit={fijar}>
-      <h3 className="titulo-tarjeta">📌 Pregunta de la semana</h3>
+      <h3 className="titulo-tarjeta"><Ico icono={PushPin} /> Pregunta de la semana</h3>
       <small className="suave">
         Se ve fijada arriba del foro desde el {fechaLegible(lunes)}. {propia.datos ? 'La escribió el equipo.' : 'Es una de las 6 preguntas preparadas con la encuesta; cambia sola cada lunes.'}
       </small>

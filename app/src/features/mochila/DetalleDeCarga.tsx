@@ -1,3 +1,5 @@
+import { ChartBar, ChatCircleText, ChatsCircle, Door, DoorOpen, HandPalm, Heart, MagnifyingGlass } from '@phosphor-icons/react'
+import { Ico } from '../../ui/Ico'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { FUENTE_DE_LOS_DATOS } from '../../content/cargas'
@@ -20,7 +22,7 @@ function QueLeDirias({ situacion, orden }: { situacion: CargaDelHijo['situacion'
 
   return (
     <section className="carga__bloque">
-      <h3 className="carga__subtitulo">💬 ¿Qué le dirías?</h3>
+      <h3 className="carga__subtitulo"><Ico icono={ChatCircleText} /> ¿Qué le dirías?</h3>
       <p className="carga__escena">{situacion.frase}</p>
       <div role="radiogroup" aria-label="Respuestas posibles">
         {respuestas.map((respuesta) => (
@@ -38,7 +40,7 @@ function QueLeDirias({ situacion, orden }: { situacion: CargaDelHijo['situacion'
       </div>
       {elegida && (
         <div className={clases('retro', 'reaccion', elegida.abre && 'reaccion--abre')} aria-live="polite">
-          <b>{elegida.abre ? '🚪✨ Esta respuesta abre la puerta.' : '🚪 Esta respuesta cierra la puerta.'}</b>
+          <b>{elegida.abre ? <><Ico icono={DoorOpen} /> Esta respuesta abre la puerta.</> : <><Ico icono={Door} /> Esta respuesta cierra la puerta.</>}</b>
           <p className="reaccion__voz">Así se sentiría tu hijo: “{elegida.reaccion}”</p>
           <button className="enlace-discreto" onClick={() => setElegida(undefined)}>
             {elegida.abre ? 'Ver las otras respuestas' : 'Probar otra respuesta'}
@@ -61,10 +63,10 @@ export function DetalleDeCarga({ carga, orden }: { carga: CargaDelHijo; orden: n
       <CartasDeEstudiantes carga={carga.id} />
 
       <section className="carga__bloque">
-        <h3 className="carga__subtitulo">🔎 Lo que pasa</h3>
+        <h3 className="carga__subtitulo"><Ico icono={MagnifyingGlass} /> Lo que pasa</h3>
         <p>{carga.loQuePasa}</p>
         <div className="dato-real">
-          <b>📊 Lo que nos contaron en el colegio</b>
+          <b><Ico icono={ChartBar} /> Lo que nos contaron en el colegio</b>
           <p>{carga.dato}</p>
           <small className="suave">{FUENTE_DE_LOS_DATOS}</small>
         </div>
@@ -74,11 +76,11 @@ export function DetalleDeCarga({ carga, orden }: { carga: CargaDelHijo; orden: n
 
       <section className="carga__bloque carga__frases">
         <div className="frases frases--evita">
-          <h3 className="carga__subtitulo">✋ Mejor evita</h3>
+          <h3 className="carga__subtitulo"><Ico icono={HandPalm} /> Mejor evita</h3>
           <ul>{carga.evita.map((f) => <li key={f}>{f}</li>)}</ul>
         </div>
         <div className="frases frases--prueba">
-          <h3 className="carga__subtitulo">💛 Prueba decir</h3>
+          <h3 className="carga__subtitulo"><Ico icono={Heart} /> Prueba decir</h3>
           <ul>{carga.prueba.map((f) => <li key={f}>{f}</li>)}</ul>
         </div>
       </section>
@@ -88,7 +90,7 @@ export function DetalleDeCarga({ carga, orden }: { carga: CargaDelHijo; orden: n
       <EncuestaDeCasa carga={carga.id} />
       <InvitacionAEscribir />
 
-      <Link className="boton boton--borde carga__foro" to="/foro">💬 Conversa con otras familias en el foro</Link>
+      <Link className="boton boton--borde carga__foro" to="/foro"><Ico icono={ChatsCircle} /> Conversa con otras familias en el foro</Link>
     </article>
   )
 }

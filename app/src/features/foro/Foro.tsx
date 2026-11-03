@@ -1,3 +1,5 @@
+import { LockSimple } from '@phosphor-icons/react'
+import { Ico } from '../../ui/Ico'
 import { Link, useSearchParams } from 'react-router-dom'
 import { useEnLinea } from '../../hooks/useEnLinea'
 import { useSeleccionEnUrl } from '../../hooks/useSeleccionEnUrl'
@@ -21,7 +23,7 @@ function PreguntaDeLaSemana() {
   const [params] = useSearchParams()
   if (fallo) return <p className="aviso-suave">No pudimos cargar la pregunta de la semana. Revisa tu conexión.</p>
   if (!pregunta) return <Cargando />
-  return <ConversacionDelTema tema={pregunta} etiqueta="Pregunta de la semana" autor="💬 Respondes a" enfocar={params.has(PARAMETRO_RESPONDER)} resumida />
+  return <ConversacionDelTema tema={pregunta} etiqueta="Pregunta de la semana" autor="Respondes a" enfocar={params.has(PARAMETRO_RESPONDER)} resumida />
 }
 
 const SECCIONES = [
@@ -43,7 +45,7 @@ export default function Foro() {
         <Fichas etiqueta="Secciones del foro" opciones={SECCIONES.map((s) => s.titulo)} activa={indice} onCambiar={ir} />
         {enLinea ? <Contenido /> : <p className="aviso-suave">Para conversar en el foro necesitas internet.</p>}
         <p className="suave centrado">
-          🔒 Un espacio anónimo para compartir y aprender entre familias, acompañados por psicología del colegio.
+          <Ico icono={LockSimple} /> Un espacio anónimo para compartir y aprender entre familias, acompañados por psicología del colegio.
         </p>
         <p className="foro__equipo">
           <Link to="/privacidad#normas-del-foro">Normas del foro y privacidad</Link>

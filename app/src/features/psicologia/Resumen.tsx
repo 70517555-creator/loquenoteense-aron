@@ -1,3 +1,5 @@
+import { CalendarBlank, ChatCircleText, Envelope, Flag, HourglassMedium, HouseLine, Lightbulb, UsersThree, type Icon } from '@phosphor-icons/react'
+import { Ico } from '../../ui/Ico'
 import { useCallback } from 'react'
 import { useServicios } from '../../app/servicios'
 import { cargas } from '../../content/cargas'
@@ -10,14 +12,14 @@ import { Visitas } from './Visitas'
 import { porcentaje } from '../../utils/listas'
 import { fechaDeHoy } from '../../utils/tiempo'
 
-const INDICADORES: { clave: keyof ResumenDelForo; texto: string; emoji: string }[] = [
-  { clave: 'pendientes', texto: 'Por revisar', emoji: '⏳' },
-  { clave: 'publicados', texto: 'Comentarios publicados', emoji: '💬' },
-  { clave: 'propuestas', texto: 'Temas propuestos', emoji: '💡' },
-  { clave: 'reportes', texto: 'Reportes sin atender', emoji: '🚩' },
-  { clave: 'temasProgramados', texto: 'Temas programados', emoji: '📅' },
-  { clave: 'cartas', texto: 'Cartas de estudiantes', emoji: '✉️' },
-  { clave: 'equipo', texto: 'Personas en el equipo', emoji: '👥' },
+const INDICADORES: { clave: keyof ResumenDelForo; texto: string; Icono: Icon }[] = [
+  { clave: 'pendientes', texto: 'Por revisar', Icono: HourglassMedium },
+  { clave: 'publicados', texto: 'Comentarios publicados', Icono: ChatCircleText },
+  { clave: 'propuestas', texto: 'Temas propuestos', Icono: Lightbulb },
+  { clave: 'reportes', texto: 'Reportes sin atender', Icono: Flag },
+  { clave: 'temasProgramados', texto: 'Temas programados', Icono: CalendarBlank },
+  { clave: 'cartas', texto: 'Cartas de estudiantes', Icono: Envelope },
+  { clave: 'equipo', texto: 'Personas en el equipo', Icono: UsersThree },
 ]
 
 function LoQueSeViveEnCasa() {
@@ -37,7 +39,7 @@ function LoQueSeViveEnCasa() {
 
   return (
     <div className="tarjeta">
-      <h3 className="carga__subtitulo">🏠 Lo que más se vive en casa (La mochila de tu hijo)</h3>
+      <h3 className="carga__subtitulo"><Ico icono={HouseLine} /> Lo que más se vive en casa (La mochila de tu hijo)</h3>
       {filas.length ? (
         <ul className="encuesta__barras">
           {filas.map(({ titulo, conteo }) => {
@@ -72,9 +74,9 @@ export function Resumen() {
   return (
     <section className="conversacion">
       <ul className="indicadores">
-        {INDICADORES.map(({ clave, texto, emoji }) => (
+        {INDICADORES.map(({ clave, texto, Icono }) => (
           <li key={clave} className="tarjeta indicador">
-            <span className="indicador__emoji" aria-hidden="true">{emoji}</span>
+            <Icono className="indicador__emoji" size={28} weight="duotone" aria-hidden="true" />
             <b className="indicador__numero">{datos?.[clave] ?? 0}</b>
             <small className="suave">{texto}</small>
           </li>

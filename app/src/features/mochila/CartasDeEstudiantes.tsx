@@ -1,3 +1,5 @@
+import { Envelope, HandHeart, Heart, Sparkle } from '@phosphor-icons/react'
+import { Ico } from '../../ui/Ico'
 import { useCallback, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useServicios } from '../../app/servicios'
@@ -13,11 +15,11 @@ import { useConsejoDeCarta } from './useConsejoDeCarta'
 
 function ConsejoDeLaCarta({ carta }: { carta: CartaDeEstudiante }) {
   const { consejo, preparando } = useConsejoDeCarta(carta)
-  if (preparando) return <p className="consejo-de-carta consejo-de-carta--preparando">✨ Preparando un consejo para ti…</p>
+  if (preparando) return <p className="consejo-de-carta consejo-de-carta--preparando"><Ico icono={Sparkle} /> Preparando un consejo para ti…</p>
   if (!consejo) return null
   return (
     <div className={clases('consejo-de-carta', consejo.de === 'psicologia' && 'consejo-de-carta--psicologia')}>
-      <b>{consejo.de === 'psicologia' ? '💚 Lo que dice psicología' : '✨ Una idea para ti'}</b>
+      <b>{consejo.de === 'psicologia' ? <><Ico icono={HandHeart} /> Lo que dice psicología</> : <><Ico icono={Sparkle} /> Una idea para ti</>}</b>
       <TextoRecortable texto={consejo.texto} className="consejo-de-carta__texto" />
     </div>
   )
@@ -50,7 +52,7 @@ export function HojaDeCarta({ carta }: { carta: CartaDeEstudiante }) {
         <p className="hoja-de-carta__texto mano">{carta.texto}</p>
         <p className="hoja-de-carta__firma mano">Un estudiante de {carta.nivel.toLowerCase()}</p>
         <BotonDeVoto id={carta.id} total={carta.meHizoPensar} votar={() => mochila.meHizoPensar(carta)}>
-          💛 Me hizo pensar
+          <Ico icono={Heart} /> Me hizo pensar
         </BotonDeVoto>
       </div>
       <ConsejoDeLaCarta carta={carta} />
@@ -66,7 +68,7 @@ export function CartasDeEstudiantes({ carga }: { carga: string }) {
 
   return (
     <section className="carga__bloque cartas-de-chicos">
-      <h3 className="carga__subtitulo">✉️ {datos.length === 1 ? 'Un chico del colegio escribió sobre esto' : `${datos.length} chicos del colegio escribieron sobre esto`}</h3>
+      <h3 className="carga__subtitulo"><Ico icono={Envelope} /> {datos.length === 1 ? 'Un chico del colegio escribió sobre esto' : `${datos.length} chicos del colegio escribieron sobre esto`}</h3>
       <p className="suave sin-margen">Son cartas anónimas y reales. Psicología las revisó antes de publicarlas. Léelas pensando en tu hijo.</p>
       <NotaDeConsejos />
       <ul className="hojas-de-carta">{datos.map((c) => <HojaDeCarta key={c.id} carta={c} />)}</ul>
@@ -75,7 +77,7 @@ export function CartasDeEstudiantes({ carga }: { carga: string }) {
 }
 
 export function NotaDeConsejos() {
-  return <small className="suave">💚 Los consejos en verde son de psicología. ✨ Las ideas en amarillo las prepara la inteligencia artificial.</small>
+  return <small className="suave"><Ico icono={HandHeart} /> Los consejos en verde son de psicología. <Ico icono={Sparkle} /> Las ideas en amarillo las prepara la inteligencia artificial.</small>
 }
 
 export function InvitacionAEscribir() {
