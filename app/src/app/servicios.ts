@@ -12,6 +12,7 @@ import type { ContentRepository } from '../ports/ContentRepository'
 import type { EstadisticasPort } from '../ports/EstadisticasPort'
 import type { ForoPort, PanelDePsicologiaPort } from '../ports/ForoPort'
 import type { MochilaPort } from '../ports/MochilaPort'
+import type { PodcastPort } from '../ports/PodcastPort'
 import type { ProgressStore } from '../ports/ProgressStore'
 
 export interface Servicios {
@@ -21,6 +22,7 @@ export interface Servicios {
   foro: ForoPort
   panel: PanelDePsicologiaPort
   mochila: MochilaPort
+  podcast: PodcastPort
   estadisticas: EstadisticasPort
   conIA: boolean
 }
@@ -37,6 +39,7 @@ export const servicios: Servicios = {
   foro: perezoso(() => import('../adapters/foro/firestoreForo').then((m) => m.firestoreForo)),
   panel: perezoso(() => import('../adapters/foro/firestorePanel').then((m) => m.firestorePanel)),
   mochila: perezoso(() => import('../adapters/foro/firestoreMochila').then((m) => m.firestoreMochila)),
+  podcast: perezoso(() => import('../adapters/foro/firestorePodcast').then((m) => m.firestorePodcast)),
   estadisticas: firestoreRest,
   conIA: Boolean(config.urlAsistente),
 }

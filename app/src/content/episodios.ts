@@ -2,7 +2,7 @@ import type { Episodio } from '../domain/tipos'
 
 export const episodios: Episodio[] = [
   {
-    id: 'ep1', numero: 1, duracion: '9 min', audioUrl: '/audio/ep01-no-vienes-con-manual.mp3',
+    id: 'ep1', numero: 1, duracion: '9 min', audioUrl: '/audio/ep01-no-vienes-con-manual.mp3', publicadoEn: '2026-11-02',
     titulo: 'No vienes con manual',
     descripcion: 'Por qué nadie nos enseñó a ser padres, y por qué nunca es tarde para aprender.',
   },

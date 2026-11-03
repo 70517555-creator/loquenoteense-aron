@@ -7,6 +7,8 @@ import { Icono } from '../../ui/Icono'
 import { Logo } from '../../ui/Logo'
 import { PARAMETRO_ABRIR_VIDEO } from '../inicio/useVideoDeBienvenida'
 import { videoDeBienvenida } from '../inicio/youtube'
+import { useEpisodioNuevo } from '../podcast/useEpisodioNuevo'
+import { AvisoDeEpisodio } from './AvisoDeEpisodio'
 import { PreguntaDeLaSemanaEnCasa } from './PreguntaDeLaSemanaEnCasa'
 import { Cielo } from './paisaje/Cielo'
 import { Suelo } from './paisaje/Suelo'
@@ -45,6 +47,7 @@ function Bienvenida({ momento, saludo, recorridas }: { momento: Momento; saludo:
         Hoy recorriste <b>{recorridas}</b> de {habitaciones.length} habitaciones
       </p>
       <BarraDeProgreso avance={recorridas} total={habitaciones.length} />
+      <AvisoDeEpisodio />
       <PreguntaDeLaSemanaEnCasa />
       <Link to="/privacidad" className="casa__privacidad">Privacidad y normas</Link>
     </header>
@@ -89,6 +92,7 @@ export default function Casa() {
   const { visitadasHoy } = useVisitasDeHoy()
   const fueVisitada = (id: string) => visitadasHoy.includes(id)
   const recorridas = habitaciones.filter((h) => fueVisitada(h.id)).length
+  const episodioNuevo = useEpisodioNuevo()
 
   return (
     <main className={`casa casa--${momento}`}>
@@ -101,7 +105,7 @@ export default function Casa() {
         <VentanaDelAtico habitacion={asistenteHabitacion} />
         <div className="fachada">
           {habitaciones.map((habitacion, i) => (
-            <Ventana key={habitacion.id} habitacion={habitacion} posicion={i} visitada={fueVisitada(habitacion.id)} />
+            <Ventana key={habitacion.id} habitacion={habitacion} posicion={i} visitada={fueVisitada(habitacion.id)} nueva={habitacion.id === 'podcast' && !!episodioNuevo} />
           ))}
         </div>
         <Entrada />

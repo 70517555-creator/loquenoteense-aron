@@ -1,14 +1,16 @@
+import { ChatCircleDots, Headphones } from '@phosphor-icons/react'
 import { useState } from 'react'
-import { config } from '../../config'
 import type { Episodio } from '../../domain/tipos'
 import { useContenido } from '../../hooks/useContenido'
 import { useEnLinea } from '../../hooks/useEnLinea'
 import { Cargando } from '../../ui/Cargando'
 import { Encabezado } from '../../ui/Encabezado'
-import { Icono } from '../../ui/Icono'
 import { Ilustracion } from '../../ui/Ilustracion'
-
-const ALTO_REPRODUCTOR_SPOTIFY = 152
+import { clases } from '../../utils/clases'
+import { ConversacionDelTema } from '../foro/ConversacionDelTema'
+import { Reacciones } from './Reacciones'
+import { ReproductorRetro } from './ReproductorRetro'
+import { estaPublicado, useEpisodiosEscuchados } from './useEpisodioNuevo'
 
 function PortadaDelPodcast() {
   return (
@@ -17,102 +19,87 @@ function PortadaDelPodcast() {
         src="/images/podcast.webp"
         className="podcast-portada__img"
         alt="Portada del podcast"
-        respaldo={
-          <div className="podcast-portada__img podcast-portada__respaldo">
-            <Icono nombre="headphones" tam={56} />
-          </div>
-        }
+        respaldo={<div className="podcast-portada__img podcast-portada__respaldo"><Headphones size={56} weight="duotone" /></div>}
       />
       <div>
         <h2 className="mano titulo-grande sin-margen">Lo que no te enseñaron</h2>
         <p className="suave">Conversaciones cortas para escuchar de camino al trabajo o mientras cocinas.</p>
-        {config.urlPodcast && (
-          <a className="boton boton--borde" href={config.urlPodcast} target="_blank" rel="noopener noreferrer">
-            Abrir en Spotify
-          </a>
-        )}
       </div>
     </div>
   )
 }
 
-function Reproductor({ episodio }: { episodio: Episodio }) {
-  if (episodio.spotifyEmbed) {
-    return (
-      <iframe
-        className="episodio__reproductor"
-        src={episodio.spotifyEmbed}
-        title={`Episodio ${episodio.numero}: ${episodio.titulo}`}
-        height={ALTO_REPRODUCTOR_SPOTIFY}
-        loading="lazy"
-        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-      />
-    )
-  }
-  return <audio className="episodio__audio" src={episodio.audioUrl} controls autoPlay preload="none" />
-}
+const temaDelEpisodio = (e: Episodio) => ({
+  id: `podcast-${e.id}`,
+  titulo: `Podcast #${e.numero}: ${e.titulo}`,
+  descripcion: e.descripcion,
+  fecha: e.publicadoEn ?? '',
+})
 
-interface PropsDeEpisodio {
-  episodio: Episodio
-  abierto: boolean
-  puedeEscuchar: boolean
-  onEscuchar: () => void
-}
-
-function TarjetaDeEpisodio({ episodio, abierto, puedeEscuchar, onEscuchar }: PropsDeEpisodio) {
-  const publicado = Boolean(episodio.spotifyEmbed || episodio.audioUrl)
-
+function EpisodioEnEscena({ episodio }: { episodio: Episodio }) {
+  const { marcar } = useEpisodiosEscuchados()
   return (
-    <li className="tarjeta episodio">
-      <div className="episodio__cabeza">
+    <article className="episodio-en-escena">
+      <header className="episodio-en-escena__cabeza">
         <span className="episodio__num mano">#{episodio.numero}</span>
         <div>
-          <h3 className="episodio__titulo">{episodio.titulo}</h3>
-          <p className="suave">{episodio.descripcion}</p>
-          <small className="suave">{episodio.duracion}</small>
+          <h2 className="episodio__titulo">{episodio.titulo}</h2>
+          <p className="suave sin-margen">{episodio.descripcion}</p>
         </div>
-      </div>
-      {!publicado && <span className="insignia insignia--suave">Muy pronto</span>}
-      {publicado && !abierto && (
-        <button className="boton" onClick={onEscuchar} disabled={!puedeEscuchar}>
-          <Icono nombre="play" tam={18} /> Escuchar
-        </button>
-      )}
-      {publicado && abierto && <Reproductor episodio={episodio} />}
-    </li>
+      </header>
+      <ReproductorRetro episodio={episodio} onEmpezar={() => marcar(episodio.id)} />
+      <Reacciones episodio={episodio.id} />
+      <h3 className="episodio-en-escena__subtitulo"><ChatCircleDots size={24} weight="duotone" /> Comenta el episodio</h3>
+      <ConversacionDelTema tema={temaDelEpisodio(episodio)} etiqueta="Podcast" autor="Comentas" resumida sinTablero />
+    </article>
   )
 }
 
-function ListaDeEpisodios({ episodios }: { episodios: Episodio[] }) {
-  const enLinea = useEnLinea()
-  const [abierto, setAbierto] = useState<string>()
-
+function OtrosEpisodios({ episodios, activo, onElegir }: { episodios: Episodio[]; activo?: string; onElegir: (id: string) => void }) {
   return (
-    <>
-      {!enLinea && <p className="aviso-suave">Para escuchar el podcast necesitas internet.</p>}
+    <section className="otros-episodios">
+      <h3 className="episodio-en-escena__subtitulo">Todos los episodios</h3>
       <ul className="episodios">
-        {episodios.map((episodio) => (
-          <TarjetaDeEpisodio
-            key={episodio.id}
-            episodio={episodio}
-            abierto={abierto === episodio.id}
-            puedeEscuchar={enLinea}
-            onEscuchar={() => setAbierto(episodio.id)}
-          />
-        ))}
+        {episodios.map((e) => {
+          const publicado = estaPublicado(e)
+          return (
+            <li key={e.id}>
+              <button className={clases('tarjeta', 'episodio', e.id === activo && 'episodio--activo')} disabled={!publicado} onClick={() => onElegir(e.id)}>
+                <span className="episodio__num mano">#{e.numero}</span>
+                <span className="episodio__datos">
+                  <b className="episodio__titulo">{e.titulo}</b>
+                  <small className="suave">{publicado ? e.duracion : 'Muy pronto'}</small>
+                </span>
+              </button>
+            </li>
+          )
+        })}
       </ul>
-    </>
+    </section>
   )
 }
 
 export default function Podcast() {
   const episodios = useContenido('episodios')
+  const enLinea = useEnLinea()
+  const [elegido, setElegido] = useState<string>()
+  const publicados = episodios?.filter(estaPublicado) ?? []
+  const activo = publicados.find((e) => e.id === elegido) ?? publicados.at(-1)
+
   return (
     <main>
       <Encabezado titulo="Podcast" icono="headphones" />
-      <div className="contenedor">
+      <div className="contenedor podcast">
         <PortadaDelPodcast />
-        {episodios ? <ListaDeEpisodios episodios={episodios} /> : <Cargando />}
+        {!episodios ? (
+          <Cargando />
+        ) : (
+          <>
+            {!enLinea && <p className="aviso-suave">Para escuchar el podcast necesitas internet.</p>}
+            {activo && <EpisodioEnEscena key={activo.id} episodio={activo} />}
+            <OtrosEpisodios episodios={episodios} activo={activo?.id} onElegir={(id) => { setElegido(id); scrollTo({ top: 0, behavior: 'smooth' }) }} />
+          </>
+        )}
       </div>
     </main>
   )

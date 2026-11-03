@@ -103,4 +103,5 @@ export interface Episodio {
   duracion: string
   spotifyEmbed?: string
   audioUrl?: string
+  publicadoEn?: string
 }

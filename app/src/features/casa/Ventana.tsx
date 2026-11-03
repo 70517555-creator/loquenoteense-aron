@@ -10,9 +10,10 @@ interface Props {
   habitacion: Habitacion
   posicion: number
   visitada: boolean
+  nueva?: boolean
 }
 
-export function Ventana({ habitacion, posicion, visitada }: Props) {
+export function Ventana({ habitacion, posicion, visitada, nueva }: Props) {
   return (
     <Link
       to={habitacion.ruta}
@@ -30,6 +31,7 @@ export function Ventana({ habitacion, posicion, visitada }: Props) {
         </span>
       </span>
       <b className="ventana__titulo">{habitacion.titulo}</b>
+      {nueva && <span className="ventana__nueva">Nuevo</span>}
       {visitada && (
         <span className="ventana__marca" aria-label="visitada">
           <Icono nombre="check" tam={14} />

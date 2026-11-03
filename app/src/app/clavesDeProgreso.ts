@@ -15,4 +15,5 @@ export const CLAVES_DE_PROGRESO = {
   votosDelForo: 'foro-votos',
   politicaAceptada: 'foro-politica-aceptada',
   semanaRespondida: 'foro-semana-respondida',
+  episodiosEscuchados: 'podcast-escuchados',
 } as const

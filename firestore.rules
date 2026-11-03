@@ -215,6 +215,34 @@ service cloud.firestore {
       }
     }
 
+    // Reacciones al podcast: una por familia y por episodio; solo sube el contador de la reacción elegida.
+    function sumaUnaReaccion(episodio) {
+      let voto = /databases/$(database)/documents/reacciones/$(episodio)/votos/$(request.auth.uid);
+      let reaccion = getAfter(voto).data.reaccion;
+      let antes = resource == null ? {} : resource.data;
+      return conSesion()
+        && nuevo().keys().hasOnly(['ayudo', 'identifique', 'intentare', 'emociono'])
+        && !exists(voto)
+        && existsAfter(voto)
+        && nuevo().diff(antes).affectedKeys().hasOnly([reaccion])
+        && nuevo().get(reaccion, 0) == antes.get(reaccion, 0) + 1;
+    }
+
+    match /reacciones/{episodio} {
+      allow read: if true;
+      allow create, update: if episodio.matches('^[a-z0-9-]{1,30}$') && sumaUnaReaccion(episodio);
+      allow delete: if esCoordinador();
+
+      match /votos/{uid} {
+        allow get: if conSesion() && uid == request.auth.uid;
+        allow list, delete: if esCoordinador();
+        allow create: if conSesion() && uid == request.auth.uid
+          && nuevo().keys().hasOnly(['reaccion', 'creadoEn'])
+          && nuevo().reaccion in ['ayudo', 'identifique', 'intentare', 'emociono']
+          && nuevo().creadoEn == request.time;
+      }
+    }
+
     match /encuesta/{carga} {
       allow read: if true;
       allow create, update: if carga.matches('^[a-z-]{1,30}$') && sumaUnaRespuesta(carga);

@@ -18,6 +18,7 @@ interface Props {
   autor?: string
   enfocar?: boolean
   resumida?: boolean
+  sinTablero?: boolean
 }
 
 function InvitacionACompartir({ primera }: { primera: boolean }) {
@@ -37,13 +38,14 @@ interface PropsDeLista {
   fallo: boolean
   onQuitar?: (comentario: Comentario) => void
   tarjeta: ReactNode
+  sinTablero?: boolean
 }
 
 // Celular y tablet: la tarjeta para responder y debajo las notas. Pantallas anchas: la tarjeta al centro de un
 // corcho y las notas a los dos costados.
-function ListaDeComentarios({ comentarios, cargando, fallo, onQuitar, tarjeta }: PropsDeLista) {
+function ListaDeComentarios({ comentarios, cargando, fallo, onQuitar, tarjeta, sinTablero }: PropsDeLista) {
   const [verTodos, setVerTodos] = useState(false)
-  const ancha = useMedia(PANTALLA_DE_MURAL)
+  const ancha = useMedia(PANTALLA_DE_MURAL) && !sinTablero
   if (fallo) return <>{tarjeta}<p className="aviso-suave">No pudimos cargar los comentarios. Revisa tu conexión.</p></>
   if (cargando && !comentarios) return <>{tarjeta}<Cargando /></>
   const publicados = comentarios?.filter((c) => c.estado === 'aprobado').length ?? 0
@@ -90,7 +92,7 @@ function ListaDeComentarios({ comentarios, cargando, fallo, onQuitar, tarjeta }:
   )
 }
 
-export function ConversacionDelTema({ tema, etiqueta, autor, enfocar, resumida }: Props) {
+export function ConversacionDelTema({ tema, etiqueta, autor, enfocar, resumida, sinTablero }: Props) {
   const { datos, cargando, fallo, recargar } = useComentarios(tema.id)
   const { panel } = useServicios()
   const delEquipo = useEsDelEquipo()
@@ -120,7 +122,7 @@ export function ConversacionDelTema({ tema, etiqueta, autor, enfocar, resumida }
 
   return (
     <section className="conversacion">
-      <ListaDeComentarios comentarios={datos} cargando={cargando} fallo={fallo} onQuitar={delEquipo ? quitar : undefined} tarjeta={tarjeta} />
+      <ListaDeComentarios comentarios={datos} cargando={cargando} fallo={fallo} onQuitar={delEquipo ? quitar : undefined} tarjeta={tarjeta} sinTablero={sinTablero} />
     </section>
   )
 }

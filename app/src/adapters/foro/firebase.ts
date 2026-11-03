@@ -18,6 +18,7 @@ export const RUTAS = {
   votos: 'votos',
   cartas: 'cartas',
   encuesta: 'encuesta',
+  reacciones: 'reacciones',
 } as const
 
 export async function usuarioActual(): Promise<User | null> {
