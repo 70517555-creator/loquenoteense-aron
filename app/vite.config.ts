@@ -30,7 +30,7 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,svg,woff2}'],
         globIgnores: ['**/firebase-*.js'],
         navigateFallback: '/index.html',
-        navigateFallbackDenylist: [/^\/images\//],
+        navigateFallbackDenylist: [/^\/images\//, /^\/audio\//],
         runtimeCaching: [
           {
             urlPattern: ({ request }) => request.destination === 'image',
