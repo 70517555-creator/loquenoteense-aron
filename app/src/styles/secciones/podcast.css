@@ -95,6 +95,7 @@
   .retro-player__pantalla { height: 120px; }
   .retro-player__boton { width: 42px; height: 42px; }
   .retro-player__play { width: 64px; height: 64px; }
+  .retro-player__controles { gap: var(--e-2) 8px; }
   .retro-player__volumen { flex-basis: 100%; justify-content: center; }
   .retro-player__volumen input { width: 60%; }
 }
@@ -148,20 +149,25 @@
   .aviso-episodio__accion { padding: 4px 12px; }
 }
 
-/* Compartir el episodio. */
-.compartir-episodio { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-2) var(--e-3); }
-.compartir-episodio__boton {
-  display: inline-flex; align-items: center; gap: var(--e-2); min-height: 50px; padding: 0 var(--e-5); border: 0; border-radius: var(--r-total);
-  background: linear-gradient(180deg, #ff6b5e, var(--rojo)); color: #fff; font: inherit; font-weight: 900; font-size: var(--t-m); cursor: pointer;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 6px 14px rgba(200, 48, 44, 0.35); transition: transform 0.15s var(--suave);
+/* Compartir: un botón más del reproductor, con burbuja de cuántas veces se compartió. */
+.compartir-retro { position: relative; }
+.compartir-retro__boton { background: radial-gradient(circle at 35% 25%, #ffb0a6, #e0483e 55%, #8e1f1a); }
+.compartir-retro__cuenta {
+  position: absolute; top: -6px; right: -8px; min-width: 22px; height: 22px; padding: 0 6px; border-radius: var(--r-total);
+  display: grid; place-items: center; background: #6dfc9b; color: #0b1230; font-size: 0.72rem; font-weight: 900; box-shadow: 0 0 0 2px #0d1330;
 }
-.compartir-episodio__boton:hover { transform: translateY(-2px); }
-.compartir-episodio__cuenta { color: var(--tinta-suave); font-size: var(--t-s); font-weight: 700; }
-.compartir-episodio__opciones { flex-basis: 100%; display: flex; flex-wrap: wrap; gap: var(--e-2); animation: aparecer 0.25s var(--suave) both; }
-.compartir-episodio__opcion {
-  display: inline-flex; align-items: center; gap: 6px; min-height: 42px; padding: 0 var(--e-4); border: 1.5px solid var(--linea); border-radius: var(--r-total);
-  background: #fff; color: var(--tinta); font: inherit; font-weight: 800; font-size: var(--t-s); text-decoration: none; cursor: pointer;
+.compartir-retro__menu {
+  position: absolute; bottom: calc(100% + 10px); right: 0; z-index: 5; display: grid; min-width: 190px; padding: 6px; border-radius: 14px;
+  background: linear-gradient(180deg, #24305e, #121a3c); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 10px 24px rgba(0, 0, 0, 0.45);
+  animation: aparecer 0.2s var(--suave) both;
 }
-.compartir-episodio__opcion--whatsapp { color: #128c4a; border-color: #b6e6c9; }
-.compartir-episodio__opcion--facebook { color: #1b5fcc; border-color: #c4d6f5; }
-@media (max-width: 480px) { .compartir-episodio__boton { flex: 1 1 100%; justify-content: center; } .compartir-episodio { justify-content: center; } }
+.compartir-retro__opcion {
+  display: flex; align-items: center; gap: var(--e-2); min-height: 42px; padding: 0 var(--e-3); border: 0; border-radius: 10px;
+  background: none; color: #eaf0ff; font: inherit; font-weight: 800; font-size: var(--t-s); text-decoration: none; text-align: left; cursor: pointer;
+}
+.compartir-retro__opcion:hover { background: rgba(255, 255, 255, 0.1); }
+@media (max-width: 400px) {
+  .retro-player__controles { gap: var(--e-2) 6px; }
+  .retro-player__boton { width: 38px; height: 38px; }
+  .retro-player__play { width: 58px; height: 58px; }
+}

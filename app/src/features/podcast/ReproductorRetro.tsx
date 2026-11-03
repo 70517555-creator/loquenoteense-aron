@@ -10,6 +10,7 @@ const BARRAS = 28
 interface Props {
   episodio: Episodio
   onEmpezar?: () => void
+  accion?: React.ReactNode
 }
 
 // El ecualizador lee el audio de verdad; si el navegador no lo permite, las barras se mueven solas.
@@ -68,7 +69,7 @@ function useEcualizador(audio: React.RefObject<HTMLAudioElement | null>, lienzo:
   return { conectar, reanudar: () => contexto.current?.resume() }
 }
 
-export function ReproductorRetro({ episodio, onEmpezar }: Props) {
+export function ReproductorRetro({ episodio, onEmpezar, accion }: Props) {
   const audio = useRef<HTMLAudioElement>(null)
   const lienzo = useRef<HTMLCanvasElement>(null)
   const [sonando, setSonando] = useState(false)
@@ -169,6 +170,7 @@ export function ReproductorRetro({ episodio, onEmpezar }: Props) {
         <button className="retro-player__boton retro-player__velocidad" onClick={cambiarVelocidad} aria-label="Cambiar velocidad">
           {velocidad}x
         </button>
+        {accion}
         <div className="retro-player__volumen">
           <button className="retro-player__boton" onClick={() => setMudo(!mudo)} aria-label={mudo ? 'Activar sonido' : 'Silenciar'}>
             {mudo || volumen === 0 ? <SpeakerSlash weight="fill" size={18} /> : <SpeakerHigh weight="fill" size={18} />}

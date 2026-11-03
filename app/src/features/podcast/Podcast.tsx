@@ -49,8 +49,7 @@ function EpisodioEnEscena({ episodio }: { episodio: Episodio }) {
           <p className="suave sin-margen">{episodio.descripcion}</p>
         </div>
       </header>
-      <ReproductorRetro episodio={episodio} onEmpezar={() => marcar(episodio.id)} />
-      <CompartirEpisodio episodio={episodio} />
+      <ReproductorRetro episodio={episodio} onEmpezar={() => marcar(episodio.id)} accion={<CompartirEpisodio episodio={episodio} />} />
       <Reacciones episodio={episodio.id} />
       <h3 className="episodio-en-escena__subtitulo"><ChatCircleDots size={24} weight="duotone" /> Comenta el episodio</h3>
       <ConversacionDelTema tema={temaDelEpisodio(episodio)} etiqueta="Podcast" autor="Comentas" resumida sinTablero />
