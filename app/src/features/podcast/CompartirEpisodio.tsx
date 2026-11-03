@@ -6,7 +6,8 @@ import { useConsulta } from '../../hooks/useConsulta'
 
 export const PARAMETRO_EPISODIO = 'episodio'
 
-const enlaceDe = (e: Episodio) => `${location.origin}/podcast?${PARAMETRO_EPISODIO}=${e.id}`
+// Cada episodio tiene su página en public/escuchar/<id>.html con la vista previa para WhatsApp y Facebook.
+const enlaceDe = (e: Episodio) => `${location.origin}/escuchar/${e.id}`
 const mensajeDe = (e: Episodio) =>
   `Escucha el episodio ${e.numero} del podcast "Lo que no te enseñaron": ${e.titulo} (${e.duracion}). Para papás y mamás del colegio.`
 
