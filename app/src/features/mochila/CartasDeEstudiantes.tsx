@@ -19,7 +19,6 @@ function ConsejoDeLaCarta({ carta }: { carta: CartaDeEstudiante }) {
     <div className={clases('consejo-de-carta', consejo.de === 'psicologia' && 'consejo-de-carta--psicologia')}>
       <b>{consejo.de === 'psicologia' ? '💚 Lo que dice psicología' : '✨ Una idea para ti'}</b>
       <TextoRecortable texto={consejo.texto} className="consejo-de-carta__texto" />
-      {consejo.de === 'ia' && <small className="suave">Sugerencia preparada con inteligencia artificial. No reemplaza a psicología del colegio.</small>}
     </div>
   )
 }
@@ -69,9 +68,14 @@ export function CartasDeEstudiantes({ carga }: { carga: string }) {
     <section className="carga__bloque cartas-de-chicos">
       <h3 className="carga__subtitulo">✉️ {datos.length === 1 ? 'Un chico del colegio escribió sobre esto' : `${datos.length} chicos del colegio escribieron sobre esto`}</h3>
       <p className="suave sin-margen">Son cartas anónimas y reales. Psicología las revisó antes de publicarlas. Léelas pensando en tu hijo.</p>
+      <NotaDeConsejos />
       <ul className="hojas-de-carta">{datos.map((c) => <HojaDeCarta key={c.id} carta={c} />)}</ul>
     </section>
   )
+}
+
+export function NotaDeConsejos() {
+  return <small className="suave">💚 Los consejos en verde son de psicología. ✨ Las ideas en amarillo las prepara la inteligencia artificial.</small>
 }
 
 export function InvitacionAEscribir() {
