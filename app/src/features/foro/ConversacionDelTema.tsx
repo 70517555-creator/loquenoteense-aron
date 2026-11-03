@@ -9,7 +9,7 @@ import { useComentarios } from './useForo'
 import { useEsDelEquipo } from './useEsDelEquipo'
 
 const POCOS_COMENTARIOS = 3
-const COMENTARIOS_A_LA_VISTA = 5
+const COMENTARIOS_A_LA_VISTA = 8
 
 interface Props {
   tema: TemaDelDia
@@ -46,17 +46,17 @@ function ListaDeComentarios({ comentarios, cargando, fallo, onQuitar }: PropsDeL
     <>
       {publicados < POCOS_COMENTARIOS && <InvitacionACompartir primera={publicados === 0} />}
       {!!comentarios?.length && (
-        <>
-          <h3 className="conversacion__subtitulo">💬 Lo que comparten las familias <span className="suave">({publicados})</span></h3>
-          <ul className="comentarios">
+        <div className="mural-foro">
+          <h3 className="mural-foro__titulo">📌 Lo que comparten las familias <span>({publicados})</span></h3>
+          <ul className="mural">
             {visibles?.map((c) => <TarjetaDeComentario key={c.id} comentario={c} onQuitar={onQuitar} />)}
           </ul>
           {ocultos > 0 && (
-            <button className="boton boton--borde comentarios__mas" onClick={() => setVerTodos(true)}>
-              Ver {ocultos} {ocultos === 1 ? 'respuesta más' : 'respuestas más'}
+            <button className="boton mural-foro__mas" onClick={() => setVerTodos(true)}>
+              Ver {ocultos} {ocultos === 1 ? 'nota más' : 'notas más'}
             </button>
           )}
-        </>
+        </div>
       )}
     </>
   )
