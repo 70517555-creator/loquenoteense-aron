@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useState, type ReactNode } from 'react'
 import { useServicios } from '../../app/servicios'
 import { MOTIVO_AL_RETIRAR, type Comentario, type TemaDelDia } from '../../domain/foro'
+import { useMedia } from '../../hooks/useMedia'
 import { Cargando } from '../../ui/Cargando'
 import { fechaLegible } from '../../utils/tiempo'
 import { FormularioDeComentario } from './FormularioDeComentario'
@@ -19,13 +20,6 @@ interface Props {
   resumida?: boolean
 }
 
-interface PropsDeLista {
-  comentarios?: Comentario[]
-  cargando: boolean
-  fallo: boolean
-  onQuitar?: (comentario: Comentario) => void
-}
-
 function InvitacionACompartir({ primera }: { primera: boolean }) {
   return (
     <p className="tarjeta invitacion-foro">
@@ -35,27 +29,61 @@ function InvitacionACompartir({ primera }: { primera: boolean }) {
   )
 }
 
-function ListaDeComentarios({ comentarios, cargando, fallo, onQuitar }: PropsDeLista) {
+const PANTALLA_DE_MURAL = '(min-width: 1200px) and (orientation: landscape)'
+
+interface PropsDeLista {
+  comentarios?: Comentario[]
+  cargando: boolean
+  fallo: boolean
+  onQuitar?: (comentario: Comentario) => void
+  tarjeta: ReactNode
+}
+
+// Celular y tablet: la tarjeta para responder y debajo las notas. Pantallas anchas: la tarjeta al centro de un
+// corcho y las notas a los dos costados.
+function ListaDeComentarios({ comentarios, cargando, fallo, onQuitar, tarjeta }: PropsDeLista) {
   const [verTodos, setVerTodos] = useState(false)
-  if (fallo) return <p className="aviso-suave">No pudimos cargar los comentarios. Revisa tu conexión.</p>
-  if (cargando && !comentarios) return <Cargando />
+  const ancha = useMedia(PANTALLA_DE_MURAL)
+  if (fallo) return <>{tarjeta}<p className="aviso-suave">No pudimos cargar los comentarios. Revisa tu conexión.</p></>
+  if (cargando && !comentarios) return <>{tarjeta}<Cargando /></>
   const publicados = comentarios?.filter((c) => c.estado === 'aprobado').length ?? 0
-  const visibles = verTodos ? comentarios : comentarios?.slice(0, COMENTARIOS_A_LA_VISTA)
-  const ocultos = (comentarios?.length ?? 0) - (visibles?.length ?? 0)
+  const visibles = (verTodos ? comentarios : comentarios?.slice(0, COMENTARIOS_A_LA_VISTA)) ?? []
+  const ocultos = (comentarios?.length ?? 0) - visibles.length
+  const invitacion = publicados < POCOS_COMENTARIOS && <InvitacionACompartir primera={publicados === 0} />
+  const titulo = <h3 className="mural-foro__titulo">📌 Lo que comparten las familias <span>({publicados})</span></h3>
+  const verMas = ocultos > 0 && (
+    <button className="boton mural-foro__mas" onClick={() => setVerTodos(true)}>
+      Ver {ocultos} {ocultos === 1 ? 'nota más' : 'notas más'}
+    </button>
+  )
+  const notas = (lista: Comentario[], clase = 'mural') => (
+    <ul className={clase}>{lista.map((c) => <TarjetaDeComentario key={c.id} comentario={c} onQuitar={onQuitar} />)}</ul>
+  )
+
+  if (ancha && visibles.length) {
+    return (
+      <div className="tablero">
+        {notas(visibles.filter((_, i) => i % 2 === 0), 'mural tablero__lado')}
+        <div className="tablero__centro">
+          {tarjeta}
+          {invitacion}
+          {titulo}
+          {verMas}
+        </div>
+        {notas(visibles.filter((_, i) => i % 2 === 1), 'mural tablero__lado')}
+      </div>
+    )
+  }
+
   return (
     <>
-      {publicados < POCOS_COMENTARIOS && <InvitacionACompartir primera={publicados === 0} />}
-      {!!comentarios?.length && (
+      {tarjeta}
+      {invitacion}
+      {!!visibles.length && (
         <div className="mural-foro">
-          <h3 className="mural-foro__titulo">📌 Lo que comparten las familias <span>({publicados})</span></h3>
-          <ul className="mural">
-            {visibles?.map((c) => <TarjetaDeComentario key={c.id} comentario={c} onQuitar={onQuitar} />)}
-          </ul>
-          {ocultos > 0 && (
-            <button className="boton mural-foro__mas" onClick={() => setVerTodos(true)}>
-              Ver {ocultos} {ocultos === 1 ? 'nota más' : 'notas más'}
-            </button>
-          )}
+          {titulo}
+          {notas(visibles)}
+          {verMas}
         </div>
       )}
     </>
@@ -76,22 +104,23 @@ export function ConversacionDelTema({ tema, etiqueta, autor, enfocar, resumida }
     }
   }
 
+  const tarjeta = resumida ? (
+    <article className="tarjeta tema-resumido">
+      <p className="tema-resumido__contexto">{autor ?? etiqueta}: <b>{tema.titulo}</b></p>
+      <FormularioDeComentario tema={tema} onEnviado={recargar} enfocar={enfocar && !cargando} compacto />
+    </article>
+  ) : (
+    <article className="tarjeta tema-del-dia">
+      <span className="insignia">{autor ?? etiqueta} · {fechaLegible(tema.fecha)}</span>
+      <h2 className="mano titulo-grande sin-margen">{tema.titulo}</h2>
+      {tema.descripcion && <p className="sin-margen">{tema.descripcion}</p>}
+      <FormularioDeComentario tema={tema} onEnviado={recargar} enfocar={enfocar && !cargando} compacto />
+    </article>
+  )
+
   return (
     <section className="conversacion">
-      {resumida ? (
-        <article className="tarjeta tema-resumido">
-          <p className="tema-resumido__contexto">{autor ?? etiqueta}: <b>{tema.titulo}</b></p>
-          <FormularioDeComentario tema={tema} onEnviado={recargar} enfocar={enfocar && !cargando} compacto />
-        </article>
-      ) : (
-        <article className="tarjeta tema-del-dia">
-          <span className="insignia">{autor ?? etiqueta} · {fechaLegible(tema.fecha)}</span>
-          <h2 className="mano titulo-grande sin-margen">{tema.titulo}</h2>
-          {tema.descripcion && <p className="sin-margen">{tema.descripcion}</p>}
-          <FormularioDeComentario tema={tema} onEnviado={recargar} enfocar={enfocar && !cargando} compacto />
-        </article>
-      )}
-      <ListaDeComentarios comentarios={datos} cargando={cargando} fallo={fallo} onQuitar={delEquipo ? quitar : undefined} />
+      <ListaDeComentarios comentarios={datos} cargando={cargando} fallo={fallo} onQuitar={delEquipo ? quitar : undefined} tarjeta={tarjeta} />
     </section>
   )
 }

@@ -1,5 +1,5 @@
-.foro { display: grid; gap: var(--e-4); padding-bottom: calc(var(--alto-pestanas) + var(--seguro-abajo) + var(--e-6)); }
-.conversacion { display: grid; gap: var(--e-4); }
+.foro { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--e-4); padding-bottom: calc(var(--alto-pestanas) + var(--seguro-abajo) + var(--e-6)); }
+.conversacion { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--e-4); }
 .tema-del-dia { display: grid; gap: var(--e-2); background: linear-gradient(160deg, var(--ambar-suave), var(--papel)); border: 1.5px solid #f3dca6; }
 .tema-del-dia .insignia { justify-self: start; min-height: 30px; font-size: var(--t-xs); }
 .invitacion-foro { margin: 0; background: var(--lila); border: 1.5px dashed #c9b8ef; text-align: center; }
@@ -139,4 +139,32 @@
   .mural .nota { gap: 6px; padding: var(--e-3); }
   .mural .nota__texto { --lineas: 4; font-size: 0.95rem; line-height: 1.5; }
   .mural .nota__avatar { width: 32px; height: 32px; font-size: 1rem; }
+}
+
+/* Tablero completo en pantallas anchas: toda la página es corcho, la pregunta al centro y las notas a los costados. */
+@media (min-width: 1200px) and (orientation: landscape) {
+  main:has(.tablero) {
+    min-height: 100dvh;
+    background:
+      radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.08) 0 1px, transparent 2px) 0 0 / 9px 9px,
+      radial-gradient(circle at 70% 60%, rgba(80, 45, 10, 0.18) 0 1px, transparent 2px) 0 0 / 7px 7px,
+      linear-gradient(160deg, #cfa56f, #b98b52) fixed;
+  }
+  main:has(.tablero) .foro > .fichas, main:has(.tablero) .foro > p {
+    justify-self: center; padding: 6px 14px; border-radius: 12px; background: rgba(255, 253, 246, 0.92);
+  }
+  .tablero {
+    --centro: clamp(480px, 36vw, 600px);
+    display: grid; grid-template-columns: minmax(0, 1fr) var(--centro) minmax(0, 1fr); align-items: start; gap: var(--e-6);
+    width: min(1760px, calc(100vw - 64px)); margin-left: calc(50% - min(880px, 50vw - 32px));
+  }
+  .tablero__centro { position: sticky; top: var(--e-4); display: grid; gap: var(--e-3); }
+  .tablero__centro .tarjeta { box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15), 0 16px 32px rgba(40, 20, 0, 0.25); }
+  .tablero__centro .mural-foro__titulo { justify-self: center; padding: 6px 16px; border-radius: 6px; background: #fffdf6; rotate: -1deg; box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2); }
+  .tablero__centro .mural-foro__mas { justify-self: center; background: #fffdf6; color: var(--tinta); }
+  .tablero__lado { display: block; columns: 1; padding-top: var(--e-4); }
+  .tablero__lado .nota { margin-bottom: var(--e-6); }
+}
+@media (min-width: 1700px) and (orientation: landscape) {
+  .tablero__lado { display: grid; grid-template-columns: 1fr 1fr; align-items: start; column-gap: var(--e-5); }
 }
