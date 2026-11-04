@@ -34,40 +34,42 @@ function MochilaInteractiva({ cargas }: { cargas: CargaDelHijo[] }) {
   }
 
   return (
-    <>
-      <div className={clases('mochila', vistas === cargas.length && 'mochila--liviana')}>
-        <DibujoDeMochila />
-        {cargas.map((carga) => (
+    <div className="mochila-y-detalle">
+      <div className="mochila-y-detalle__mochila">
+        <div className={clases('mochila', vistas === cargas.length && 'mochila--liviana')}>
+          <DibujoDeMochila />
+          {cargas.map((carga) => (
+            <button
+              key={carga.id}
+              className={clases(
+                'etiqueta',
+                `etiqueta--${carga.color}`,
+                abiertas.includes(carga.id) && 'etiqueta--vista',
+                activa === carga.id && 'etiqueta--activa',
+              )}
+              style={{ left: `${carga.x}%`, top: `${carga.y}%`, '--giro': `${carga.giro}deg` } as CSSProperties}
+              onClick={() => elegir(carga.id)}
+              aria-pressed={activa === carga.id}
+            >
+              {carga.etiqueta}
+              {!!cartasDeChicos[carga.id] && (
+                <span className="etiqueta__cartas" aria-label={`${cartasDeChicos[carga.id]} cartas de estudiantes`}><Ico icono={Envelope} peso="fill" /> {cartasDeChicos[carga.id]}</span>
+              )}
+            </button>
+          ))}
           <button
-            key={carga.id}
-            className={clases(
-              'etiqueta',
-              `etiqueta--${carga.color}`,
-              abiertas.includes(carga.id) && 'etiqueta--vista',
-              activa === carga.id && 'etiqueta--activa',
-            )}
-            style={{ left: `${carga.x}%`, top: `${carga.y}%`, '--giro': `${carga.giro}deg` } as CSSProperties}
-            onClick={() => elegir(carga.id)}
-            aria-pressed={activa === carga.id}
+            className={clases('carta-del-bolsillo', activa === BOLSILLO && 'carta-del-bolsillo--activa')}
+            onClick={() => elegir(BOLSILLO)}
+            aria-pressed={activa === BOLSILLO}
+            aria-label={`Bolsillo secreto${sinLeer ? `: ${sinLeer} carta(s) sin leer` : ''}`}
           >
-            {carga.etiqueta}
-            {!!cartasDeChicos[carga.id] && (
-              <span className="etiqueta__cartas" aria-label={`${cartasDeChicos[carga.id]} cartas de estudiantes`}><Ico icono={Envelope} peso="fill" /> {cartasDeChicos[carga.id]}</span>
-            )}
+            <Ico icono={Envelope} /> Bolsillo secreto
+            {sinLeer > 0 && <span className="carta-del-bolsillo__aviso">{sinLeer}</span>}
           </button>
-        ))}
-        <button
-          className={clases('carta-del-bolsillo', activa === BOLSILLO && 'carta-del-bolsillo--activa')}
-          onClick={() => elegir(BOLSILLO)}
-          aria-pressed={activa === BOLSILLO}
-          aria-label={`Bolsillo secreto${sinLeer ? `: ${sinLeer} carta(s) sin leer` : ''}`}
-        >
-          <Ico icono={Envelope} /> Bolsillo secreto
-          {sinLeer > 0 && <span className="carta-del-bolsillo__aviso">{sinLeer}</span>}
-        </button>
-      </div>
+        </div>
 
-      <p className="suave centrado">Abriste {vistas} de {cargas.length} cosas que carga tu hijo</p>
+        <p className="suave centrado">Abriste {vistas} de {cargas.length} cosas que carga tu hijo</p>
+      </div>
 
       <div className="tarjeta revelado" ref={detalle}>
         {activa === BOLSILLO ? (
@@ -81,7 +83,7 @@ function MochilaInteractiva({ cargas }: { cargas: CargaDelHijo[] }) {
       {vistas === cargas.length && (
         <p className="aviso-suave"><Ico icono={Sparkle} /> Abriste toda su mochila. Entender lo que carga ya lo hace sentir menos solo.</p>
       )}
-    </>
+    </div>
   )
 }
 

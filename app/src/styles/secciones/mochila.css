@@ -115,7 +115,7 @@
 .visitas__dias { margin-top: var(--e-4); }
 
 /* Cartas de los chicos: hojas de cuaderno escritas a mano, pegadas con cinta. */
-.cartas-de-chicos { display: grid; gap: var(--e-2); }
+.cartas-de-chicos { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--e-2); }
 .hojas-de-carta { list-style: none; margin: var(--e-3) 0 0; padding: 0; display: grid; gap: var(--e-5); }
 @media (min-width: 760px) { .hojas-de-carta { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); } }
 .hoja-de-carta {
@@ -159,10 +159,85 @@
 .consejo-de-carta--preparando { margin: 0 var(--e-2); color: var(--tinta-suave); font-size: var(--t-s); animation: latir-suave 1.6s ease-in-out infinite; }
 .consejo-de-carta__texto { margin: 0; white-space: pre-wrap; line-height: 1.55; font-size: 0.97rem; }
 @keyframes latir-suave { 50% { opacity: 0.5; } }
-.voces__cartas { display: grid; gap: var(--e-2); margin-bottom: var(--e-6); }
+.voces__cartas { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--e-2); margin-bottom: var(--e-6); }
 .consejo-por-aprobar { display: grid; gap: var(--e-1); font-weight: 700; font-size: var(--t-s); }
 .consejo-por-aprobar textarea { font-weight: 400; font-size: var(--t-m, 1rem); line-height: 1.5; }
 .hoja-de-carta__quitar { position: absolute; top: 8px; right: 8px; z-index: 1; }
 .carta-nueva .aceptar-normas { display: flex; align-items: flex-start; gap: var(--e-2); margin-top: var(--e-3); font-size: var(--t-s); line-height: 1.4; cursor: pointer; }
 .carta-nueva .aceptar-normas input { flex: none; width: 20px; height: 20px; margin-top: 1px; padding: 0; accent-color: var(--rojo); }
 .carta-enviada p { margin: 0 0 var(--e-3); }
+
+/* Libreta de cartas: cuaderno abierto con pestañas de colores. Carta a la izquierda, consejo a la derecha. */
+.libreta { --pestana: #f6cc4f; min-width: 0; margin-top: var(--e-3); }
+.libreta__pestanas { display: flex; gap: 6px; padding: 0 var(--e-4); overflow-x: auto; scrollbar-width: none; }
+.libreta__pestanas::-webkit-scrollbar { display: none; }
+.libreta__pestana {
+  flex: none; padding: 8px 16px 10px; border: 0; border-radius: 10px 10px 0 0; cursor: pointer;
+  background: var(--pestana); color: #3a2a10; font-family: var(--f-mano, inherit); font-size: 1.15rem; font-weight: 700;
+  translate: 0 6px; opacity: 0.75; transition: translate 0.2s, opacity 0.2s;
+}
+.libreta__pestana:hover { opacity: 1; translate: 0 2px; }
+.libreta__pestana--abierta { opacity: 1; translate: 0 0; box-shadow: 0 -2px 6px rgba(60, 40, 20, 0.12); }
+.libreta__pestana--amarilla, .libreta__paginas--amarilla { --pestana: #f6cc4f; }
+.libreta__pestana--verde, .libreta__paginas--verde { --pestana: #9fd0ae; }
+.libreta__pestana--rosa, .libreta__paginas--rosa { --pestana: #f4a9b8; }
+.libreta__pestana--celeste, .libreta__paginas--celeste { --pestana: #9cc8ea; }
+.libreta__pestana--lila, .libreta__paginas--lila { --pestana: #c6b2e6; }
+
+.libreta__paginas {
+  position: relative; display: grid; gap: var(--e-4); padding: var(--e-4);
+  border-radius: 14px; background: var(--pestana); border-top: 0;
+  box-shadow: 0 10px 24px rgba(60, 40, 20, 0.16); animation: pasar-pagina 0.35s ease-out;
+}
+.libreta__pagina { display: grid; align-content: start; gap: var(--e-3); min-width: 0; }
+.libreta .hoja-de-carta { rotate: 0deg; }
+.libreta__pagina:first-child { align-content: stretch; }
+.libreta .hoja-de-carta::before { display: none; }
+.libreta__pagina--consejo { padding: var(--e-4); border-radius: 6px; background: #fffdf6; box-shadow: 0 1px 1px rgba(60, 40, 20, 0.08); }
+.libreta .consejo-de-carta { margin: 0; }
+.libreta .consejo-de-carta::before { display: none; }
+.libreta .consejo-de-carta--preparando { margin: 0; }
+.libreta__espiral { display: none; }
+.libreta__pasar { display: flex; align-items: center; justify-content: center; gap: var(--e-3); margin-top: auto; padding-top: var(--e-2); }
+.libreta__flecha {
+  display: grid; place-items: center; width: 40px; height: 40px; border: 0; border-radius: 50%; cursor: pointer;
+  background: var(--pestana); color: #3a2a10; font-size: 1.1rem;
+}
+.libreta__flecha:disabled { opacity: 0.3; cursor: default; }
+
+@media (min-width: 760px) {
+  .libreta__paginas { grid-template-columns: minmax(0, 1.25fr) 26px minmax(0, 1fr); gap: 0; padding: var(--e-4) var(--e-4) var(--e-4); }
+  .libreta__pagina--consejo { border-radius: 0 6px 6px 0; }
+  .libreta .hoja-de-carta { border-radius: 6px 0 0 6px; }
+  /* Anillos del cuaderno entre las dos páginas. */
+  .libreta__espiral {
+    display: block; align-self: stretch; margin: 14px -6px; position: relative; z-index: 1;
+    background: repeating-linear-gradient(180deg, transparent 0 8px, #c3c7cd 8px 10px, #6c717a 10px 14px, transparent 14px 28px);
+    border-radius: 6px;
+  }
+}
+@keyframes pasar-pagina { from { opacity: 0; translate: 0 6px; } }
+@media (prefers-reduced-motion: reduce) { .libreta__paginas { animation: none; } }
+
+/* Computadora y pizarra: la mochila queda fija a la izquierda y el tema usa todo el ancho, en dos columnas. */
+@media (min-width: 1100px) and (orientation: landscape) {
+  .contenedor:has(.mochila-y-detalle) { max-width: min(1640px, 100%); padding-inline: clamp(24px, 3vw, 56px); }
+  .contenedor:has(.mochila-y-detalle) > .entrada { max-width: 980px; margin-inline: auto; text-align: center; }
+  .mochila-y-detalle { display: grid; grid-template-columns: clamp(300px, 26vw, 440px) minmax(0, 1fr); gap: clamp(24px, 3vw, 56px); align-items: start; }
+  .mochila-y-detalle__mochila { position: sticky; top: 84px; }
+  .mochila-y-detalle__mochila .mochila { width: 100%; margin-top: var(--e-3); }
+  .mochila-y-detalle__mochila .etiqueta { font-size: clamp(1rem, 1.25vw, 1.3rem); }
+  .mochila-y-detalle .revelado { min-height: 60vh; padding: clamp(20px, 2.4vw, 40px); }
+  .mochila-y-detalle > .aviso-suave { grid-column: 2; }
+
+  .carga { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: clamp(24px, 2.6vw, 48px); align-items: start; }
+  .carga > * { grid-column: 1 / -1; }
+  .carga > .carga__bloque:not(.cartas-de-chicos, .encuesta), .carga > .carga__reto { grid-column: auto; }
+  .carga > .carga__reto { margin-top: var(--e-5); }
+  .carga__frases { grid-template-columns: 1fr; }
+  .carga > .enlace-discreto { justify-self: center; margin-top: var(--e-4); }
+  .carga__foro { justify-self: center; }
+  .carga .libreta__paginas { grid-template-columns: minmax(0, 1.3fr) 26px minmax(0, 1fr); }
+  .carga .hoja-de-carta__texto { font-size: 1.55rem; line-height: 34px; }
+  .carga .hoja-de-carta { background-position: 0 0, 0 15px, 0 0; background-size: auto, 100% 34px, auto; }
+}

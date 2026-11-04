@@ -6,7 +6,7 @@ import { Cargando } from '../../ui/Cargando'
 import { Encabezado } from '../../ui/Encabezado'
 import { Icono } from '../../ui/Icono'
 import { masRecientePrimero } from '../../domain/foro'
-import { HojaDeCarta, InvitacionAEscribir, NotaDeConsejos, useCartasPublicadas } from '../mochila/CartasDeEstudiantes'
+import { LibretaDeCartas, InvitacionAEscribir, NotaDeConsejos, useCartasPublicadas } from '../mochila/CartasDeEstudiantes'
 
 const COLORES_DE_AVATAR = ['#c8302c', '#1f2a44', '#b07812', '#3f7d5c', '#7a5ca8', '#b2507a']
 const RETRASO_DE_ENTRADA_MS = 80
@@ -35,7 +35,7 @@ function CartasRecientes() {
       <h2 className="mano titulo-tarjeta sin-margen"><Ico icono={Envelope} /> Lo que nos escriben los chicos</h2>
       <p className="suave sin-margen">Cartas anónimas y reales de estudiantes del colegio. Psicología las revisó antes de publicarlas.</p>
       <NotaDeConsejos />
-      <ul className="hojas-de-carta">{[...cartas].sort(masRecientePrimero).map((c) => <HojaDeCarta key={c.id} carta={c} />)}</ul>
+      <LibretaDeCartas cartas={[...cartas].sort(masRecientePrimero)} />
     </section>
   )
 }
