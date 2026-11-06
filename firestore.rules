@@ -125,7 +125,7 @@ service cloud.firestore {
         allow read: if puedeLeerPublicacion();
 
         allow create: if conSesion()
-          && nuevo().keys().hasOnly(['texto', 'apodo', 'rol', 'estado', 'urgente', 'meAyudo', 'autorUid', 'creadoEn', 'temaTitulo', 'respondeA', 'politica'])
+          && nuevo().keys().hasOnly(['texto', 'apodo', 'rol', 'estado', 'urgente', 'meAyudo', 'autorUid', 'creadoEn', 'temaTitulo', 'respondeA', 'respondeAId', 'politica'])
           && textoValido(nuevo().texto, 800)
           && textoValido(nuevo().apodo, 80)
           && textoValido(nuevo().temaTitulo, 120)
@@ -134,7 +134,7 @@ service cloud.firestore {
           && nuevo().meAyudo == 0
           && nuevo().creadoEn == request.time
           && (
-            (nuevo().rol == 'padre' && nuevo().estado == 'pendiente' && !('respondeA' in nuevo()) && aceptoLaPolitica())
+            (nuevo().rol == 'padre' && nuevo().estado == 'pendiente' && !('respondeA' in nuevo()) && !('respondeAId' in nuevo()) && aceptoLaPolitica())
             || (nuevo().rol == 'psicologia' && nuevo().estado == 'aprobado' && esPsicologo())
           );
 

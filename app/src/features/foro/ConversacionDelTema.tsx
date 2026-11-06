@@ -2,14 +2,14 @@ import { Heart, PushPin } from '@phosphor-icons/react'
 import { Ico } from '../../ui/Ico'
 import { useState, type ReactNode } from 'react'
 import { useServicios } from '../../app/servicios'
-import { MOTIVO_AL_RETIRAR, type Comentario, type TemaDelDia } from '../../domain/foro'
+import { MOTIVO_AL_RETIRAR, type Comentario, type Psicologo, type TemaDelDia } from '../../domain/foro'
 import { useMedia } from '../../hooks/useMedia'
 import { Cargando } from '../../ui/Cargando'
 import { fechaLegible } from '../../utils/tiempo'
 import { FormularioDeComentario } from './FormularioDeComentario'
 import { TarjetaDeComentario } from './TarjetaDeComentario'
 import { useComentarios } from './useForo'
-import { useEsDelEquipo } from './useEsDelEquipo'
+import { usePsicologoActual } from './useEsDelEquipo'
 
 const POCOS_COMENTARIOS = 3
 const COMENTARIOS_A_LA_VISTA = 8
@@ -39,20 +39,37 @@ interface PropsDeLista {
   cargando: boolean
   fallo: boolean
   onQuitar?: (comentario: Comentario) => void
+  psicologo: Psicologo | null
+  onAcompanado: () => void
   tarjeta: ReactNode
   sinTablero?: boolean
 }
 
+// Las respuestas de psicología que dicen a qué nota responden se muestran dentro de esa nota, no sueltas.
+function separarAcompanamientos(comentarios: Comentario[]) {
+  const ids = new Set(comentarios.map((c) => c.id))
+  const deCadaNota = new Map<string, Comentario[]>()
+  const sueltos: Comentario[] = []
+  for (const c of comentarios) {
+    if (c.rol === 'psicologia' && c.respondeAId && ids.has(c.respondeAId)) {
+      deCadaNota.set(c.respondeAId, [...(deCadaNota.get(c.respondeAId) ?? []), c])
+    } else sueltos.push(c)
+  }
+  for (const respuestas of deCadaNota.values()) respuestas.sort((a, b) => a.creadoEn.getTime() - b.creadoEn.getTime())
+  return { notas: sueltos, deCadaNota }
+}
+
 // Celular y tablet: la tarjeta para responder y debajo las notas. Pantallas anchas: la tarjeta al centro de un
 // corcho y las notas a los dos costados.
-function ListaDeComentarios({ comentarios, cargando, fallo, onQuitar, tarjeta, sinTablero }: PropsDeLista) {
+function ListaDeComentarios({ comentarios: todos, cargando, fallo, onQuitar, psicologo, onAcompanado, tarjeta, sinTablero }: PropsDeLista) {
   const [verTodos, setVerTodos] = useState(false)
   const ancha = useMedia(PANTALLA_DE_MURAL) && !sinTablero
   if (fallo) return <>{tarjeta}<p className="aviso-suave">No pudimos cargar los comentarios. Revisa tu conexión.</p></>
-  if (cargando && !comentarios) return <>{tarjeta}<Cargando /></>
-  const publicados = comentarios?.filter((c) => c.estado === 'aprobado').length ?? 0
-  const visibles = (verTodos ? comentarios : comentarios?.slice(0, COMENTARIOS_A_LA_VISTA)) ?? []
-  const ocultos = (comentarios?.length ?? 0) - visibles.length
+  if (cargando && !todos) return <>{tarjeta}<Cargando /></>
+  const { notas: comentarios, deCadaNota } = separarAcompanamientos(todos ?? [])
+  const publicados = comentarios.filter((c) => c.estado === 'aprobado').length
+  const visibles = verTodos ? comentarios : comentarios.slice(0, COMENTARIOS_A_LA_VISTA)
+  const ocultos = comentarios.length - visibles.length
   const invitacion = publicados < POCOS_COMENTARIOS && <InvitacionACompartir primera={publicados === 0} />
   const titulo = <h3 className="mural-foro__titulo"><Ico icono={PushPin} peso="fill" /> Lo que comparten las familias <span>({publicados})</span></h3>
   const verMas = ocultos > 0 && (
@@ -61,7 +78,7 @@ function ListaDeComentarios({ comentarios, cargando, fallo, onQuitar, tarjeta, s
     </button>
   )
   const notas = (lista: Comentario[], clase = 'mural') => (
-    <ul className={clase}>{lista.map((c) => <TarjetaDeComentario key={c.id} comentario={c} onQuitar={onQuitar} />)}</ul>
+    <ul className={clase}>{lista.map((c) => <TarjetaDeComentario key={c.id} comentario={c} onQuitar={onQuitar} acompanamientos={deCadaNota.get(c.id)} psicologo={psicologo} onAcompanado={onAcompanado} />)}</ul>
   )
 
   if (ancha && visibles.length) {
@@ -97,7 +114,8 @@ function ListaDeComentarios({ comentarios, cargando, fallo, onQuitar, tarjeta, s
 export function ConversacionDelTema({ tema, etiqueta, autor, enfocar, resumida, sinTablero }: Props) {
   const { datos, cargando, fallo, recargar } = useComentarios(tema.id)
   const { panel } = useServicios()
-  const delEquipo = useEsDelEquipo()
+  const psicologo = usePsicologoActual()
+  const delEquipo = Boolean(psicologo)
   const quitar = async (comentario: Comentario) => {
     if (!confirm('¿Quitar este comentario del foro? Dejará de verse para todas las familias.')) return
     try {
@@ -124,7 +142,7 @@ export function ConversacionDelTema({ tema, etiqueta, autor, enfocar, resumida, 
 
   return (
     <section className="conversacion">
-      <ListaDeComentarios comentarios={datos} cargando={cargando} fallo={fallo} onQuitar={delEquipo ? quitar : undefined} tarjeta={tarjeta} sinTablero={sinTablero} />
+      <ListaDeComentarios comentarios={datos} cargando={cargando} fallo={fallo} onQuitar={delEquipo ? quitar : undefined} psicologo={psicologo} onAcompanado={recargar} tarjeta={tarjeta} sinTablero={sinTablero} />
     </section>
   )
 }

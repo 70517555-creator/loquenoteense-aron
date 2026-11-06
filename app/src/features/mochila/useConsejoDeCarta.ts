@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useServicios } from '../../app/servicios'
 import type { CartaDeEstudiante, ConsejoDeCarta } from '../../domain/mochila'
 import type { AssistantPort } from '../../ports/AssistantPort'
+import { pedirEnFila } from './colaDeIA'
 
 const PREFIJO_DE_GUARDADO = 'consejo-ia:'
 
@@ -10,8 +11,8 @@ const preguntaParaLaIA = (carta: CartaDeEstudiante) =>
   '¿Qué puede estar sintiendo un chico que escribe esto y qué podría decirle un papá o una mamá si su hijo le contara algo así?'
 
 // Solo sirve la respuesta de la IA: la guía local es genérica y no habla de esta carta.
-export async function pedirConsejoALaIA(asistente: AssistantPort, carta: CartaDeEstudiante): Promise<string | undefined> {
-  const respuesta = await asistente.responder({ modo: 'traductor', mensajes: [{ rol: 'padre', texto: preguntaParaLaIA(carta) }] })
+export async function pedirConsejoALaIA(asistente: AssistantPort, carta: CartaDeEstudiante, primero = false): Promise<string | undefined> {
+  const respuesta = await pedirEnFila(asistente, { modo: 'traductor', mensajes: [{ rol: 'padre', texto: preguntaParaLaIA(carta) }] }, primero)
   return respuesta.fuente === 'ia' && !respuesta.alerta ? respuesta.texto.replace(/\n{2,}/g, '\n') : undefined
 }
 

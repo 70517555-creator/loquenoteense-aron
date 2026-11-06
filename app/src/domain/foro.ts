@@ -25,6 +25,7 @@ export interface Comentario {
   esMio: boolean
   motivoRechazo?: string
   respondeA?: string
+  respondeAId?: string
 }
 
 export interface Propuesta {

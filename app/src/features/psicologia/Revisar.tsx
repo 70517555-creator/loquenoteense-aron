@@ -1,7 +1,7 @@
 import { Confetti, Envelope, Heart, Sparkle, Tag, WarningCircle } from '@phosphor-icons/react'
 import { Ico } from '../../ui/Ico'
 import { sinGuiones } from '../foro/useApodo'
-import { useCallback, useEffect, useState, type ReactNode } from 'react'
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 import { useServicios } from '../../app/servicios'
 import { cargas, tituloDeCarga } from '../../content/cargas'
 import { MOTIVOS_DE_RECHAZO, type Comentario, type Decision, type Propuesta, type Psicologo } from '../../domain/foro'
@@ -9,9 +9,12 @@ import { CARGA_POR_CLASIFICAR, MOTIVOS_DE_RECHAZO_DE_CARTA, type CartaDeEstudian
 import { clasificarCarta } from '../mochila/clasificarCarta'
 import { pedirConsejoALaIA } from '../mochila/useConsejoDeCarta'
 import { useAccion } from '../../hooks/useAccion'
+import { useAlVerse } from '../../hooks/useAlVerse'
 import { useConsulta } from '../../hooks/useConsulta'
 import { Cargando } from '../../ui/Cargando'
 import { clases } from '../../utils/clases'
+import { fechaYHora } from '../../utils/tiempo'
+import { BotonEliminar } from './BotonEliminar'
 
 interface PropsDeModeracion {
   ocupado: boolean
@@ -67,8 +70,9 @@ function ComentarioPorRevisar({ comentario, psicologo, onListo }: PropsDeComenta
 
   return (
     <li className={clases('tarjeta', 'por-revisar', comentario.urgente && 'por-revisar--urgente')}>
+      <BotonEliminar eliminar={() => panel.eliminarComentario(comentario)} onEliminado={onListo} />
       {comentario.urgente && <span className="insignia insignia--urgente"><Ico icono={WarningCircle} peso="fill" /> Posible riesgo: atender primero</span>}
-      <small className="suave">Tema: {comentario.temaTitulo}</small>
+      <small className="suave">Tema: {comentario.temaTitulo} · {fechaYHora(comentario.creadoEn)}</small>
       <b>{sinGuiones(comentario.apodo)}</b>
       <p className="comentario__texto">{comentario.texto}</p>
       {respuesta !== undefined && (
@@ -99,7 +103,8 @@ function PropuestaPorRevisar({ propuesta, onListo }: { propuesta: Propuesta; onL
 
   return (
     <li className="tarjeta por-revisar">
-      <small className="suave">Propuesta de tema{propuesta.nivel && ` · ${propuesta.nivel}`}</small>
+      <BotonEliminar eliminar={() => panel.eliminarPropuesta(propuesta)} onEliminado={onListo} />
+      <small className="suave">Propuesta de tema{propuesta.nivel && ` · ${propuesta.nivel}`} · {fechaYHora(propuesta.creadoEn)}</small>
       <p className="comentario__texto">{propuesta.texto}</p>
       {error && <p className="aviso-suave">{error}</p>}
       <BotonesDeModeracion ocupado={ocupado} onDecidir={decidir} />
@@ -107,23 +112,29 @@ function PropuestaPorRevisar({ propuesta, onListo }: { propuesta: Propuesta; onL
   )
 }
 
-function ConsejoPorAprobar({ carta, consejo, onCambiar }: { carta: CartaDeEstudiante; consejo: ConsejoDeCarta; onCambiar: (c: ConsejoDeCarta) => void }) {
+const SIN_RESPUESTA_DE_LA_IA = 'La IA no respondió esta vez (está atendiendo muchas cartas). Toca "Pedir sugerencia a la IA" o escribe el consejo tú.'
+
+function ConsejoPorAprobar({ carta, consejo, visible, onCambiar }: { carta: CartaDeEstudiante; consejo: ConsejoDeCarta; visible: boolean; onCambiar: (c: ConsejoDeCarta) => void }) {
   const { asistente } = useServicios()
   const [preparando, setPreparando] = useState(false)
+  const [sinRespuesta, setSinRespuesta] = useState(false)
 
-  const preparar = useCallback(async () => {
+  const preparar = useCallback(async (primero: boolean) => {
     setPreparando(true)
+    setSinRespuesta(false)
     try {
-      const texto = await pedirConsejoALaIA(asistente, carta)
+      const texto = await pedirConsejoALaIA(asistente, carta, primero)
       if (texto) onCambiar({ texto, de: 'ia' })
+      else setSinRespuesta(true)
     } catch {
-      // Sin IA: psicología puede escribirlo a mano o aprobar sin consejo.
+      setSinRespuesta(true)
     } finally {
       setPreparando(false)
     }
   }, [asistente, carta, onCambiar])
 
-  useEffect(() => { if (!carta.urgente) preparar() }, [carta.urgente, preparar])
+  // Solo pide a la IA cuando la carta aparece en pantalla: psicología puede leerlas en el orden que quiera.
+  useEffect(() => { if (visible && !carta.urgente) preparar(false) }, [visible, carta.urgente, preparar])
 
   return (
     <label className="consejo-por-aprobar">
@@ -131,31 +142,32 @@ function ConsejoPorAprobar({ carta, consejo, onCambiar }: { carta: CartaDeEstudi
       <textarea
         rows={5}
         value={consejo.texto}
-        placeholder={preparando ? 'La IA está preparando una sugerencia…' : 'Escribe un consejo corto, o déjalo vacío para publicar la carta sola.'}
+        placeholder={preparando ? 'La IA está preparando una sugerencia… (puede tardar si hay muchas cartas)' : 'Escribe un consejo corto, o déjalo vacío para publicar la carta sola.'}
         onChange={(e) => onCambiar({ texto: e.target.value, de: 'psicologia' })}
       />
+      {sinRespuesta && !consejo.texto && <small className="aviso-suave">{SIN_RESPUESTA_DE_LA_IA}</small>}
       <small className="suave">
         {consejo.de === 'ia' && consejo.texto ? 'Lo preparó la IA: léelo y cámbialo si quieres. Si lo editas, se publica como consejo de psicología.' : ''}
-        {' '}<button type="button" className="enlace-discreto" disabled={preparando} onClick={preparar}>{preparando ? 'Preparando…' : <><Ico icono={Sparkle} /> Pedir otra sugerencia a la IA</>}</button>
+        {' '}<button type="button" className="enlace-discreto" disabled={preparando} onClick={() => preparar(true)}>{preparando ? 'Preparando…' : <><Ico icono={Sparkle} /> {consejo.texto ? 'Pedir otra sugerencia a la IA' : 'Pedir sugerencia a la IA'}</>}</button>
       </small>
     </label>
   )
 }
 
-function TemaDeLaCarta({ carta, carga, onCambiar }: { carta: CartaDeEstudiante; carga?: string; onCambiar: (id: string) => void }) {
+function TemaDeLaCarta({ carta, carga, visible, onCambiar }: { carta: CartaDeEstudiante; carga?: string; visible: boolean; onCambiar: (id: string) => void }) {
   const { asistente } = useServicios()
   const [clasificando, setClasificando] = useState(carta.carga === CARGA_POR_CLASIFICAR)
   const [sugerida, setSugerida] = useState<string>()
 
   useEffect(() => {
-    if (carta.carga !== CARGA_POR_CLASIFICAR) return
+    if (!visible || carta.carga !== CARGA_POR_CLASIFICAR) return
     let vigente = true
     clasificarCarta(asistente, carta.texto, cargas)
       .then((id) => { if (vigente && id) { setSugerida(id); onCambiar(id) } })
       .catch(() => {})
       .finally(() => vigente && setClasificando(false))
     return () => { vigente = false }
-  }, [asistente, carta, onCambiar])
+  }, [asistente, carta, visible, onCambiar])
 
   return (
     <label className="consejo-por-aprobar">
@@ -175,6 +187,8 @@ function CartaPorRevisar({ carta, onListo }: { carta: CartaDeEstudiante; onListo
   const [consejo, setConsejo] = useState<ConsejoDeCarta>({ texto: '', de: 'ia' })
   const [carga, setCarga] = useState<string | undefined>(carta.carga === CARGA_POR_CLASIFICAR ? undefined : carta.carga)
   const [falta, setFalta] = useState(false)
+  const tarjeta = useRef<HTMLLIElement>(null)
+  const visible = useAlVerse(tarjeta)
   const elegirTema = useCallback((id: string) => {
     setCarga(id)
     setFalta(false)
@@ -186,14 +200,15 @@ function CartaPorRevisar({ carta, onListo }: { carta: CartaDeEstudiante; onListo
   }
 
   return (
-    <li className={clases('tarjeta', 'por-revisar', carta.urgente && 'por-revisar--urgente')}>
+    <li ref={tarjeta} className={clases('tarjeta', 'por-revisar', carta.urgente && 'por-revisar--urgente')}>
+      <BotonEliminar eliminar={() => panel.eliminarCarta(carta)} onEliminado={onListo} />
       {carta.urgente && <span className="insignia insignia--urgente"><Ico icono={WarningCircle} peso="fill" /> Posible riesgo: el estudiante vio las líneas de ayuda</span>}
-      <small className="suave"><Ico icono={Envelope} /> Carta de estudiante · {carta.nivel} · {carta.carga === CARGA_POR_CLASIFICAR ? 'escrita en el bolsillo secreto' : `tema: ${tituloDeCarga(carta.carga)}`}</small>
+      <small className="suave"><Ico icono={Envelope} /> Carta de estudiante · {carta.nivel} · {carta.carga === CARGA_POR_CLASIFICAR ? 'escrita en el bolsillo secreto' : `tema: ${tituloDeCarga(carta.carga)}`} · {fechaYHora(carta.creadoEn)}</small>
       <p className="comentario__texto">{carta.texto}</p>
       <small className="suave">Revisa que no tenga nombres, grados, secciones ni datos que permitan reconocer a alguien.</small>
-      <TemaDeLaCarta carta={carta} carga={carga} onCambiar={elegirTema} />
+      <TemaDeLaCarta carta={carta} carga={carga} visible={visible} onCambiar={elegirTema} />
       {falta && <p className="aviso-suave">Elige el tema antes de aprobar.</p>}
-      <ConsejoPorAprobar carta={carta} consejo={consejo} onCambiar={setConsejo} />
+      <ConsejoPorAprobar carta={carta} consejo={consejo} visible={visible} onCambiar={setConsejo} />
       {error && <p className="aviso-suave">{error}</p>}
       <BotonesDeModeracion ocupado={ocupado} motivos={MOTIVOS_DE_RECHAZO_DE_CARTA} onDecidir={decidir} />
     </li>

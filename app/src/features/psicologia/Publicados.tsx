@@ -8,6 +8,8 @@ import { useAccion } from '../../hooks/useAccion'
 import { useConsulta } from '../../hooks/useConsulta'
 import { Cargando } from '../../ui/Cargando'
 import { clases } from '../../utils/clases'
+import { fechaYHora } from '../../utils/tiempo'
+import { BotonEliminar } from './BotonEliminar'
 
 function ComentarioPublicado({ comentario, onOculto }: { comentario: Comentario; onOculto: () => void }) {
   const { panel } = useServicios()
@@ -20,8 +22,9 @@ function ComentarioPublicado({ comentario, onOculto }: { comentario: Comentario;
 
   return (
     <li className={clases('tarjeta', 'por-revisar', comentario.rol === 'psicologia' && 'comentario--psicologia')}>
+      <BotonEliminar eliminar={() => panel.eliminarComentario(comentario)} onEliminado={onOculto} />
       <small className="suave">
-        {comentario.temaTitulo} · {comentario.creadoEn.toLocaleDateString('es-PE')} · <Ico icono={Heart} peso="fill" /> {comentario.meAyudo}
+        {comentario.temaTitulo} · {fechaYHora(comentario.creadoEn)} · <Ico icono={Heart} peso="fill" /> {comentario.meAyudo}
       </small>
       <b>{sinGuiones(comentario.apodo)}</b>
       <p className="comentario__texto">{comentario.texto}</p>

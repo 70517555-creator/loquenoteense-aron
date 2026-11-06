@@ -2,12 +2,13 @@ import { HandHeart, HourglassMedium } from '@phosphor-icons/react'
 import { useCallback, useLayoutEffect, useRef, useState, type CSSProperties } from 'react'
 import { createPortal } from 'react-dom'
 import { useServicios } from '../../app/servicios'
-import type { Comentario } from '../../domain/foro'
+import type { Comentario, Psicologo } from '../../domain/foro'
 import { Ico } from '../../ui/Ico'
 import { Icono } from '../../ui/Icono'
 import { useCerrarConEscape } from '../../hooks/useCerrarConEscape'
 import { clases } from '../../utils/clases'
-import { haceCuanto } from '../../utils/tiempo'
+import { fechaYHora } from '../../utils/tiempo'
+import { AcompanarComentario } from './AcompanarComentario'
 import { BotonDeVoto } from './BotonDeVoto'
 import { BotonReportar } from './BotonReportar'
 import { sinGuiones } from './useApodo'
@@ -72,10 +73,31 @@ interface Props {
   onQuitar?: (comentario: Comentario) => void
 }
 
+interface PropsDeTarjeta extends Props {
+  acompanamientos?: Comentario[]
+  psicologo?: Psicologo | null
+  onAcompanado?: () => void
+}
+
+// La respuesta de psicología va dentro de la nota de la familia: así se ve que alguien la leyó y la acompaña.
+function Acompanamientos({ respuestas }: { respuestas: Comentario[] }) {
+  if (!respuestas.length) return null
+  return (
+    <div className="nota__acompanamientos">
+      {respuestas.map((r) => (
+        <div key={r.id} className="acompanamiento">
+          <b><Ico icono={HandHeart} peso="fill" /> {sinGuiones(r.apodo)} <time className="acompanamiento__fecha" dateTime={r.creadoEn.toISOString()}>{fechaYHora(r.creadoEn)}</time></b>
+          <p>{r.texto}</p>
+        </div>
+      ))}
+    </div>
+  )
+}
+
 function Encabezado({ comentario, onQuitar }: Props) {
   const publicado = comentario.estado === 'aprobado'
   const { quien, grado } = separarApodo(comentario.apodo)
-  const detalles = [grado, comentario.respondeA && `en respuesta a ${sinGuiones(comentario.respondeA)}`, haceCuanto(comentario.creadoEn)]
+  const detalles = [grado, comentario.respondeA && `en respuesta a ${sinGuiones(comentario.respondeA)}`, fechaYHora(comentario.creadoEn)]
   return (
     <header className="nota__cabeza">
       <Avatar comentario={comentario} />
@@ -93,11 +115,16 @@ function Encabezado({ comentario, onQuitar }: Props) {
   )
 }
 
-function Acciones({ comentario }: { comentario: Comentario }) {
+function Acciones({ comentario, onAcompanar }: { comentario: Comentario; onAcompanar?: () => void }) {
   if (comentario.estado !== 'aprobado') return null
   return (
     <div className="nota__acciones">
       <MeAyudo comentario={comentario} />
+      {onAcompanar && (
+        <button className="boton-acompanar" onClick={onAcompanar}>
+          <Ico icono={HandHeart} peso="fill" /> Acompañar
+        </button>
+      )}
       {!comentario.esMio && <BotonReportar ruta={rutaDelComentario(comentario)} texto={comentario.texto} />}
     </div>
   )
@@ -122,11 +149,13 @@ function NotaAmpliada({ comentario, onCerrar }: { comentario: Comentario; onCerr
   )
 }
 
-export function TarjetaDeComentario({ comentario, onQuitar }: Props) {
+export function TarjetaDeComentario({ comentario, onQuitar, acompanamientos = [], psicologo, onAcompanado }: PropsDeTarjeta) {
   const texto = useRef<HTMLParagraphElement>(null)
   const [esLarga, setEsLarga] = useState(false)
   const [ampliada, setAmpliada] = useState(false)
+  const [acompanando, setAcompanando] = useState(false)
   const { clase, estilo } = estiloDeNota(comentario)
+  const puedeAcompanar = psicologo && comentario.rol !== 'psicologia'
 
   useLayoutEffect(() => {
     const p = texto.current
@@ -139,8 +168,17 @@ export function TarjetaDeComentario({ comentario, onQuitar }: Props) {
       <p ref={texto} className="nota__texto texto-recortado">{comentario.texto}</p>
       {esLarga && <button className="leer-mas" onClick={() => setAmpliada(true)}>Leer completa</button>}
       {comentario.esMio && <EstadoPropio comentario={comentario} />}
-      <Acciones comentario={comentario} />
+      <Acompanamientos respuestas={acompanamientos} />
+      <Acciones comentario={comentario} onAcompanar={puedeAcompanar ? () => setAcompanando(true) : undefined} />
       {ampliada && <NotaAmpliada comentario={comentario} onCerrar={() => setAmpliada(false)} />}
+      {acompanando && psicologo && (
+        <AcompanarComentario
+          comentario={comentario}
+          psicologo={psicologo}
+          onCerrar={() => setAcompanando(false)}
+          onPublicado={() => { setAcompanando(false); onAcompanado?.() }}
+        />
+      )}
     </li>
   )
 }

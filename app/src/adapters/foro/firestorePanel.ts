@@ -87,6 +87,7 @@ export const firestorePanel: PanelDePsicologiaPort = {
       texto,
       apodo: nombre,
       respondeA: comentario.apodo,
+      respondeAId: comentario.id,
       temaTitulo: comentario.temaTitulo,
       rol: 'psicologia',
       estado: 'aprobado',
@@ -97,6 +98,10 @@ export const firestorePanel: PanelDePsicologiaPort = {
     })
     await lote.commit()
   },
+
+  eliminarComentario: (comentario) => deleteDoc(refDeComentario(comentario)),
+  eliminarPropuesta: (propuesta) => deleteDoc(doc(db, RUTAS.propuestas, propuesta.id)),
+  eliminarCarta: (carta) => deleteDoc(doc(db, RUTAS.cartas, carta.id)),
 
   async propuestasAprobadas() {
     const aprobadas = await getDocs(query(collection(db, RUTAS.propuestas), where('estado', '==', 'aprobado')))

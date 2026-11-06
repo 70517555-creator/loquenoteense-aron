@@ -31,6 +31,9 @@ export interface PanelDePsicologiaPort {
   moderarPropuesta(propuesta: Propuesta, decision: Decision, motivo?: string): Promise<void>
   moderarCarta(carta: CartaDeEstudiante, decision: Decision, motivo?: string, consejo?: ConsejoDeCarta, carga?: string): Promise<void>
   responder(comentario: Comentario, texto: string, nombre: string): Promise<void>
+  eliminarComentario(comentario: Comentario): Promise<void>
+  eliminarPropuesta(propuesta: Propuesta): Promise<void>
+  eliminarCarta(carta: CartaDeEstudiante): Promise<void>
   propuestasAprobadas(): Promise<Propuesta[]>
   temasProgramados(desde: string): Promise<TemaDelDia[]>
   programarTema(tema: Omit<TemaDelDia, 'id'>, propuesta?: Propuesta): Promise<void>

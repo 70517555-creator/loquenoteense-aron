@@ -47,3 +47,11 @@ export function haceCuanto(fecha: Date, ahora = new Date()): string {
   if (distancia >= MS_POR_HORA) return FORMATO_RELATIVO.format(Math.round(diferencia / MS_POR_HORA), 'hour')
   return FORMATO_RELATIVO.format(Math.round(diferencia / MS_POR_MINUTO), 'minute')
 }
+
+const FORMATO_FECHA_Y_HORA = new Intl.DateTimeFormat('es-PE', { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' })
+const FORMATO_FECHA_Y_HORA_CON_ANIO = new Intl.DateTimeFormat('es-PE', { day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: '2-digit' })
+
+// "6 nov., 4:25 p. m."; si es de otro año, también lo dice.
+export function fechaYHora(fecha: Date, ahora = new Date()): string {
+  return (fecha.getFullYear() === ahora.getFullYear() ? FORMATO_FECHA_Y_HORA : FORMATO_FECHA_Y_HORA_CON_ANIO).format(fecha)
+}

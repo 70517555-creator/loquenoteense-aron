@@ -43,7 +43,9 @@
 .foro__equipo { margin: var(--e-5) 0 0; text-align: center; font-size: var(--t-s); line-height: 2; color: var(--tinta-suave); }
 .panel__saludo { display: flex; justify-content: space-between; align-items: center; }
 .panel__saludo p { margin: 0; }
-.por-revisar { display: grid; gap: var(--e-2); }
+.por-revisar { position: relative; display: grid; gap: var(--e-2); }
+.por-revisar > .por-revisar__eliminar { position: absolute; top: 10px; right: 10px; width: 34px; height: 34px; margin: 0; z-index: 1; }
+.por-revisar > .por-revisar__eliminar + * { padding-right: 40px; }
 .por-revisar--urgente { border: 2px solid var(--rojo); }
 .insignia--urgente { justify-self: start; background: var(--rojo-suave); color: var(--rojo-oscuro); }
 
@@ -170,3 +172,34 @@
 }
 .nota__avatar { color: #fff; font-weight: 900; font-size: 1rem; box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.15); }
 .nota__avatar--psicologia { background: #2e8b57; }
+
+/* Acompañamiento de psicología: botón solo para el equipo y la respuesta dentro de la nota de la familia. */
+.boton-acompanar {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 30px; padding: 4px 12px; border: 0; border-radius: var(--r-total); cursor: pointer;
+  background: #2e8b57; color: #fff !important; font: 800 var(--t-xs) var(--f-texto); box-shadow: 0 2px 6px rgba(46, 139, 87, 0.35);
+  transition: transform 0.2s var(--suave), box-shadow 0.2s;
+}
+.boton-acompanar:hover { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(46, 139, 87, 0.45); }
+.nota__acompanamientos { display: grid; gap: var(--e-2); }
+.acompanamiento {
+  position: relative; display: grid; gap: 4px; padding: var(--e-2) var(--e-3); border-radius: 10px;
+  background: rgba(255, 255, 255, 0.82); box-shadow: inset 3px 0 0 #2e8b57; font-size: 0.92rem; line-height: 1.5;
+}
+.acompanamiento b { display: flex; align-items: center; gap: 6px; color: #23704a; font-size: var(--t-xs); }
+.acompanamiento p { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; color: #2f2723; }
+
+.acompanar { width: min(100%, 620px); }
+.acompanar__original {
+  margin: 0; padding: var(--e-3) var(--e-4); border-radius: var(--r-m); background: #fff4c9; box-shadow: inset 4px 0 0 #f0c53d;
+  white-space: pre-wrap; overflow-wrap: anywhere; max-height: 30dvh; overflow: auto; line-height: 1.5;
+}
+.acompanar__original small { display: block; margin-top: var(--e-1); color: var(--tinta-suave); font-size: var(--t-xs); font-weight: 700; }
+.acompanar__frases { display: flex; flex-wrap: wrap; gap: 6px; }
+.acompanar__frases small { flex-basis: 100%; }
+.acompanar__frases .ficha { max-width: 100%; height: auto; min-height: 34px; padding-block: 6px; white-space: normal !important; text-align: left; font-size: var(--t-xs); }
+.acompanar textarea { line-height: 1.5; }
+.acompanar__ia { justify-self: start; }
+.acompanar__firma { margin: 0; font-size: var(--t-s); color: var(--tinta-suave); }
+.acompanar .boton--exito { justify-self: stretch; }
+@media (max-width: 640px) { .acompanar__original { max-height: 22dvh; } }
+.acompanamiento__fecha { margin-left: auto; font-weight: 600; color: var(--tinta-suave); }

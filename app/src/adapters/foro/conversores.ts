@@ -25,6 +25,7 @@ export const aComentario = (d: DocumentSnapshot, uid?: string): Comentario => ({
   esMio: d.get('autorUid') === uid,
   motivoRechazo: d.get('motivoRechazo'),
   respondeA: d.get('respondeA'),
+  respondeAId: d.get('respondeAId'),
 })
 
 export const aPropuesta = (d: DocumentSnapshot, uid?: string): Propuesta => ({
