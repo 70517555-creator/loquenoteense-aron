@@ -4,7 +4,7 @@ import { sinGuiones } from '../foro/useApodo'
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 import { useServicios } from '../../app/servicios'
 import { cargas, tituloDeCarga } from '../../content/cargas'
-import { MOTIVOS_DE_RECHAZO, type Comentario, type Decision, type Propuesta, type Psicologo } from '../../domain/foro'
+import { FIRMA_DE_PSICOLOGIA, MOTIVOS_DE_RECHAZO, type Comentario, type Decision, type Propuesta } from '../../domain/foro'
 import { CARGA_POR_CLASIFICAR, MOTIVOS_DE_RECHAZO_DE_CARTA, type CartaDeEstudiante, type ConsejoDeCarta } from '../../domain/mochila'
 import { hayRiesgo } from '../../domain/riesgo'
 import { clasificarCarta } from '../mochila/clasificarCarta'
@@ -51,15 +51,14 @@ function BotonesDeModeracion({ ocupado, motivos = MOTIVOS_DE_RECHAZO, onDecidir,
 
 interface PropsDeComentario {
   comentario: Comentario
-  psicologo: Psicologo
   onListo: () => void
 }
 
-function ComentarioPorRevisar({ comentario, psicologo, onListo }: PropsDeComentario) {
+function ComentarioPorRevisar({ comentario, onListo }: PropsDeComentario) {
   const { panel } = useServicios()
   const { ocupado, error, ejecutar } = useAccion()
   const [respuesta, setRespuesta] = useState<string>()
-  const firma = `${psicologo.nombre} · Psicología`
+  const firma = FIRMA_DE_PSICOLOGIA
 
   const decidir = async (decision: Decision, motivo?: string) => {
     if (await ejecutar(() => panel.moderarComentario(comentario, decision, motivo))) onListo()
@@ -219,7 +218,7 @@ function CartaPorRevisar({ carta, onListo }: { carta: CartaDeEstudiante; onListo
   )
 }
 
-export function Revisar({ psicologo }: { psicologo: Psicologo }) {
+export function Revisar() {
   const { panel } = useServicios()
   const { datos, cargando, fallo, recargar } = useConsulta(useCallback(() => panel.pendientes(), [panel]))
 
@@ -232,7 +231,7 @@ export function Revisar({ psicologo }: { psicologo: Psicologo }) {
       <button className="boton boton--fantasma" onClick={recargar}>Actualizar</button>
       {sinPendientes && <p className="suave centrado"><Ico icono={Confetti} /> No hay nada por revisar.</p>}
       <ul className="lista-panel">
-        {datos?.comentarios.map((c) => <ComentarioPorRevisar key={c.id} comentario={c} psicologo={psicologo} onListo={recargar} />)}
+        {datos?.comentarios.map((c) => <ComentarioPorRevisar key={c.id} comentario={c} onListo={recargar} />)}
         {datos?.cartas.map((c) => <CartaPorRevisar key={c.id} carta={c} onListo={recargar} />)}
         {datos?.propuestas.map((p) => <PropuestaPorRevisar key={p.id} propuesta={p} onListo={recargar} />)}
       </ul>

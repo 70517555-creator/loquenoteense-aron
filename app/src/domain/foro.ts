@@ -87,3 +87,6 @@ export const MOTIVOS_DE_REPORTE = ['Tiene datos personales', 'Es ofensivo o irre
 
 export const masRecientePrimero = <T extends { creadoEn: Date }>(a: T, b: T) => b.creadoEn.getTime() - a.creadoEn.getTime()
 export const masAntiguoPrimero = <T extends { creadoEn: Date }>(a: T, b: T) => a.creadoEn.getTime() - b.creadoEn.getTime()
+
+// En lo público psicología firma como equipo: nunca con el nombre de quien responde.
+export const FIRMA_DE_PSICOLOGIA = 'Psicología del colegio'

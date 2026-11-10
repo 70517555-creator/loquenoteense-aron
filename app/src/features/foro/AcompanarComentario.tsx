@@ -2,7 +2,7 @@ import { HandHeart, Sparkle } from '@phosphor-icons/react'
 import { useCallback, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useServicios } from '../../app/servicios'
-import type { Comentario, Psicologo } from '../../domain/foro'
+import { FIRMA_DE_PSICOLOGIA, type Comentario } from '../../domain/foro'
 import { hayRiesgo } from '../../domain/riesgo'
 import { useAccion } from '../../hooks/useAccion'
 import { useCerrarConEscape } from '../../hooks/useCerrarConEscape'
@@ -29,12 +29,11 @@ const pedidoDeBorrador = (comentario: Comentario) =>
 
 interface Props {
   comentario: Comentario
-  psicologo: Psicologo
   onCerrar: () => void
   onPublicado: () => void
 }
 
-export function AcompanarComentario({ comentario, psicologo, onCerrar, onPublicado }: Props) {
+export function AcompanarComentario({ comentario, onCerrar, onPublicado }: Props) {
   const { panel, asistente } = useServicios()
   const { ocupado, error, ejecutar } = useAccion()
   const [texto, setTexto] = useState('')
@@ -42,7 +41,6 @@ export function AcompanarComentario({ comentario, psicologo, onCerrar, onPublica
   const [sinBorrador, setSinBorrador] = useState(false)
   const cerrar = useCallback(() => onCerrar(), [onCerrar])
   useCerrarConEscape(cerrar)
-  const firma = `${psicologo.nombre} · Psicología`
   const quien = sinGuiones(comentario.apodo).split(' · ')[0]
   const conRiesgo = comentario.urgente || hayRiesgo(comentario.texto)
 
@@ -64,7 +62,7 @@ export function AcompanarComentario({ comentario, psicologo, onCerrar, onPublica
 
   const publicar = async () => {
     const limpio = texto.trim()
-    if (limpio && (await ejecutar(() => panel.responder(comentario, limpio, firma)))) onPublicado()
+    if (limpio && (await ejecutar(() => panel.responder(comentario, limpio, FIRMA_DE_PSICOLOGIA)))) onPublicado()
   }
 
   return createPortal(
@@ -106,7 +104,7 @@ export function AcompanarComentario({ comentario, psicologo, onCerrar, onPublica
         {error && <p className="aviso-suave">{error}</p>}
 
         <p className="acompanar__firma">
-          Se publicará en la nota de {quien}, firmado: <b>{firma}</b>
+          Se publicará en la nota de {quien}, firmado solo como <b>{FIRMA_DE_PSICOLOGIA}</b> (sin tu nombre)
         </p>
         <button className="boton boton--exito" disabled={ocupado || !texto.trim()} onClick={publicar}>
           <Ico icono={HandHeart} /> {ocupado ? 'Publicando…' : 'Publicar acompañamiento'}

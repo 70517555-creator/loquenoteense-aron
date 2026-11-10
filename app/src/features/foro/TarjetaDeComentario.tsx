@@ -2,7 +2,7 @@ import { HandHeart, HourglassMedium } from '@phosphor-icons/react'
 import { useCallback, useLayoutEffect, useRef, useState, type CSSProperties } from 'react'
 import { createPortal } from 'react-dom'
 import { useServicios } from '../../app/servicios'
-import type { Comentario, Psicologo } from '../../domain/foro'
+import { FIRMA_DE_PSICOLOGIA, type Comentario, type Psicologo } from '../../domain/foro'
 import { Ico } from '../../ui/Ico'
 import { Icono } from '../../ui/Icono'
 import { useCerrarConEscape } from '../../hooks/useCerrarConEscape'
@@ -86,7 +86,7 @@ function Acompanamientos({ respuestas }: { respuestas: Comentario[] }) {
     <div className="nota__acompanamientos">
       {respuestas.map((r) => (
         <div key={r.id} className="acompanamiento">
-          <b><Ico icono={HandHeart} peso="fill" /> {sinGuiones(r.apodo)} <time className="acompanamiento__fecha" dateTime={r.creadoEn.toISOString()}>{fechaYHora(r.creadoEn)}</time></b>
+          <b><Ico icono={HandHeart} peso="fill" /> {FIRMA_DE_PSICOLOGIA} <time className="acompanamiento__fecha" dateTime={r.creadoEn.toISOString()}>{fechaYHora(r.creadoEn)}</time></b>
           <p>{r.texto}</p>
         </div>
       ))}
@@ -96,14 +96,13 @@ function Acompanamientos({ respuestas }: { respuestas: Comentario[] }) {
 
 function Encabezado({ comentario, onQuitar }: Props) {
   const publicado = comentario.estado === 'aprobado'
-  const { quien, grado } = separarApodo(comentario.apodo)
+  const { quien, grado } = comentario.rol === 'psicologia' ? { quien: FIRMA_DE_PSICOLOGIA, grado: '' } : separarApodo(comentario.apodo)
   const detalles = [grado, comentario.respondeA && `en respuesta a ${sinGuiones(comentario.respondeA)}`, fechaYHora(comentario.creadoEn)]
   return (
     <header className="nota__cabeza">
       <Avatar comentario={comentario} />
       <div className="nota__quien">
         <b>{quien}{comentario.esMio && publicado && <small className="suave"> (tú)</small>}</b>
-        {comentario.rol === 'psicologia' && <span className="nota__rol">Psicología del colegio</span>}
         <small className="nota__meta">{detalles.filter(Boolean).join(' · ')}</small>
       </div>
       {onQuitar && publicado && (
@@ -171,10 +170,9 @@ export function TarjetaDeComentario({ comentario, onQuitar, acompanamientos = []
       <Acompanamientos respuestas={acompanamientos} />
       <Acciones comentario={comentario} onAcompanar={puedeAcompanar ? () => setAcompanando(true) : undefined} />
       {ampliada && <NotaAmpliada comentario={comentario} onCerrar={() => setAmpliada(false)} />}
-      {acompanando && psicologo && (
+      {acompanando && (
         <AcompanarComentario
           comentario={comentario}
-          psicologo={psicologo}
           onCerrar={() => setAcompanando(false)}
           onPublicado={() => { setAcompanando(false); onAcompanado?.() }}
         />

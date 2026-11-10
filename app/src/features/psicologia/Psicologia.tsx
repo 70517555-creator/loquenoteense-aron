@@ -40,7 +40,7 @@ function Entrar({ onEntro }: { onEntro: (p: Psicologo) => void }) {
 
 function Panel({ psicologo, onSalir }: { psicologo: Psicologo; onSalir: () => void }) {
   const secciones = [
-    { titulo: 'Por revisar', contenido: <Revisar psicologo={psicologo} /> },
+    { titulo: 'Por revisar', contenido: <Revisar /> },
     { titulo: 'Temas', contenido: <ProgramarTemas /> },
     { titulo: 'Reportes', contenido: <Reportes /> },
     ...(psicologo.coordinador
