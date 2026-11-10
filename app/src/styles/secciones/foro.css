@@ -203,3 +203,12 @@
 .acompanar .boton--exito { justify-self: stretch; }
 @media (max-width: 640px) { .acompanar__original { max-height: 22dvh; } }
 .acompanamiento__fecha { margin-left: auto; font-weight: 600; color: var(--tinta-suave); }
+
+/* Archivo del foro: preguntas de semanas pasadas y temas de otros días. */
+.archivo-del-foro { display: grid; gap: var(--e-3); }
+.archivo__subtitulo { margin-top: var(--e-4) !important; }
+.archivo__semana { border-left: 5px solid var(--ambar, #f0c53d); }
+.archivo__fecha { display: inline-flex; align-items: center; gap: 6px; color: var(--tinta-suave); font-weight: 700; }
+.archivo__cuantos { grid-column: 1; display: inline-flex; align-items: center; gap: 6px; font-size: var(--t-xs); font-weight: 800; color: #23704a; }
+.tema-anterior > .archivo__cuantos + :last-child { grid-row: 1 / span 3; }
+.archivo__volver { justify-self: start; }

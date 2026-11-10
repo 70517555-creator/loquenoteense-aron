@@ -30,7 +30,7 @@ const SECCIONES = [
   { id: 'semana', titulo: 'Pregunta de la semana', Contenido: PreguntaDeLaSemana },
   { id: 'hoy', titulo: 'Tema de hoy', Contenido: TemaDeHoy },
   { id: 'propuestas', titulo: 'Temas propuestos', Contenido: PropuestasDeTemas },
-  { id: 'anteriores', titulo: 'Anteriores', Contenido: TemasAnteriores },
+  { id: 'anteriores', titulo: 'Archivo', Contenido: TemasAnteriores },
 ]
 
 export default function Foro() {

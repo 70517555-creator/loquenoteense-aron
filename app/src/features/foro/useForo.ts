@@ -50,6 +50,31 @@ export function useTemasAnteriores() {
   return useConsulta(useCallback(() => foro.temasAnteriores(hoy), [foro, hoy]))
 }
 
+const SEMANAS_EN_EL_ARCHIVO = 16
+
+export interface SemanaArchivada {
+  tema: TemaDelDia
+  publicados: number
+}
+
+// Las preguntas de semanas pasadas no viven en la lista de temas: se arman por fecha y solo se muestran las que tienen comentarios.
+export function useSemanasAnteriores() {
+  const { foro } = useServicios()
+  const lunes = lunesDeLaSemana()
+  return useConsulta(useCallback(async () => {
+    const [anio, mes, dia] = lunes.split('-').map(Number)
+    const semanas = Array.from({ length: SEMANAS_EN_EL_ARCHIVO }, (_, i) => fechaDeHoy(new Date(anio, mes - 1, dia - 7 * (i + 1))))
+    const archivo = await Promise.all(semanas.map(async (otroLunes): Promise<SemanaArchivada> => {
+      const [propia, publicados] = await Promise.all([
+        foro.preguntaDeLaSemana(otroLunes).catch(() => null),
+        foro.cuantosPublicados(`${PREFIJO_DE_SEMANA}${otroLunes}`).catch(() => 0),
+      ])
+      return { tema: temaDeLaSemana(otroLunes, propia ?? undefined), publicados }
+    }))
+    return archivo.filter((s) => s.publicados > 0)
+  }, [foro, lunes]))
+}
+
 export function useComentarios(temaId: string) {
   const { foro } = useServicios()
   return useConsulta(useCallback(() => foro.comentarios(temaId), [foro, temaId]))

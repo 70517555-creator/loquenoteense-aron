@@ -1,5 +1,5 @@
 import {
-  addDoc, collection, doc, getDoc, getDocs, limit, orderBy, query, serverTimestamp, where,
+  addDoc, collection, doc, getCountFromServer, getDoc, getDocs, limit, orderBy, query, serverTimestamp, where,
 } from 'firebase/firestore'
 import { VERSION_DE_POLITICA } from '../../content/politicas'
 import { masAntiguoPrimero } from '../../domain/foro'
@@ -38,6 +38,11 @@ export const firestoreForo: ForoPort = {
     const uid = await uidConSesion()
     const documentos = await aprobadosYPropios(RUTAS.comentarios(temaId), uid)
     return sinRepetir(documentos.map((d) => aComentario(d, uid))).sort(masAntiguoPrimero)
+  },
+
+  async cuantosPublicados(temaId) {
+    const publicados = query(collection(db, RUTAS.comentarios(temaId)), where('estado', '==', 'aprobado'))
+    return (await getCountFromServer(publicados)).data().count
   },
 
   async comentar({ tema, texto, apodo, urgente }) {

@@ -6,6 +6,7 @@ import { useServicios } from '../../app/servicios'
 import { cargas, tituloDeCarga } from '../../content/cargas'
 import { MOTIVOS_DE_RECHAZO, type Comentario, type Decision, type Propuesta, type Psicologo } from '../../domain/foro'
 import { CARGA_POR_CLASIFICAR, MOTIVOS_DE_RECHAZO_DE_CARTA, type CartaDeEstudiante, type ConsejoDeCarta } from '../../domain/mochila'
+import { hayRiesgo } from '../../domain/riesgo'
 import { clasificarCarta } from '../mochila/clasificarCarta'
 import { pedirConsejoALaIA } from '../mochila/useConsejoDeCarta'
 import { useAccion } from '../../hooks/useAccion'
@@ -112,12 +113,14 @@ function PropuestaPorRevisar({ propuesta, onListo }: { propuesta: Propuesta; onL
   )
 }
 
-const SIN_RESPUESTA_DE_LA_IA = 'La IA no respondió esta vez (está atendiendo muchas cartas). Toca "Pedir sugerencia a la IA" o escribe el consejo tú.'
+const SIN_RESPUESTA_DE_LA_IA = 'La IA no respondió esta vez. Inténtalo otra vez en un minuto o escribe el consejo tú.'
+const CARTA_CON_RIESGO = 'Esta carta tiene señales de riesgo: por seguridad la IA no prepara consejos para estas cartas. Si decides publicarla, escribe tú el consejo.'
 
 function ConsejoPorAprobar({ carta, consejo, visible, onCambiar }: { carta: CartaDeEstudiante; consejo: ConsejoDeCarta; visible: boolean; onCambiar: (c: ConsejoDeCarta) => void }) {
   const { asistente } = useServicios()
   const [preparando, setPreparando] = useState(false)
   const [sinRespuesta, setSinRespuesta] = useState(false)
+  const conRiesgo = carta.urgente || hayRiesgo(carta.texto)
 
   const preparar = useCallback(async (primero: boolean) => {
     setPreparando(true)
@@ -125,16 +128,16 @@ function ConsejoPorAprobar({ carta, consejo, visible, onCambiar }: { carta: Cart
     try {
       const texto = await pedirConsejoALaIA(asistente, carta, primero)
       if (texto) onCambiar({ texto, de: 'ia' })
-      else setSinRespuesta(true)
+      else setSinRespuesta(primero)
     } catch {
-      setSinRespuesta(true)
+      setSinRespuesta(primero)
     } finally {
       setPreparando(false)
     }
   }, [asistente, carta, onCambiar])
 
   // Solo pide a la IA cuando la carta aparece en pantalla: psicología puede leerlas en el orden que quiera.
-  useEffect(() => { if (visible && !carta.urgente) preparar(false) }, [visible, carta.urgente, preparar])
+  useEffect(() => { if (visible && !conRiesgo) preparar(false) }, [visible, conRiesgo, preparar])
 
   return (
     <label className="consejo-por-aprobar">
@@ -145,10 +148,11 @@ function ConsejoPorAprobar({ carta, consejo, visible, onCambiar }: { carta: Cart
         placeholder={preparando ? 'La IA está preparando una sugerencia… (puede tardar si hay muchas cartas)' : 'Escribe un consejo corto, o déjalo vacío para publicar la carta sola.'}
         onChange={(e) => onCambiar({ texto: e.target.value, de: 'psicologia' })}
       />
-      {sinRespuesta && !consejo.texto && <small className="aviso-suave">{SIN_RESPUESTA_DE_LA_IA}</small>}
+      {conRiesgo && <small className="aviso-suave">{CARTA_CON_RIESGO}</small>}
+      {!conRiesgo && sinRespuesta && !consejo.texto && <small className="aviso-suave">{SIN_RESPUESTA_DE_LA_IA}</small>}
       <small className="suave">
         {consejo.de === 'ia' && consejo.texto ? 'Lo preparó la IA: léelo y cámbialo si quieres. Si lo editas, se publica como consejo de psicología.' : ''}
-        {' '}<button type="button" className="enlace-discreto" disabled={preparando} onClick={() => preparar(true)}>{preparando ? 'Preparando…' : <><Ico icono={Sparkle} /> {consejo.texto ? 'Pedir otra sugerencia a la IA' : 'Pedir sugerencia a la IA'}</>}</button>
+        {' '}{!conRiesgo && <button type="button" className="enlace-discreto" disabled={preparando} onClick={() => preparar(true)}>{preparando ? 'Preparando…' : <><Ico icono={Sparkle} /> {consejo.texto ? 'Pedir otra sugerencia a la IA' : 'Pedir sugerencia a la IA'}</>}</button>}
       </small>
     </label>
   )

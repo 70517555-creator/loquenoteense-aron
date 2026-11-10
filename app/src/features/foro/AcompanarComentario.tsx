@@ -3,6 +3,7 @@ import { useCallback, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useServicios } from '../../app/servicios'
 import type { Comentario, Psicologo } from '../../domain/foro'
+import { hayRiesgo } from '../../domain/riesgo'
 import { useAccion } from '../../hooks/useAccion'
 import { useCerrarConEscape } from '../../hooks/useCerrarConEscape'
 import { Ico } from '../../ui/Ico'
@@ -43,6 +44,7 @@ export function AcompanarComentario({ comentario, psicologo, onCerrar, onPublica
   useCerrarConEscape(cerrar)
   const firma = `${psicologo.nombre} · Psicología`
   const quien = sinGuiones(comentario.apodo).split(' · ')[0]
+  const conRiesgo = comentario.urgente || hayRiesgo(comentario.texto)
 
   const agregarFrase = (frase: string) => setTexto((actual) => (actual.trim() ? `${actual.trimEnd()} ${frase}` : frase).slice(0, MAX_CARACTERES))
 
@@ -93,9 +95,13 @@ export function AcompanarComentario({ comentario, psicologo, onCerrar, onPublica
           onChange={(e) => setTexto(e.target.value)}
           aria-label="Tu respuesta"
         />
-        <button type="button" className="enlace-discreto acompanar__ia" disabled={preparando} onClick={pedirBorrador}>
-          {preparando ? 'Preparando borrador…' : <><Ico icono={Sparkle} /> {texto ? 'Pedir otro borrador a la IA' : 'Pedir un borrador a la IA'}</>}
-        </button>
+        {conRiesgo ? (
+          <small className="aviso-suave">Este comentario tiene señales de riesgo: por seguridad la IA no prepara borradores para estos casos. Escribe tú la respuesta.</small>
+        ) : (
+          <button type="button" className="enlace-discreto acompanar__ia" disabled={preparando} onClick={pedirBorrador}>
+            {preparando ? 'Preparando borrador…' : <><Ico icono={Sparkle} /> {texto ? 'Pedir otro borrador a la IA' : 'Pedir un borrador a la IA'}</>}
+          </button>
+        )}
         {sinBorrador && <small className="aviso-suave">La IA no respondió esta vez. Intenta en un momento o escríbelo tú.</small>}
         {error && <p className="aviso-suave">{error}</p>}
 

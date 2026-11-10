@@ -8,6 +8,7 @@ export interface ForoPort {
   temasAnteriores(hasta: string): Promise<TemaDelDia[]>
   preguntaDeLaSemana(lunes: string): Promise<PreguntaDeLaSemana | null>
   comentarios(temaId: string): Promise<Comentario[]>
+  cuantosPublicados(temaId: string): Promise<number>
   comentar(nuevo: NuevoComentario): Promise<void>
   marcarMeAyudo(comentario: Comentario): Promise<void>
   propuestas(): Promise<Propuesta[]>
